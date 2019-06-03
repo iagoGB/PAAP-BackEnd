@@ -14,7 +14,7 @@ public class CasaMovelApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CasaMovelApplication.class, args);
 		
-		EventoDAO dao = new EventoDAO();
+		/*EventoDAO dao = new EventoDAO();
 		ArrayList<Evento> lista = dao.getEvento();
 		
 		for  (Evento a: lista) {
@@ -22,7 +22,7 @@ public class CasaMovelApplication {
 			System.out.println(a.getTitulo());
 			System.out.println(a.getCargaHoraria());
 			System.out.println("----------------");
-		} 
+		} */
 	}
 
 }
