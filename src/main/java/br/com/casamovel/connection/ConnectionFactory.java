@@ -10,7 +10,7 @@ public class ConnectionFactory {
 		 /*private final String DRIVER = "com.postgresql.jdbc.Driver";*/
 		private static final String URL = "jdbc:postgresql://localhost:5432/casaMovel";
 		private static final String USER = "postgres";
-		private static final String PASSWORD = "casa@eideia";
+		private static final String PASSWORD = "mydatabase";
 		
 		public static  Connection getConnection() 
 		{

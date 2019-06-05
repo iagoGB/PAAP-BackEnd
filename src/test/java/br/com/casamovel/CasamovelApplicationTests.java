@@ -11,6 +11,7 @@ public class CasamovelApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		
 	}
 
 }
