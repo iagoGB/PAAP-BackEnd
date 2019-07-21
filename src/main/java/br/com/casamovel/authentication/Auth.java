@@ -1,4 +1,4 @@
-package br.com.casamovel.auth;
+package br.com.casamovel.authentication;
 
 import java.util.Arrays;
 
