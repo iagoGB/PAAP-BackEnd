@@ -2,13 +2,16 @@ package br.com.casamovel.models;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -39,6 +42,9 @@ public class Usuario implements Serializable{
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
 	private Date atualizado_em;
+	
+	@ManyToMany(mappedBy="eventos")
+	List<Evento> usuarios = new ArrayList<Evento>();
 	
 	public Usuario() {
 		
