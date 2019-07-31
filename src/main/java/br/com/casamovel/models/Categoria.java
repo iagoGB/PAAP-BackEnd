@@ -23,6 +23,10 @@ public class Categoria implements Serializable {
 	@OneToMany(mappedBy="categoria")
 	List<Evento> eventos = new ArrayList<Evento>();
 	
+	public void setCategoria_id(long categoria_id) {
+		this.categoria_id = categoria_id;
+	}
+
 	public Categoria() {
 	}
 	

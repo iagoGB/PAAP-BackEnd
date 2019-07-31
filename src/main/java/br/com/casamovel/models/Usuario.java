@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +32,15 @@ public class Usuario implements Serializable{
 	private String departamento;
 	private String telefone;
 	
-	@Basic
+	public List<Evento> getEventos() {
+		return eventos;
+	}
+	public void setEventos(List<Evento> eventos) {
+		this.eventos = eventos;
+	}
+	public void setUsuario_id(long usuario_id) {
+		this.usuario_id = usuario_id;
+	}
 	private Time carga_horaria;
 	
 	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT-3")
@@ -43,8 +52,8 @@ public class Usuario implements Serializable{
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
 	private Date atualizado_em;
 	
-	@ManyToMany(mappedBy="eventos")
-	List<Evento> usuarios = new ArrayList<Evento>();
+	@ManyToMany(mappedBy="usuarios", cascade = CascadeType.ALL)
+	List<Evento> eventos = new ArrayList<Evento>();
 	
 	public Usuario() {
 		
