@@ -3,34 +3,47 @@ package br.com.casamovel.models;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="usuario")
-public class Usuario implements Serializable{
+public class Usuario implements Serializable,UserDetails{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long usuario_id;
 	private long cpf;
 //	@Column(name = "carga_horaria", nullable = false, columnDefinition = "double default 0")
 	private String nome;
 	private String email;
+	private String senha;
 	private String departamento;
 	private String telefone;
+	@ManyToMany
+	@JoinTable(
+		name = "usuario_role",
+		joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "usuario_id"),
+		inverseJoinColumns = @JoinColumn(name="role_id",referencedColumnName = "roleName")
+	)
+	private List<Role> roles;
 	
 	public List<Evento> getEventos() {
 		return eventos;
@@ -114,5 +127,48 @@ public class Usuario implements Serializable{
 	}
 	public void setAtualizado_em(Date atualizado_em) {
 		this.atualizado_em = atualizado_em;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+	@Override
+	public String getPassword() {
+		//Método sobrescrito da classe do Spring UserDetails
+		return this.senha;
+	}
+	@Override
+	public String getUsername() {
+		//Método sobrescrito da classe do Spring UserDetails
+		return this.email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		
+		return true;
+	}
+	public List<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 }
