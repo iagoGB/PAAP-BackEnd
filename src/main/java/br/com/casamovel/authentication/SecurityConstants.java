@@ -2,7 +2,6 @@ package br.com.casamovel.authentication;
 
 import java.util.Collections;
 import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,13 +11,22 @@ import org.springframework.security.core.Authentication;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-public class TokenAuthenticationService {
+public class SecurityConstants {
 		// EXPIRATION_TIME = 10 dias
-		static final long EXPIRATION_TIME = 860_000_000;
-		static final String SECRET = "MySecret";
-		static final String TOKEN_PREFIX = "Bearer";
-		static final String HEADER_STRING = "Authorization";
+		//static final long EXPIRATION_TIME = 860_000_000;
+		public static final String SECRET = "MySecret";
+		public static final String TOKEN_PREFIX = "Bearer";
+		public static final String HEADER_STRING = "Authorization";
+		//Url permitida para autenticação
+		public static final String SIGN_UP_URL = "/login";
+		public static final long EXPIRATION_TIME = 86400000L;
 		
+	/*
+		Metodo para converter tempo em MILLIS a partir da unidade desejada
+		public static void main(String[] args) {
+			System.out.println(TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); - 1dia
+		}
+	*/
 		static void addAuthentication(HttpServletResponse response, String email) {
 			String JWT = Jwts.builder()
 					.setSubject(email)
@@ -46,4 +54,5 @@ public class TokenAuthenticationService {
 			}
 			return null;
 		}
+
 }
