@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,11 +17,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="usuario")
@@ -33,7 +36,10 @@ public class Usuario implements Serializable,UserDetails{
 	private long cpf;
 //	@Column(name = "carga_horaria", nullable = false, columnDefinition = "double default 0")
 	private String nome;
+	@NotEmpty
+	@Column(unique = true)
 	private String email;
+	@JsonIgnore
 	private String senha;
 	private String departamento;
 	private String telefone;
@@ -136,7 +142,7 @@ public class Usuario implements Serializable,UserDetails{
 	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return this.roles;
 	}
 	@Override
 	public String getPassword() {

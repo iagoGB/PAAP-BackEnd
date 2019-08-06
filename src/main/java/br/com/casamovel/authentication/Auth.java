@@ -22,11 +22,14 @@ public class Auth extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.csrf().disable().authorizeRequests()
-		.antMatchers("/home").permitAll()
-		.antMatchers(HttpMethod.POST, "/login").permitAll()
+		.antMatchers(HttpMethod.GET,"/home").permitAll()
+		.antMatchers(HttpMethod.POST,"/home").permitAll()
+		.antMatchers(HttpMethod.GET,"/categoria").hasRole("ADMIN")
+		.antMatchers(HttpMethod.POST,"/categoria").hasRole("ADMIN")
 		.anyRequest().authenticated()
 		.and()
-
+		.httpBasic();
+/*
 		// filtra requisições de login
 		.addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
 				UsernamePasswordAuthenticationFilter.class)
@@ -34,6 +37,7 @@ public class Auth extends WebSecurityConfigurerAdapter{
 		// filtra outras requisições para verificar a presença do JWT no header
 		.addFilterBefore(new JWTAuthenticationFilter(),
 				UsernamePasswordAuthenticationFilter.class);
+*/
 	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
