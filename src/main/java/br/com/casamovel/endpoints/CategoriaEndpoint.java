@@ -20,7 +20,6 @@ public class CategoriaEndpoint {
 	 CategoriaRepository categoriaRepository;
 	
 	@GetMapping("/categoria")
-	@PreAuthorize("hasRole('ADMIN')")
 	public List<Categoria> listaCategoria() {
 		return categoriaRepository.findAll();
 	}

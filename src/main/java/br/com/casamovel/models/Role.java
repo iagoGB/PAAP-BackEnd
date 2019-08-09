@@ -1,21 +1,27 @@
 package br.com.casamovel.models;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 @Entity
-public class Role implements GrantedAuthority{
+public class Role implements GrantedAuthority,Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	private String roleName;
-	@ManyToMany (mappedBy = "roles")
+	@ManyToMany (mappedBy = "roles", cascade = CascadeType.ALL) //antes estava por role
 	private List<Usuario> usuarios;
 
+	@Override
+	public String toString() {
+		return "Role [roleName=" + roleName + "]";
+	}
 	@Override
 	public String getAuthority() {
 		return this.roleName;
@@ -31,6 +37,13 @@ public class Role implements GrantedAuthority{
 	}
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
+	}
+	public Role(String roleName, List<Usuario> usuarios) {
+		super();
+		this.roleName = roleName;
+		this.usuarios = usuarios;
+	}
+	public Role() {
 	}
 	
 	

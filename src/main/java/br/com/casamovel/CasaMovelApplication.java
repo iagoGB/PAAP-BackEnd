@@ -17,10 +17,11 @@ public class CasaMovelApplication {
 		SpringApplication.run(CasaMovelApplication.class, args);
 		System.out.println("Senha criptografada: " + new BCryptPasswordEncoder().encode("abcd1234"));
 	}	
-	@RequestMapping("/home")
+	
+	@RequestMapping("/login")
 	public String home() {
 		return "Hello World! \n Welcome to CASa Móvel API";
 		
-	}
+	} 
 	
 }

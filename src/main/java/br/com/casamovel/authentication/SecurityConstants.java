@@ -14,12 +14,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class SecurityConstants {
 		// EXPIRATION_TIME = 10 dias
 		//static final long EXPIRATION_TIME = 860_000_000;
-		public static final String SECRET = "MySecret";
-		public static final String TOKEN_PREFIX = "Bearer";
-		public static final String HEADER_STRING = "Authorization";
+		 static final String SECRET = "MySecret";
+		 static final String TOKEN_PREFIX = "Bearer ";
+		 static final String HEADER_STRING = "Authorization";
 		//Url permitida para autenticação
-		public static final String SIGN_UP_URL = "/login";
-		public static final long EXPIRATION_TIME = 86400000L;
+		 static final String SIGN_UP_URL = "/changeman";
+		 static final long EXPIRATION_TIME = 86400000L;
 		
 	/*
 		Metodo para converter tempo em MILLIS a partir da unidade desejada
@@ -34,7 +34,7 @@ public class SecurityConstants {
 					.signWith(SignatureAlgorithm.HS512, SECRET)
 					.compact();
 			
-			response.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
+			response.addHeader(HEADER_STRING, TOKEN_PREFIX + JWT);
 		}
 		
 		static Authentication getAuthentication(HttpServletRequest request) {

@@ -1,6 +1,7 @@
 package br.com.casamovel.models;
 
 import java.io.Serializable;
+
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,13 +24,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "usuario_id")
 
 @Entity
 @Table(name="usuario")
 public class Usuario implements Serializable,UserDetails{
 	private static final long serialVersionUID = 1L;
 	
+	@Override
+	public String toString() {
+		return "Usuario [usuario_id=" + usuario_id + ", cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", senha="
+				+ senha + ", departamento=" + departamento + ", telefone=" + telefone + ", roles=" + roles
+				+ ", carga_horaria=" + carga_horaria + ", data_ingresso=" + data_ingresso + ", criado_em=" + criado_em
+				+ ", atualizado_em=" + atualizado_em + ", eventos=" + eventos + "]";
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long usuario_id;
@@ -39,11 +49,10 @@ public class Usuario implements Serializable,UserDetails{
 	@NotEmpty
 	@Column(unique = true)
 	private String email;
-	@JsonIgnore
 	private String senha;
 	private String departamento;
 	private String telefone;
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 		name = "usuario_role",
 		joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "usuario_id"),
@@ -51,6 +60,12 @@ public class Usuario implements Serializable,UserDetails{
 	)
 	private List<Role> roles;
 	
+	public List<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 	public List<Evento> getEventos() {
 		return eventos;
 	}
@@ -171,10 +186,22 @@ public class Usuario implements Serializable,UserDetails{
 		
 		return true;
 	}
-	public List<Role> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<Role> roles) {
+	public Usuario(long usuario_id, long cpf, String nome, @NotEmpty String email, String senha, String departamento,
+			String telefone, List<Role> roles, Time carga_horaria, Date data_ingresso, Date criado_em,
+			Date atualizado_em, List<Evento> eventos) {
+		super();
+		this.usuario_id = usuario_id;
+		this.cpf = cpf;
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.departamento = departamento;
+		this.telefone = telefone;
 		this.roles = roles;
+		this.carga_horaria = carga_horaria;
+		this.data_ingresso = data_ingresso;
+		this.criado_em = criado_em;
+		this.atualizado_em = atualizado_em;
+		this.eventos = eventos;
 	}
 }
