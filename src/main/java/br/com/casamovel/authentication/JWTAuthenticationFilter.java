@@ -23,42 +23,47 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+	//Gerenciador de autenticação
 	private AuthenticationManager authenticationManager;
-	//Verificar se recebe builder ou comum;
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager= authenticationManager;
 	}
-
+	//Tentativa de autenticação
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException 
-	{
+	{	//Tentar passar os valores que vem do Json para um objeto usuário
 		try {
 			Usuario usuario = new ObjectMapper().readValue(request.getInputStream(),Usuario.class);
 			System.out.println("Transformou para usuário "+ usuario.toString());
 			//Provavelmente será necessário  passar a lista de autorizações abaixo (getAuthorities()). Rever depois
+			//Solicita a autenticação para o gerenciador
 			return this.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken( usuario.getUsername(), usuario.getPassword()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
+	//Quando a autenticação é bem sucessida, este método é invocado para gerar os dados do token
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authResult) throws IOException, ServletException {
+	protected void successfulAuthentication(
+			HttpServletRequest request, HttpServletResponse response, 
+			FilterChain chain, Authentication authResult
+	) throws IOException, ServletException {
 		System.out.println("Entrou no método autenticação bem sucedida");
-		String username = ((User) authResult.getPrincipal()).getUsername();
-		System.out.println("Classe clastada"+username);
+		String username = ((User) authResult.getPrincipal()).getUsername(); // authResult.getPrincipal()).getUsername(); 
+		System.out.println("Classe castada: "+username);
 		String token = Jwts
 				.builder()
 				.setSubject(username)
 				.setExpiration(new Date (System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, SECRET)
 				.compact();
-		System.out.println("token: "+token);
-		
-		response.addHeader(HEADER_STRING,TOKEN_PREFIX + token);
+		String bearerToken = (TOKEN_PREFIX + token);
+		//Escrever no body
+		response.getWriter().write("{\"token\":\""+bearerToken+"\"}");
+		//Escrever no header
+		response.addHeader(HEADER_STRING,bearerToken);
 	}
 	
 	public AuthenticationManager getAuthenticationManager() {

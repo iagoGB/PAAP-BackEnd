@@ -27,17 +27,25 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+			throws IOException, ServletException 
+	{	
+		//Pega o cabecalho da autenticação
 		String header = request.getHeader(HEADER_STRING);
 		System.out.println("Escrevendo o header que chegou da requisição "+ header);
-		if (header == null ) {//(!header.startsWith(HEADER_STRING))){ //O problema esta aqui
+		//Checa se o header é nulo ou se nao inicia com 'Bearer '
+		if (header == null || !header.startsWith(TOKEN_PREFIX)){//(!header.startsWith(HEADER_STRING))){ //O problema esta aqui
+			//Ignora requisição
 			chain.doFilter(request, response);
 			System.out.println("Se essa mensagem está aqui é pq o header esta nulo ou nao começa com Bearer ");
+			//Caso verdadeiro, ele sai da execussão do método
 			return;
 			
 		}
+		//Se ele chegou até aqui significa que o token atende os requisitos
+		
 		UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(request);
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+		//Com isso, é possivel usar nos controllers
 		System.out.println("Se chegou aqui é pq esta pegando a chave de autenticação"+ authenticationToken.toString());
 		chain.doFilter(request, response);
 	}
@@ -47,7 +55,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 		String token = request.getHeader(HEADER_STRING);
 		System.out.println("Escrevendo o token do método getAuthentication()"+token);
 		if (token == null) return null;
-		String username = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX,"")).getBody().getSubject();
+		//Pegar o valor do token e verificar dados
+		String username = Jwts
+				.parser()
+				.setSigningKey(SECRET)
+				//Retira prefixo adicionado
+				.parseClaimsJws(token.replace(TOKEN_PREFIX,""))
+				.getBody()
+				.getSubject();
 		UserDetails userDetails = implementsUserDetailsService.loadUserByUsername(username);
 		System.out.println("Debugando user details"+userDetails.toString());
 		return username != null ? new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities()) : null;

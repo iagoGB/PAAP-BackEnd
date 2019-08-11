@@ -11,24 +11,31 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
 @EnableWebSecurity
-public class Auth extends WebSecurityConfigurerAdapter{
+public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private ImplementsUserDetailsService userDetailsService;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		System.out.println("Executando configurações da classe Auth");
-		http.cors().and().csrf().disable().authorizeRequests()
-			.antMatchers(HttpMethod.POST, "/login").permitAll() //SIGN_UP_URL
-			.antMatchers(HttpMethod.GET,"/categoria").hasRole("ADMIN")
-			.antMatchers(HttpMethod.POST,"/categoria").hasRole("ADMIN")
+		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
 			.and()
+			.csrf().disable().authorizeRequests()
+			.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+			.antMatchers(HttpMethod.GET,"/categoria").hasRole("USER")
+			.antMatchers(HttpMethod.POST,"/categoria").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET,"/usuario").hasRole("ADMIN")
+			.antMatchers(HttpMethod.POST,"/usuario").hasRole("ADMIN")
+			.and()
+			// filtra requisições de login
 			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+			// filtra outras requisições para verificar a presença do JWT no header
 			.addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService));
 		
 		
-//		FUNCIONAL
+//		BASIC AUTH FUNCIONAL
 //		http.csrf().disable().authorizeRequests()
 //		.antMatchers(HttpMethod.GET,"/home").permitAll()
 //		.antMatchers(HttpMethod.POST,"/home").permitAll()
@@ -36,33 +43,10 @@ public class Auth extends WebSecurityConfigurerAdapter{
 //		.anyRequest().authenticated()
 //		.and()
 //		.httpBasic(); 
-		
-		/*
-		// filtra requisições de login
-		.addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
-				UsernamePasswordAuthenticationFilter.class)
-
-		// filtra outras requisições para verificar a presença do JWT no header
-		.addFilterBefore(new JWTAuthenticationFilter(),
-				UsernamePasswordAuthenticationFilter.class);
-*/
 	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService)
 		.passwordEncoder(new BCryptPasswordEncoder());
-		System.out.println("Encriptou password");
 	}
-	/*   
-	 @Bean
-	    CorsConfigurationSource corsConfigurationSource() {
-	        CorsConfiguration configuration = new CorsConfiguration();
-	        configuration.setAllowedOrigins(Arrays.asList("*"));
-	        configuration.setAllowedMethods(Arrays.asList("*"));
-	        configuration.setAllowedHeaders(Arrays.asList("*"));
-	        configuration.setAllowCredentials(true);
-	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	        source.registerCorsConfiguration("/**", configuration);
-	        return source;
-	    } */
 }

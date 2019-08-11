@@ -12,13 +12,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class SecurityConstants {
+		//Seguir convenções: Authorization Bearer $2kansnjjw2oi5j&jwa
 		// EXPIRATION_TIME = 10 dias
 		//static final long EXPIRATION_TIME = 860_000_000;
 		 static final String SECRET = "MySecret";
 		 static final String TOKEN_PREFIX = "Bearer ";
 		 static final String HEADER_STRING = "Authorization";
 		//Url permitida para autenticação
-		 static final String SIGN_UP_URL = "/changeman";
+		 static final String SIGN_UP_URL = "/login";
 		 static final long EXPIRATION_TIME = 86400000L;
 		
 	/*
