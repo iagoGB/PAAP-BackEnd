@@ -1,5 +1,7 @@
 package br.com.casamovel.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class Role implements GrantedAuthority,Serializable{
 	private static final long serialVersionUID = 1L;
@@ -32,6 +35,7 @@ public class Role implements GrantedAuthority,Serializable{
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
+        @JsonBackReference
 	public List<Usuario> getUsuarios() {
 		return usuarios;
 	}

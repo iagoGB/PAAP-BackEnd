@@ -1,5 +1,6 @@
 package br.com.casamovel.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 
 import java.sql.Time;
@@ -25,9 +26,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.beans.factory.annotation.Value;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "usuario_id")
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name="usuario")
 public class Usuario implements Serializable,UserDetails{
@@ -43,6 +46,7 @@ public class Usuario implements Serializable,UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long usuario_id;
+        private String avatar; // Caminho para a foto
 	private long cpf;
 //	@Column(name = "carga_horaria", nullable = false, columnDefinition = "double default 0")
 	private String nome;
@@ -58,6 +62,7 @@ public class Usuario implements Serializable,UserDetails{
 		joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "usuario_id"),
 		inverseJoinColumns = @JoinColumn(name="role_id",referencedColumnName = "roleName")
 	)
+        @JsonBackReference
 	private List<Role> roles;
 	
 	public List<Role> getRoles() {
@@ -94,7 +99,13 @@ public class Usuario implements Serializable,UserDetails{
 	}
 	public long getUsuario_id() {
 		return usuario_id;
-	}
+	} 
+        public String getAvatar() {
+           return avatar;
+        }
+        public void setAvatar(String avatar) {
+           this.avatar = avatar;
+        }
 	public long getCpf() {
 		return cpf;
 	}
@@ -186,11 +197,13 @@ public class Usuario implements Serializable,UserDetails{
 		
 		return true;
 	}
-	public Usuario(long usuario_id, long cpf, String nome, @NotEmpty String email, String senha, String departamento,
-			String telefone, List<Role> roles, Time carga_horaria, Date data_ingresso, Date criado_em,
+        //Retirada id e lista de roles, verificar depois;
+	public Usuario( String avatar,long cpf, String nome, @NotEmpty String email, String senha, String departamento,
+			String telefone,List<Role>roles, Time carga_horaria, Date data_ingresso, Date criado_em,
 			Date atualizado_em, List<Evento> eventos) {
 		super();
-		this.usuario_id = usuario_id;
+                this.avatar = avatar;
+		//this.usuario_id = usuario_id;
 		this.cpf = cpf;
 		this.nome = nome;
 		this.email = email;
