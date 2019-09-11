@@ -56,6 +56,40 @@ public class Categoria implements Serializable {
 		this.eventos = eventos;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (categoria_id ^ (categoria_id >>> 32));
+		result = prime * result + ((eventos == null) ? 0 : eventos.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Categoria other = (Categoria) obj;
+		if (categoria_id != other.categoria_id)
+			return false;
+		if (eventos == null) {
+			if (other.eventos != null)
+				return false;
+		} else if (!eventos.equals(other.eventos))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		return true;
+	}
+
 	
 	
 }
