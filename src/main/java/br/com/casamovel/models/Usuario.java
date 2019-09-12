@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,8 +73,16 @@ public class Usuario implements Serializable,UserDetails{
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 		name = "usuario_role",
-		joinColumns = @JoinColumn(name="usuario_id", referencedColumnName = "usuario_id"),
-		inverseJoinColumns = @JoinColumn(name="role_id",referencedColumnName = "roleName")
+		joinColumns = @JoinColumn(
+				name="usuario_id",
+				referencedColumnName = "usuario_id",
+				foreignKey = @ForeignKey(name = "fk_usuario_id")
+		),
+		inverseJoinColumns = @JoinColumn(
+				name="role_id",
+				referencedColumnName = "roleName",
+				foreignKey = @ForeignKey(name = "fk_role_id")
+		)
 	)
 	
     @JsonBackReference
