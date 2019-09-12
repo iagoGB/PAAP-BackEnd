@@ -1,8 +1,10 @@
 package br.com.casamovel.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -17,13 +19,21 @@ public class EventoUsuario implements Serializable {
 
 	@Id
 	@ManyToOne
-	//@JoinColumn(name = "evento_id")
-	private Evento evento;
+        @JoinColumn(
+		name = "fk_evento_id",
+		referencedColumnName = "evento_id",
+		foreignKey = @ForeignKey(name="fk_evento_id")
+	)
+	private Evento evento_id;
 	
 	@Id
 	@ManyToOne
-	//@JoinColumn(name = "usuario_id")
-	private Usuario usuario;
+	@JoinColumn(
+		name = "fk_usuario_id",
+		referencedColumnName = "usuario_id",
+		foreignKey = @ForeignKey(name="fk_usuario_id")
+	)
+	private Usuario usuario_id;
 	
 	private boolean isSubscribed;
 	
@@ -34,19 +44,19 @@ public class EventoUsuario implements Serializable {
 	}
 
 	public Evento getEvento() {
-		return evento;
+		return evento_id;
 	}
 
 	public void setEvento(Evento evento) {
-		this.evento = evento;
+		this.evento_id = evento;
 	}
 
 	public Usuario getUsuario() {
-		return usuario;
+		return usuario_id;
 	}
 
 	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+		this.usuario_id = usuario;
 	}
 
 	public boolean isSubscribed() {
@@ -65,52 +75,49 @@ public class EventoUsuario implements Serializable {
 		this.isPresent = isPresent;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((evento == null) ? 0 : evento.hashCode());
-		result = prime * result + (isPresent ? 1231 : 1237);
-		result = prime * result + (isSubscribed ? 1231 : 1237);
-		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 17 * hash + Objects.hashCode(this.evento_id);
+        hash = 17 * hash + Objects.hashCode(this.usuario_id);
+        hash = 17 * hash + (this.isSubscribed ? 1 : 0);
+        hash = 17 * hash + (this.isPresent ? 1 : 0);
+        return hash;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EventoUsuario other = (EventoUsuario) obj;
-		if (evento == null) {
-			if (other.evento != null)
-				return false;
-		} else if (!evento.equals(other.evento))
-			return false;
-		if (isPresent != other.isPresent)
-			return false;
-		if (isSubscribed != other.isSubscribed)
-			return false;
-		if (usuario == null) {
-			if (other.usuario != null)
-				return false;
-		} else if (!usuario.equals(other.usuario))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final EventoUsuario other = (EventoUsuario) obj;
+        if (this.isSubscribed != other.isSubscribed) {
+            return false;
+        }
+        if (this.isPresent != other.isPresent) {
+            return false;
+        }
+        if (!Objects.equals(this.evento_id, other.evento_id)) {
+            return false;
+        }
+        if (!Objects.equals(this.usuario_id, other.usuario_id)) {
+            return false;
+        }
+        return true;
+        
+    }
 
-	@Override
-	public String toString() {
-		return "EventoUsuario [evento=" + evento + ", usuario=" + usuario + ", isSubscribed=" + isSubscribed
-				+ ", isPresent=" + isPresent + "]";
-	}
-	
-	
-	
-	
-	
+    @Override
+    public String toString() {
+        return "EventoUsuario{" + "evento_id=" + evento_id + ", usuario_id=" + usuario_id + ", isSubscribed=" + isSubscribed + ", isPresent=" + isPresent + '}';
+    }
+
+    
 	
 }

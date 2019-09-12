@@ -66,7 +66,7 @@ public class Usuario implements Serializable,UserDetails{
 	
 	private String telefone;
 	
-	@OneToMany(mappedBy = "evento")
+	@OneToMany(mappedBy = "evento_id")
 	private List<EventoUsuario> eventos;
 	
 	@ManyToMany(cascade = CascadeType.ALL)

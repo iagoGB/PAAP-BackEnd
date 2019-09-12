@@ -80,7 +80,5 @@ public class UsuarioEndpoint {
                 System.out.println("Erro ao criar usuario"); 
                 return ResponseEntity.badRequest().body("Erro ao criar usuário");
             }   
-	}
-        
-       
+	}     
 }

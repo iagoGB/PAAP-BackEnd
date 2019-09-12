@@ -43,7 +43,7 @@ public class Evento implements Serializable {
 
 	
 
-	@OneToMany(mappedBy = "usuario")
+	@OneToMany(mappedBy = "usuario_id")
 	List<EventoUsuario> usuarios;
 	
 	@OneToMany(mappedBy ="nome_palestrante_id" )
