@@ -1,8 +1,14 @@
 package br.com.casamovel.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,6 +23,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
@@ -31,6 +38,14 @@ public class Evento implements Serializable {
 	private String titulo;
 	
 	private String foto;
+        
+        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
+        private Date data_horario;
+        
+        private String local;
+        
+        @JsonFormat(pattern="HH:mm", timezone="GMT-3")
+        private Date carga_horaria;
 
 	@ManyToOne
 	@JoinColumn(
@@ -85,6 +100,39 @@ public class Evento implements Serializable {
 	public void setFoto(String foto) {
 		this.foto = foto;
 	}
+
+        public Timestamp getData() {
+            return (Timestamp) data_horario;
+        }
+
+        public void setData(Date data) {
+            this.data_horario = data;
+        }
+
+        public String getLocal() {
+            return local;
+        }
+
+        public void setLocal(String local) {
+            this.local = local;
+        }
+
+        public List<EventoPalestrante> getPalestrantes() {
+            return palestrantes;
+        }
+
+        public void setPalestrantes(List<EventoPalestrante> palestrantes) {
+            this.palestrantes = palestrantes;
+        }
+
+        public Date getCarga_horaria() {
+            return carga_horaria;
+        }
+
+        public void setCarga_horaria(Date carga_horaria) {
+            this.carga_horaria = carga_horaria;
+        }
+        
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -138,7 +186,10 @@ public class Evento implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 
+    @Override
+    public String toString() {
+        return "Evento{" + "evento_id=" + evento_id + ", titulo=" + titulo + ", foto=" + foto + ", categoria=" + categoria + ", usuarios=" + usuarios + ", palestrantes=" + palestrantes + '}';
+    }
+	
 }

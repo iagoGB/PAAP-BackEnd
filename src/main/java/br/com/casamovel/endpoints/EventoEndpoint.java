@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.casamovel.models.Evento;
 import br.com.casamovel.repositories.CategoriaRepository;
 import br.com.casamovel.repositories.EventoRepository;
+import java.sql.Time;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 public class EventoEndpoint {
@@ -29,17 +34,32 @@ public class EventoEndpoint {
 		return eventoRepository.findAll();
 	}
 	@PostMapping("/evento")
-	public Evento salvaEvento(@RequestBody Evento evento){
-            long l = 1;
-            Categoria c = categoriaRepository.getOne(l);
-          
-            Evento e = new Evento();
-            e.setCategoria(c);
-            e.setFoto(evento.getFoto());
-            e.setTitulo(evento.getTitulo());
+	public ResponseEntity<String> salvaEvento(@RequestBody Evento evento){
+            try {
+            Long l =  new Long(1);
+                Categoria c = categoriaRepository.getOne(l);
+                
+                Evento e = new Evento();
+                
+                e.setFoto("Caminho da foto aqui");
+                e.setTitulo(evento.getTitulo());
+                e.setCategoria(c);
+                e.setFoto(evento.getFoto());
+                e.setTitulo(evento.getTitulo());
+                e.setCarga_horaria(e.getCarga_horaria());
+                e.setLocal(evento.getLocal());
+                e.setData(evento.getData());
+                c.getEventos().add(e);
+                System.out.println(" CCCCCCCCCC: "+ c.toString());
+                Evento novoEvento = eventoRepository.saveAndFlush(e);
+                return ResponseEntity.status(HttpStatus.OK).body(novoEvento.toString());
+                
+            } catch(Exception e ){
+                Logger.getLogger(EventoEndpoint.class.getName()).log(Level.SEVERE, null, e);
+                System.out.println("Erro ao criar evento"); 
+                return ResponseEntity.badRequest().body("Erro ao criar evento");
+            }
             
-            c.getEventos().add(e);
-            return eventoRepository.save(evento);
 	}
 	@DeleteMapping("/evento/{id}")
 	public boolean deletaEvento(@PathVariable(value="id") long id) {
