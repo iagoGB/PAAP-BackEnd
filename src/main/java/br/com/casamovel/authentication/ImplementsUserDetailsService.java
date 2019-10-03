@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
-import br.com.casamovel.models.Usuario;
-import br.com.casamovel.repositories.UsuarioRepository;
+import br.com.casamovel.model.Usuario;
+import br.com.casamovel.repository.UsuarioRepository;
 
 @Repository
 @Transactional

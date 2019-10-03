@@ -1,4 +1,4 @@
-package br.com.casamovel.endpoints;
+package br.com.casamovel.endpoint;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.casamovel.models.Categoria;
-import br.com.casamovel.repositories.CategoriaRepository;
+import br.com.casamovel.model.Categoria;
+import br.com.casamovel.repository.CategoriaRepository;
 
 @RestController
 public class CategoriaEndpoint {

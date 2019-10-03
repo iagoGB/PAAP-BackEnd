@@ -1,4 +1,4 @@
-package br.com.casamovel.models;
+package br.com.casamovel.model;
 
 import java.io.Serializable;
 import java.util.Objects;

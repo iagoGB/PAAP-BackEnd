@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.casamovel.models.Role;
-import br.com.casamovel.models.Usuario;
-import br.com.casamovel.repositories.RoleRepository;
-import br.com.casamovel.repositories.UsuarioRepository;
+import br.com.casamovel.model.Role;
+import br.com.casamovel.model.Usuario;
+import br.com.casamovel.repository.RoleRepository;
+import br.com.casamovel.repository.UsuarioRepository;
 
 
 public class AdicionarUsuarioTeste {

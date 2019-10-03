@@ -1,9 +1,10 @@
-package br.com.casamovel.repositories;
+package br.com.casamovel.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.casamovel.models.Categoria;
+import br.com.casamovel.model.Categoria;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
-	
+    
+       
 }

@@ -1,4 +1,4 @@
-package br.com.casamovel.models;
+package br.com.casamovel.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

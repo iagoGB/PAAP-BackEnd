@@ -23,8 +23,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.casamovel.models.Role;
-import br.com.casamovel.models.Usuario;
+import br.com.casamovel.model.Role;
+import br.com.casamovel.model.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 

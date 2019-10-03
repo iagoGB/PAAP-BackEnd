@@ -1,4 +1,4 @@
-package br.com.casamovel.models;
+package br.com.casamovel.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,7 +39,7 @@ public class Evento implements Serializable {
 	
 	private String foto;
         
-        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone="GMT-3")
         private Date data_horario;
         
         private String local;
@@ -50,7 +50,7 @@ public class Evento implements Serializable {
 	@ManyToOne
 	@JoinColumn(
 			name="fk_categoria_id", 
-			referencedColumnName = "categoria_id",
+			referencedColumnName = "id",
 			foreignKey = @ForeignKey(name="fk_categoria_id"),
 			nullable = false	
 	)
@@ -189,7 +189,9 @@ public class Evento implements Serializable {
 
     @Override
     public String toString() {
-        return "Evento{" + "evento_id=" + evento_id + ", titulo=" + titulo + ", foto=" + foto + ", categoria=" + categoria + ", usuarios=" + usuarios + ", palestrantes=" + palestrantes + '}';
+        return "Evento{" + "evento_id=" + evento_id + ", titulo=" + titulo + ", foto=" + foto + ", data_horario=" + data_horario + ", local=" + local + ", carga_horaria=" + carga_horaria + ", categoria=" + categoria + ", usuarios=" + usuarios + ", palestrantes=" + palestrantes + '}';
     }
+
+   
 	
 }

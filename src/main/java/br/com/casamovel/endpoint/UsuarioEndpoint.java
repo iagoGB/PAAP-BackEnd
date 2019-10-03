@@ -1,6 +1,6 @@
-package br.com.casamovel.endpoints;
+package br.com.casamovel.endpoint;
 
-import br.com.casamovel.models.Role;
+import br.com.casamovel.model.Role;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.casamovel.models.Usuario;
-import br.com.casamovel.repositories.RoleRepository;
-import br.com.casamovel.repositories.UsuarioRepository;
+import br.com.casamovel.model.Usuario;
+import br.com.casamovel.repository.RoleRepository;
+import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.util.Disco;
 import java.util.ArrayList;
 import java.util.logging.Level;

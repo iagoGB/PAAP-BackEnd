@@ -1,4 +1,4 @@
-package br.com.casamovel.endpoints;
+package br.com.casamovel.endpoint;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.casamovel.models.Role;
-import br.com.casamovel.repositories.RoleRepository;
+import br.com.casamovel.model.Role;
+import br.com.casamovel.repository.RoleRepository;
 
 @RestController
 public class RoleEndpoint {

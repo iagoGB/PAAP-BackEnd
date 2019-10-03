@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.casamovel.models.Evento;
-import br.com.casamovel.repositories.EventoRepository;
+import br.com.casamovel.model.Evento;
+import br.com.casamovel.repository.EventoRepository;
 
 public class EventoTest {
 	
