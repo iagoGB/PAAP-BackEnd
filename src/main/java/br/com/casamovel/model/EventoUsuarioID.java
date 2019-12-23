@@ -14,26 +14,21 @@ public class EventoUsuarioID implements Serializable {
 		 
 	}
 	
-	
 	public Long getEvento_id() {
 		return evento_id;
 	}
-
 
 	public void setEvento_id(Long evento_id) {
 		this.evento_id = evento_id;
 	}
 
-
 	public Long getUsuario_id() {
 		return usuario_id;
 	}
 
-
 	public void setUsuario_id(Long usuario_id) {
 		this.usuario_id = usuario_id;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -65,6 +60,5 @@ public class EventoUsuarioID implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+		
 }

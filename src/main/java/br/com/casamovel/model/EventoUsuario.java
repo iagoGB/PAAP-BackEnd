@@ -21,7 +21,7 @@ public class EventoUsuario implements Serializable {
 	@ManyToOne
         @JoinColumn(
 		name = "fk_evento_id",
-		referencedColumnName = "evento_id",
+		referencedColumnName = "id",
 		foreignKey = @ForeignKey(name="fk_evento_id")
 	)
 	private Evento evento_id;
@@ -30,7 +30,7 @@ public class EventoUsuario implements Serializable {
 	@ManyToOne
 	@JoinColumn(
 		name = "fk_usuario_id",
-		referencedColumnName = "usuario_id",
+		referencedColumnName = "id",
 		foreignKey = @ForeignKey(name="fk_usuario_id")
 	)
 	private Usuario usuario_id;

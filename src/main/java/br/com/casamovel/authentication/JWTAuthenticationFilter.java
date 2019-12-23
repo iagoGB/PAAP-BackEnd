@@ -1,10 +1,9 @@
 package br.com.casamovel.authentication;
 
 import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import static br.com.casamovel.authentication.SecurityConstants.*;
 
@@ -13,7 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +21,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.casamovel.model.Role;
 import br.com.casamovel.model.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

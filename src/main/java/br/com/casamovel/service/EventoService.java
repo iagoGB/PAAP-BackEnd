@@ -56,12 +56,11 @@ public class EventoService {
             e.setFoto("Caminho da foto aqui");
             e.setTitulo(evento.getTitulo());
             e.setCategoria(c);
-            e.setCarga_horaria(e.getCarga_horaria());
+            e.setCargaHoraria(e.getCargaHoraria());
             e.setLocal(evento.getLocal());
-            e.setData(evento.getData());
+            e.setDataHorario(evento.getDataHorario());
             c.getEventos().add(e);
             System.out.println(" CCCCCCCCCC: " + c.toString());
-            Evento novoEvento = eventoRepository.saveAndFlush(e);
             salvo = true;
             
 

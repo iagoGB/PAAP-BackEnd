@@ -6,42 +6,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Entity
-@Table(name="categoria")
+@Table(name = "categoria")
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	private Long id;
-        
+
 	private String nome;
-        
-	@OneToMany(mappedBy="categoria")
+
+	@OneToMany(mappedBy = "categoria")
 	List<Evento> eventos = new ArrayList<Evento>();
-	
+
 	public Categoria() {
 	}
-	
-	public Categoria (String nome) {
+
+	public Categoria(String nome) {
 		this.nome = nome;
 	}
 
-        public Long getId() {
-            return id;
-        }
+	public Long getId() {
+		return id;
+	}
 
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-       
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getNome() {
 		return nome;
@@ -50,11 +46,11 @@ public class Categoria implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public List<Evento> getEventos() {
 		return eventos;
 	}
-	
+
 	public void setEventos(List<Evento> eventos) {
 		this.eventos = eventos;
 	}
@@ -93,11 +89,9 @@ public class Categoria implements Serializable {
 		return true;
 	}
 
-    @Override
-    public String toString() {
-        return "Categoria{" + "categoria_id=" + id + ", nome=" + nome + '}';
-    }
+	@Override
+	public String toString() {
+		return "Categoria{" + "categoria_id=" + id + ", nome=" + nome + '}';
+	}
 
-        
-        
 }

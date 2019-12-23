@@ -18,7 +18,7 @@ public class Role implements GrantedAuthority,Serializable{
 	
 	@Id
 	private String roleName;
-	@ManyToMany (mappedBy = "roles", cascade = CascadeType.ALL) //antes estava por role
+	@ManyToMany (mappedBy = "roles", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) //antes estava por role
 	private List<Usuario> usuarios;
 
 	@Override

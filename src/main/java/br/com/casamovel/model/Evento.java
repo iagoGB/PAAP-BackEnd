@@ -3,88 +3,108 @@ package br.com.casamovel.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.sql.Time;
-import java.sql.Timestamp;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 
 @Entity
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE )
-	private Long evento_id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Long id;
 
 	private String titulo;
-	
+
 	private String foto;
-        
-        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone="GMT-3")
-        private Date data_horario;
-        
-        private String local;
-        
-        @JsonFormat(pattern="HH:mm", timezone="GMT-3")
-        private Date carga_horaria;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
+	private LocalDateTime dataHorario;
+
+	private String local;
+
+	@JsonFormat(pattern = "HH:mm", timezone = "GMT-3")
+	private LocalTime cargaHoraria;
 
 	@ManyToOne
 	@JoinColumn(
-			name="fk_categoria_id", 
-			referencedColumnName = "id",
-			foreignKey = @ForeignKey(name="fk_categoria_id"),
-			nullable = false	
+		name = "fk_categoria_id", 
+		referencedColumnName = "id", 
+		foreignKey = @ForeignKey(name = "fk_categoria_id"), 
+		nullable = false
 	)
 	private Categoria categoria;
 
-	
-
 	@OneToMany(mappedBy = "usuario_id")
 	List<EventoUsuario> usuarios;
-	
-	@OneToMany(mappedBy ="nome_palestrante_id" )
+
+	@OneToMany(mappedBy = "nome_palestrante_id")
 	List<EventoPalestrante> palestrantes;
 
-	public Long getEvento_id() {
-		return evento_id;
-	}
-	public void setEvento_id(Long evento_id) {
-		this.evento_id = evento_id;
-	}
-	public List<EventoUsuario> getUsuarios() {
-		return usuarios;
-	}
-	public void setUsuarios(List<EventoUsuario> usuarios) {
-		this.usuarios = usuarios;
-	}
 	public Evento() {
 
 	}
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getTitulo() {
 		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public LocalDateTime getDataHorario() {
+		return dataHorario;
+	}
+
+	public void setDataHorario(LocalDateTime dataHorario) {
+		this.dataHorario = dataHorario;
+	}
+
+	public String getLocal() {
+		return local;
+	}
+
+	public void setLocal(String local) {
+		this.local = local;
+	}
+
+	public LocalTime getCargaHoraria() {
+		return cargaHoraria;
+	}
+
+	public void setCargaHoraria(LocalTime cargaHoraria) {
+		this.cargaHoraria = cargaHoraria;
 	}
 
 	public Categoria getCategoria() {
@@ -94,57 +114,39 @@ public class Evento implements Serializable {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
-	public String getFoto() {
-		return foto;
-	}
-	public void setFoto(String foto) {
-		this.foto = foto;
+
+	public List<EventoUsuario> getUsuarios() {
+		return usuarios;
 	}
 
-        public Timestamp getData() {
-            return (Timestamp) data_horario;
-        }
+	public void setUsuarios(List<EventoUsuario> usuarios) {
+		this.usuarios = usuarios;
+	}
 
-        public void setData(Date data) {
-            this.data_horario = data;
-        }
+	public List<EventoPalestrante> getPalestrantes() {
+		return palestrantes;
+	}
 
-        public String getLocal() {
-            return local;
-        }
+	public void setPalestrantes(List<EventoPalestrante> palestrantes) {
+		this.palestrantes = palestrantes;
+	}
 
-        public void setLocal(String local) {
-            this.local = local;
-        }
-
-        public List<EventoPalestrante> getPalestrantes() {
-            return palestrantes;
-        }
-
-        public void setPalestrantes(List<EventoPalestrante> palestrantes) {
-            this.palestrantes = palestrantes;
-        }
-
-        public Date getCarga_horaria() {
-            return carga_horaria;
-        }
-
-        public void setCarga_horaria(Date carga_horaria) {
-            this.carga_horaria = carga_horaria;
-        }
-        
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((cargaHoraria == null) ? 0 : cargaHoraria.hashCode());
 		result = prime * result + ((categoria == null) ? 0 : categoria.hashCode());
-		result = prime * result + ((evento_id == null) ? 0 : evento_id.hashCode());
+		result = prime * result + ((dataHorario == null) ? 0 : dataHorario.hashCode());
 		result = prime * result + ((foto == null) ? 0 : foto.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((local == null) ? 0 : local.hashCode());
 		result = prime * result + ((palestrantes == null) ? 0 : palestrantes.hashCode());
 		result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
 		result = prime * result + ((usuarios == null) ? 0 : usuarios.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -154,20 +156,35 @@ public class Evento implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Evento other = (Evento) obj;
+		if (cargaHoraria == null) {
+			if (other.cargaHoraria != null)
+				return false;
+		} else if (!cargaHoraria.equals(other.cargaHoraria))
+			return false;
 		if (categoria == null) {
 			if (other.categoria != null)
 				return false;
 		} else if (!categoria.equals(other.categoria))
 			return false;
-		if (evento_id == null) {
-			if (other.evento_id != null)
+		if (dataHorario == null) {
+			if (other.dataHorario != null)
 				return false;
-		} else if (!evento_id.equals(other.evento_id))
+		} else if (!dataHorario.equals(other.dataHorario))
 			return false;
 		if (foto == null) {
 			if (other.foto != null)
 				return false;
 		} else if (!foto.equals(other.foto))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (local == null) {
+			if (other.local != null)
+				return false;
+		} else if (!local.equals(other.local))
 			return false;
 		if (palestrantes == null) {
 			if (other.palestrantes != null)
@@ -186,12 +203,5 @@ public class Evento implements Serializable {
 			return false;
 		return true;
 	}
-
-    @Override
-    public String toString() {
-        return "Evento{" + "evento_id=" + evento_id + ", titulo=" + titulo + ", foto=" + foto + ", data_horario=" + data_horario + ", local=" + local + ", carga_horaria=" + carga_horaria + ", categoria=" + categoria + ", usuarios=" + usuarios + ", palestrantes=" + palestrantes + '}';
-    }
-
-   
 	
 }

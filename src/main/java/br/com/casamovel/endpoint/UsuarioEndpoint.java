@@ -50,7 +50,7 @@ public class UsuarioEndpoint {
                    Role rDefault = new Role();
                    rDefault = roleRepository.getOne("ROLE_USER");
                    //Lista de role que carrega user
-                   List a = new ArrayList<Role>();
+                   List<Role> a = new ArrayList<Role>();
                    a.add(rDefault);
                    novoUsuario = new Usuario
                     (   
@@ -63,10 +63,10 @@ public class UsuarioEndpoint {
                         usuario.getTelefone(),
                         //Adiciona role user para o novo usuário
                         a,
-                        usuario.getCarga_horaria(),
-                        usuario.getData_ingresso(),
-                        usuario.getCriado_em(),
-                        usuario.getAtualizado_em(),
+                        usuario.getCargaHoraria(),
+                        usuario.getDataIngresso(),
+                        usuario.getCriadoEm(),
+                        usuario.getAtualizadoEm(),
                         usuario.getEventos()
                     ); 
                    //Conecta usuario com role

@@ -3,10 +3,10 @@ package br.com.casamovel.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 
-import java.sql.Time;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -39,16 +39,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class Usuario implements Serializable,UserDetails{
 	private static final long serialVersionUID = 1L;
 	
-	@Override
-	public String toString() {
-		return "Usuario [usuario_id=" + usuario_id + ", cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", senha="
-				+ senha + ", departamento=" + departamento + ", telefone=" + telefone + ", roles=" + roles
-				+ ", carga_horaria=" + carga_horaria + ", data_ingresso=" + data_ingresso + ", criado_em=" + criado_em
-				+ ", atualizado_em=" + atualizado_em + ", eventos=" + eventos + "]";
-	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long usuario_id;
+	private long id;
 	
     private String avatar; // Caminho para a foto
     
@@ -70,12 +63,12 @@ public class Usuario implements Serializable,UserDetails{
 	@OneToMany(mappedBy = "evento_id")
 	private List<EventoUsuario> eventos;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinTable(
 		name = "usuario_role",
 		joinColumns = @JoinColumn(
 				name="usuario_id",
-				referencedColumnName = "usuario_id",
+				referencedColumnName = "id",
 				foreignKey = @ForeignKey(name = "fk_usuario_id")
 		),
 		inverseJoinColumns = @JoinColumn(
@@ -84,21 +77,20 @@ public class Usuario implements Serializable,UserDetails{
 				foreignKey = @ForeignKey(name = "fk_role_id")
 		)
 	)
-	
-        @JsonBackReference
+	@JsonBackReference
 	private List<Role> roles;
 	
 	
-	private Time carga_horaria;
+	private LocalTime cargaHoraria;
 	
 	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT-3")
-	private Date data_ingresso;
+	private LocalDate dataIngresso; 
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
-	private Date criado_em;
+	private LocalDateTime criadoEm = LocalDateTime.now() ;
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
-	private Date atualizado_em;
+	private LocalDateTime atualizadoEm = LocalDateTime.now() ;
 	
 	
 	
@@ -106,98 +98,127 @@ public class Usuario implements Serializable,UserDetails{
 		
 	}
 	
-	public long getUsuario_id() {
-		return usuario_id;
-	} 
 	
+	public long getId() {
+		return id;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 	public String getAvatar() {
 		return avatar;
 	}
-	
+
+
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
+
+
 	public long getCpf() {
 		return cpf;
 	}
-	
+
+
 	public void setCpf(long cpf) {
 		this.cpf = cpf;
 	}
-	
-	public Time getCarga_horaria() {
-		return carga_horaria;
-	}
-	
-	public void setCarga_horaria(Time carga_horaria) {
-		this.carga_horaria = carga_horaria;
-	}
-	
+
+
 	public String getNome() {
 		return nome;
 	}
-	
+
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
+
 	public String getEmail() {
 		return email;
 	}
-	
+
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public String getDepartamento() {
-		return departamento;
-	}
-	
-	public void setDepartamento(String departamento) {
-		this.departamento = departamento;
-	}
-	
-	public String getTelefone() {
-		return telefone;
-	}
-	
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-	
-	public Date getData_ingresso() {
-		return data_ingresso;
-	}
-	
-	public void setData_ingresso(Date data_ingresso) {
-		this.data_ingresso = data_ingresso;
-	}
-	
-	public Date getCriado_em() {
-		return criado_em;
-	}
-	
-	public void setCriado_em(Date criado_em) {
-		this.criado_em = criado_em;
-	}
-	
-	public Date getAtualizado_em() {
-		return atualizado_em;
-	}
-	
-	public void setAtualizado_em(Date atualizado_em) {
-		this.atualizado_em = atualizado_em;
-	}
-	
+
+
 	public String getSenha() {
 		return senha;
 	}
-	
+
+
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
+
+
+	public String getDepartamento() {
+		return departamento;
+	}
+
+
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
+	}
+
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+
+	public LocalTime getCargaHoraria() {
+		return cargaHoraria;
+	}
+
+
+	public void setCargaHoraria(LocalTime cargaHoraria) {
+		this.cargaHoraria = cargaHoraria;
+	}
+
+
+	public LocalDate getDataIngresso() {
+		return dataIngresso;
+	}
+
+
+	public void setDataIngresso(LocalDate dataIngresso) {
+		this.dataIngresso = dataIngresso;
+	}
+
+
+	public LocalDateTime getCriadoEm() {
+		return criadoEm;
+	}
+
+
+	public void setCriadoEm(LocalDateTime criadoEm) {
+		this.criadoEm = criadoEm;
+	}
+
+
+	public LocalDateTime getAtualizadoEm() {
+		return atualizadoEm;
+	}
+
+
+	public void setAtualizadoEm(LocalDateTime atualizadoEm) {
+		this.atualizadoEm = atualizadoEm;
+	}
+
+
 	public List<Role> getRoles() {
 		return roles;
 	}
@@ -211,7 +232,7 @@ public class Usuario implements Serializable,UserDetails{
 		this.eventos = eventos;
 	}
 	public void setUsuario_id(long usuario_id) {
-		this.usuario_id = usuario_id;
+		this.id = usuario_id;
 	}
 	
 	@Override
@@ -253,8 +274,8 @@ public class Usuario implements Serializable,UserDetails{
 	
     //Retirada id e lista de roles, verificar depois;
 	public Usuario( String avatar,long cpf, String nome, @NotEmpty String email, String senha, String departamento,
-			String telefone,List<Role>roles, Time carga_horaria, Date data_ingresso, Date criado_em,
-			Date atualizado_em, List<EventoUsuario> eventos) {
+			String telefone,List<Role>roles, LocalTime carga_horaria, LocalDate data_ingresso, LocalDateTime criado_em,
+			LocalDateTime atualizado_em, List<EventoUsuario> eventos) {
 		super();
         this.avatar = avatar;
 		//this.usuario_id = usuario_id;
@@ -265,33 +286,34 @@ public class Usuario implements Serializable,UserDetails{
 		this.departamento = departamento;
 		this.telefone = telefone;
 		this.roles = roles;
-		this.carga_horaria = carga_horaria;
-		this.data_ingresso = data_ingresso;
-		this.criado_em = criado_em;
-		this.atualizado_em = atualizado_em;
+		this.cargaHoraria = carga_horaria;
+		this.dataIngresso = data_ingresso;
+		this.criadoEm = criado_em;
+		this.atualizadoEm = atualizado_em;
 		this.eventos = eventos;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((atualizado_em == null) ? 0 : atualizado_em.hashCode());
+		result = prime * result + ((atualizadoEm == null) ? 0 : atualizadoEm.hashCode());
 		result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
-		result = prime * result + ((carga_horaria == null) ? 0 : carga_horaria.hashCode());
+		result = prime * result + ((cargaHoraria == null) ? 0 : cargaHoraria.hashCode());
 		result = prime * result + (int) (cpf ^ (cpf >>> 32));
-		result = prime * result + ((criado_em == null) ? 0 : criado_em.hashCode());
-		result = prime * result + ((data_ingresso == null) ? 0 : data_ingresso.hashCode());
+		result = prime * result + ((criadoEm == null) ? 0 : criadoEm.hashCode());
+		result = prime * result + ((dataIngresso == null) ? 0 : dataIngresso.hashCode());
 		result = prime * result + ((departamento == null) ? 0 : departamento.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((eventos == null) ? 0 : eventos.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
 		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
-		result = prime * result + (int) (usuario_id ^ (usuario_id >>> 32));
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -301,32 +323,32 @@ public class Usuario implements Serializable,UserDetails{
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (atualizado_em == null) {
-			if (other.atualizado_em != null)
+		if (atualizadoEm == null) {
+			if (other.atualizadoEm != null)
 				return false;
-		} else if (!atualizado_em.equals(other.atualizado_em))
+		} else if (!atualizadoEm.equals(other.atualizadoEm))
 			return false;
 		if (avatar == null) {
 			if (other.avatar != null)
 				return false;
 		} else if (!avatar.equals(other.avatar))
 			return false;
-		if (carga_horaria == null) {
-			if (other.carga_horaria != null)
+		if (cargaHoraria == null) {
+			if (other.cargaHoraria != null)
 				return false;
-		} else if (!carga_horaria.equals(other.carga_horaria))
+		} else if (!cargaHoraria.equals(other.cargaHoraria))
 			return false;
 		if (cpf != other.cpf)
 			return false;
-		if (criado_em == null) {
-			if (other.criado_em != null)
+		if (criadoEm == null) {
+			if (other.criadoEm != null)
 				return false;
-		} else if (!criado_em.equals(other.criado_em))
+		} else if (!criadoEm.equals(other.criadoEm))
 			return false;
-		if (data_ingresso == null) {
-			if (other.data_ingresso != null)
+		if (dataIngresso == null) {
+			if (other.dataIngresso != null)
 				return false;
-		} else if (!data_ingresso.equals(other.data_ingresso))
+		} else if (!dataIngresso.equals(other.dataIngresso))
 			return false;
 		if (departamento == null) {
 			if (other.departamento != null)
@@ -342,6 +364,8 @@ public class Usuario implements Serializable,UserDetails{
 			if (other.eventos != null)
 				return false;
 		} else if (!eventos.equals(other.eventos))
+			return false;
+		if (id != other.id)
 			return false;
 		if (nome == null) {
 			if (other.nome != null)
@@ -363,10 +387,10 @@ public class Usuario implements Serializable,UserDetails{
 				return false;
 		} else if (!telefone.equals(other.telefone))
 			return false;
-		if (usuario_id != other.usuario_id)
-			return false;
 		return true;
 	}
+	
+	
 	
 	
 }
