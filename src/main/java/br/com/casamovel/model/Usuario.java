@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,14 +26,18 @@ import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import br.com.casamovel.dto.NovoUsuarioDTO;
+import br.com.casamovel.repository.RoleRepository;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "usuario_id")
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name="usuario")
@@ -43,7 +48,7 @@ public class Usuario implements Serializable,UserDetails{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-    private String avatar; // Caminho para a foto
+    private String avatar = "C:/CASaMovel/usuarioAvatar/default.jpg";
     
 	private long cpf;
 	
@@ -61,9 +66,9 @@ public class Usuario implements Serializable,UserDetails{
 	private String telefone;
 	
 	@OneToMany(mappedBy = "evento_id")
-	private List<EventoUsuario> eventos;
+	private List<EventoUsuario> eventos = new ArrayList<>();
 	
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinTable(
 		name = "usuario_role",
 		joinColumns = @JoinColumn(
@@ -78,7 +83,7 @@ public class Usuario implements Serializable,UserDetails{
 		)
 	)
 	@JsonBackReference
-	private List<Role> roles;
+	private List<Role> roles = new ArrayList<>();
 	
 	
 	private LocalTime cargaHoraria;
@@ -272,27 +277,6 @@ public class Usuario implements Serializable,UserDetails{
 		return true;
 	}
 	
-    //Retirada id e lista de roles, verificar depois;
-	public Usuario( String avatar,long cpf, String nome, @NotEmpty String email, String senha, String departamento,
-			String telefone,List<Role>roles, LocalTime carga_horaria, LocalDate data_ingresso, LocalDateTime criado_em,
-			LocalDateTime atualizado_em, List<EventoUsuario> eventos) {
-		super();
-        this.avatar = avatar;
-		//this.usuario_id = usuario_id;
-		this.cpf = cpf;
-		this.nome = nome;
-		this.email = email;
-		this.senha = senha;
-		this.departamento = departamento;
-		this.telefone = telefone;
-		this.roles = roles;
-		this.cargaHoraria = carga_horaria;
-		this.dataIngresso = data_ingresso;
-		this.criadoEm = criado_em;
-		this.atualizadoEm = atualizado_em;
-		this.eventos = eventos;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -388,6 +372,22 @@ public class Usuario implements Serializable,UserDetails{
 		} else if (!telefone.equals(other.telefone))
 			return false;
 		return true;
+	}
+	
+	public void parse(NovoUsuarioDTO uDto, RoleRepository roleRepository) {
+		this.nome = uDto.getNome();
+		this.email = uDto.getEmail();
+		this.senha = new BCryptPasswordEncoder().encode(uDto.getSenha());
+		this.cpf = uDto.getCpf();
+		this.departamento = uDto.getDepartamento();
+		this.dataIngresso = uDto.getDataIngresso();
+		this.telefone = uDto.getTelefone();
+		
+		Role roleDefault = new Role();
+        roleDefault = roleRepository.getOne("ROLE_USER");
+        this.roles.add(roleDefault);
+        
+		
 	}
 	
 	

@@ -1,34 +1,31 @@
 package br.com.casamovel.dto;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
 
 import br.com.casamovel.model.Usuario;
 
-public class NovoUsuarioDTO {
+public class UsuarioDTO {
 	
 	private String email;
 	private Long cpf;
 	private String nome;
-	private String senha;
+	private LocalTime cargaHoraria;
 	private String departamento;
 	private String telefone;
 	private LocalDate dataIngresso;
-	private List<EventoDTO> eventos;
 	
-	public NovoUsuarioDTO(Usuario usuario) {
+	public UsuarioDTO(Usuario usuario) {
 		this.nome = usuario.getNome();
 		this.cpf = usuario.getCpf();
 		this.email = usuario.getEmail();
-		this.senha = usuario.getSenha();
+		this.cargaHoraria = usuario.getCargaHoraria();
 		this.departamento = usuario.getDepartamento();
 		this.telefone = usuario.getTelefone();
 		this.dataIngresso = usuario.getDataIngresso();
-		//Fazer a conversão dos eventos pra dto e dps inserir aqui
-		//this.eventos = usuario.getEventos();
 	}
 	
-	public NovoUsuarioDTO() {
+	public UsuarioDTO() {
 		
 	}
 	public String getEmail() {
@@ -49,12 +46,15 @@ public class NovoUsuarioDTO {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getSenha() {
-		return senha;
+	
+	public LocalTime getCargaHoraria() {
+		return cargaHoraria;
 	}
-	public void setSenha(String senha) {
-		this.senha = senha;
+
+	public void setCargaHoraria(LocalTime cargaHoraria) {
+		this.cargaHoraria = cargaHoraria;
 	}
+
 	public String getDepartamento() {
 		return departamento;
 	}
@@ -73,21 +73,7 @@ public class NovoUsuarioDTO {
 	public void setDataIngresso(LocalDate dataIngresso) {
 		this.dataIngresso = dataIngresso;
 	}
-	public List<EventoDTO> getEventos() {
-		return eventos;
-	}
 
-	public void setEventos(List<EventoDTO> eventos) {
-		this.eventos = eventos;
-	}
-
-	@Override
-	public String toString() {
-		return "NovoUsuarioDTO [email=" + email + ", cpf=" + cpf + ", nome=" + nome + ", senha=" + senha
-				+ ", departamento=" + departamento + ", telefone=" + telefone + ", dataIngresso=" + dataIngresso + "]";
-	}
-
-	
 	
 	
 	
