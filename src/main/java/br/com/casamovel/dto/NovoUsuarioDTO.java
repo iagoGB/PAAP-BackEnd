@@ -81,6 +81,7 @@ public class NovoUsuarioDTO {
 	public void setDataIngresso(LocalDate dataIngresso) {
 		this.dataIngresso = dataIngresso;
 	}
+	
 
 	@Override
 	public String toString() {

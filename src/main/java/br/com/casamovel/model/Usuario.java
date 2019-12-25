@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -385,9 +386,14 @@ public class Usuario implements Serializable,UserDetails{
 		
 		Role roleDefault = new Role();
         roleDefault = roleRepository.getOne("ROLE_USER");
-        this.roles.add(roleDefault);
-        
-		
+        this.roles.add(roleDefault);	
+	}
+	
+	@PreUpdate
+	public void commitarAtualizacao() {
+		LocalDateTime now = LocalDateTime.now();
+		System.out.println("------------------------ATUALIZAÇÃO COMMITADA ÀS "+ now.toString()+" -------------------------------------------------------");
+		setAtualizadoEm(now);
 	}
 	
 	

@@ -3,6 +3,7 @@ package br.com.casamovel.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+
 import org.springframework.data.domain.Page;
 
 import br.com.casamovel.model.Usuario;
@@ -98,7 +99,7 @@ public class UsuarioDTO {
 		return new UsuarioDTO(usuario);
 	}
 
-
+	
 	
 	
 	
