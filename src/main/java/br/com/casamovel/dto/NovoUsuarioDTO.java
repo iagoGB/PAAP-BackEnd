@@ -7,11 +7,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+
 import br.com.casamovel.model.Usuario;
 
 public class NovoUsuarioDTO {
-	@NotNull @NotEmpty @Email
+	@NotNull @NotEmpty @Email(message = "Não é um endereço de email válido")
 	private String email;
+	@NotNull
 	private Long cpf;
 	@NotNull @NotEmpty
 	private String nome;

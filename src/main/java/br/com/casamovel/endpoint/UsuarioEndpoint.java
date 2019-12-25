@@ -5,7 +5,6 @@ import br.com.casamovel.dto.UsuarioDTO;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,6 @@ import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.util.Disco;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -61,19 +58,16 @@ public class UsuarioEndpoint {
 	}
 	
 	@PostMapping
-	ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO, UriComponentsBuilder uriBuilder) throws Exception {
-            try {
-            	Usuario novoUsuario = new Usuario();
-                novoUsuario.parse(NovoUsuarioDTO, roleRepository);
-                //Salvar
-                usuarioRepository.save(novoUsuario);
-                UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
-//              return ResponseEntity.status(HttpStatus.OK).body(usuarioDTO);
-                URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
-                return ResponseEntity.created(uri).body(usuarioDTO);
-            } catch (Exception ex) {
-                Logger.getLogger(UsuarioEndpoint.class.getName()).log(Level.SEVERE, null, ex);
-                return ResponseEntity.badRequest().body(null);
-            }   
-	}     
+	ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO,
+			UriComponentsBuilder uriBuilder) throws Exception {
+		Usuario novoUsuario = new Usuario();
+		novoUsuario.parse(NovoUsuarioDTO, roleRepository);
+		// Salvar
+		usuarioRepository.save(novoUsuario);
+		UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
+		// Caminho do novo recurso criado
+		URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
+		return ResponseEntity.created(uri).body(usuarioDTO);
+
+	}   
 }
