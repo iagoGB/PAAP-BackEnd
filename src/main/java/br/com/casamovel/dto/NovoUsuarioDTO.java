@@ -1,20 +1,28 @@
 package br.com.casamovel.dto;
 
 import java.time.LocalDate;
-import java.util.List;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 
 import br.com.casamovel.model.Usuario;
 
 public class NovoUsuarioDTO {
-	
+	@NotNull @NotEmpty @Email
 	private String email;
 	private Long cpf;
+	@NotNull @NotEmpty
 	private String nome;
+	@NotNull @NotEmpty
 	private String senha;
+	@NotNull @NotEmpty
 	private String departamento;
+	@NotNull @NotEmpty
 	private String telefone;
+	@NotNull @PastOrPresent
 	private LocalDate dataIngresso;
-	private List<EventoDTO> eventos;
 	
 	public NovoUsuarioDTO(Usuario usuario) {
 		this.nome = usuario.getNome();
@@ -24,8 +32,6 @@ public class NovoUsuarioDTO {
 		this.departamento = usuario.getDepartamento();
 		this.telefone = usuario.getTelefone();
 		this.dataIngresso = usuario.getDataIngresso();
-		//Fazer a conversão dos eventos pra dto e dps inserir aqui
-		//this.eventos = usuario.getEventos();
 	}
 	
 	public NovoUsuarioDTO() {
@@ -72,13 +78,6 @@ public class NovoUsuarioDTO {
 	}
 	public void setDataIngresso(LocalDate dataIngresso) {
 		this.dataIngresso = dataIngresso;
-	}
-	public List<EventoDTO> getEventos() {
-		return eventos;
-	}
-
-	public void setEventos(List<EventoDTO> eventos) {
-		this.eventos = eventos;
 	}
 
 	@Override

@@ -86,16 +86,16 @@ public class Usuario implements Serializable,UserDetails{
 	private List<Role> roles = new ArrayList<>();
 	
 	
-	private LocalTime cargaHoraria;
+	private LocalTime cargaHoraria = LocalTime.of(0, 0);
 	
 	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT-3")
 	private LocalDate dataIngresso; 
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
-	private LocalDateTime criadoEm = LocalDateTime.now() ;
+	private LocalDateTime criadoEm = LocalDateTime.now();
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
-	private LocalDateTime atualizadoEm = LocalDateTime.now() ;
+	private LocalDateTime atualizadoEm = LocalDateTime.now();
 	
 	
 	

@@ -2,11 +2,15 @@ package br.com.casamovel.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
 
 import br.com.casamovel.model.Usuario;
 
 public class UsuarioDTO {
-	
+	private Long id;
 	private String email;
 	private Long cpf;
 	private String nome;
@@ -16,6 +20,7 @@ public class UsuarioDTO {
 	private LocalDate dataIngresso;
 	
 	public UsuarioDTO(Usuario usuario) {
+		this.id = usuario.getId();
 		this.nome = usuario.getNome();
 		this.cpf = usuario.getCpf();
 		this.email = usuario.getEmail();
@@ -28,21 +33,34 @@ public class UsuarioDTO {
 	public UsuarioDTO() {
 		
 	}
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	public Long getCpf() {
 		return cpf;
 	}
+	
 	public void setCpf(Long cpf) {
 		this.cpf = cpf;
 	}
+	
 	public String getNome() {
 		return nome;
 	}
+	
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
@@ -73,6 +91,15 @@ public class UsuarioDTO {
 	public void setDataIngresso(LocalDate dataIngresso) {
 		this.dataIngresso = dataIngresso;
 	}
+	
+	public static Page<UsuarioDTO> parse(Page<Usuario> usuarios) {
+		return usuarios.map(UsuarioDTO::new);
+	}
+	
+	public static UsuarioDTO parse(Usuario usuario) {
+		return new UsuarioDTO(usuario);
+	}
+
 
 	
 	

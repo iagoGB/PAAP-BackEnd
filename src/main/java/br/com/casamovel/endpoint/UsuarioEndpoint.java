@@ -1,16 +1,26 @@
 package br.com.casamovel.endpoint;
 
 import br.com.casamovel.dto.NovoUsuarioDTO;
+import br.com.casamovel.dto.UsuarioDTO;
 
+import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.RoleRepository;
@@ -18,10 +28,13 @@ import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.util.Disco;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.http.HttpStatus;
+
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 
 @RestController
+@RequestMapping("/usuario")
 public class UsuarioEndpoint {
 	@Autowired
 	UsuarioRepository usuarioRepository;
@@ -29,29 +42,38 @@ public class UsuarioEndpoint {
     RoleRepository roleRepository;       
     Disco disco = new Disco();
 	
-	@GetMapping("/usuario")
-	List<Usuario> listaUsuario() {
-		return usuarioRepository.findAll();
+	@GetMapping
+	Page<UsuarioDTO> listaUsuario(
+		@RequestParam(required = false) LocalDate dataIngresso,
+		@RequestParam int pagina, 
+		@RequestParam int quantidade,
+		@RequestParam(defaultValue = "id") String ordenacao
+	) 
+	{
+		Pageable pagination = PageRequest.of(pagina, quantidade,Direction.DESC,ordenacao);
+		Page<Usuario> usuarioEntidade = usuarioRepository.findAll(pagination);
+		return UsuarioDTO.parse(usuarioEntidade);
 	}
 	
-	@GetMapping("/usuario/{id}")
+	@GetMapping("/{id}")
 	Optional<Usuario> usuarioPorId(@PathVariable(value="id") Long id) {
 		return usuarioRepository.findById(id);
 	}
 	
-	@PostMapping("/usuario")
-	ResponseEntity<String> salvarUsuario(@RequestBody NovoUsuarioDTO usuarioDTO) throws Exception {
-            System.out.println("DTO: "+ usuarioDTO.toString());
+	@PostMapping
+	ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO, UriComponentsBuilder uriBuilder) throws Exception {
             try {
             	Usuario novoUsuario = new Usuario();
-                novoUsuario.parse(usuarioDTO, roleRepository);
+                novoUsuario.parse(NovoUsuarioDTO, roleRepository);
                 //Salvar
-                System.out.println("Novo Usuario" + novoUsuario.toString());
-                usuarioRepository.saveAndFlush(novoUsuario);
-                return ResponseEntity.status(HttpStatus.OK).body(novoUsuario.toString());
+                usuarioRepository.save(novoUsuario);
+                UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
+//              return ResponseEntity.status(HttpStatus.OK).body(usuarioDTO);
+                URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
+                return ResponseEntity.created(uri).body(usuarioDTO);
             } catch (Exception ex) {
                 Logger.getLogger(UsuarioEndpoint.class.getName()).log(Level.SEVERE, null, ex);
-                return ResponseEntity.badRequest().body("Erro ao criar usuário");
+                return ResponseEntity.badRequest().body(null);
             }   
 	}     
 }
