@@ -7,6 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.casamovel.model.Usuario;
 
@@ -24,7 +25,8 @@ public class NovoUsuarioDTO {
 	@NotNull @NotEmpty
 	private String telefone;
 	@NotNull @PastOrPresent
-	private LocalDate dataIngresso;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" ,timezone = "GMT-3")
+	private LocalDate data_ingresso;
 	
 	public NovoUsuarioDTO(Usuario usuario) {
 		this.nome = usuario.getNome();
@@ -33,7 +35,7 @@ public class NovoUsuarioDTO {
 		this.senha = usuario.getSenha();
 		this.departamento = usuario.getDepartamento();
 		this.telefone = usuario.getTelefone();
-		this.dataIngresso = usuario.getDataIngresso();
+		this.data_ingresso = usuario.getDataIngresso();
 	}
 	
 	public NovoUsuarioDTO() {
@@ -76,17 +78,17 @@ public class NovoUsuarioDTO {
 		this.telefone = telefone;
 	}
 	public LocalDate getDataIngresso() {
-		return dataIngresso;
+		return data_ingresso;
 	}
 	public void setDataIngresso(LocalDate dataIngresso) {
-		this.dataIngresso = dataIngresso;
+		this.data_ingresso = dataIngresso;
 	}
 	
 
 	@Override
 	public String toString() {
 		return "NovoUsuarioDTO [email=" + email + ", cpf=" + cpf + ", nome=" + nome + ", senha=" + senha
-				+ ", departamento=" + departamento + ", telefone=" + telefone + ", dataIngresso=" + dataIngresso + "]";
+				+ ", departamento=" + departamento + ", telefone=" + telefone + ", dataIngresso=" + data_ingresso + "]";
 	}
 
 	
