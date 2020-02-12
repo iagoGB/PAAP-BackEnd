@@ -5,6 +5,7 @@
  */
 package br.com.casamovel.service;
 
+import br.com.casamovel.dto.NovoEventoDTO;
 import br.com.casamovel.endpoint.EventoEndpoint;
 import br.com.casamovel.model.Categoria;
 import br.com.casamovel.model.Evento;
@@ -34,32 +35,23 @@ public class EventoService {
         return eventoRepository.findAll();
     }
     
-    public boolean salvarEvento(Evento evento) {
+    public boolean salvarEvento(NovoEventoDTO novoEventoDTO) {
         boolean salvo = false;
         
         try {
-            System.out.println("evento que chegou no service: "+ evento);
-            long numero;
-            numero = 2;
+            System.out.println("evento que chegou no service: "+ novoEventoDTO);
             Categoria c = null;
             Optional<Categoria> optC;
-            System.out.println("categoria Rep: "+ categoriaRepository.findById(numero).toString());
-            optC = categoriaRepository.findById(numero);
+            System.out.println("categoria Rep: "+ categoriaRepository.findById(novoEventoDTO.getCategoria()).toString());
+            optC = categoriaRepository.findById(novoEventoDTO.getCategoria());
             if (optC.isPresent()){
                 c = optC.get();
             }
             
             System.out.println("c: "+ c.toString());
-            Evento e = new Evento();
             
-
-            e.setFoto("Caminho da foto aqui");
-            e.setTitulo(evento.getTitulo());
-            e.setCategoria(c);
-            e.setCargaHoraria(e.getCargaHoraria());
-            e.setLocal(evento.getLocal());
-            e.setDataHorario(evento.getDataHorario());
-            c.getEventos().add(e);
+            
+            
             System.out.println(" CCCCCCCCCC: " + c.toString());
             salvo = true;
             

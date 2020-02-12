@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.com.casamovel.dto.NovoEventoDTO;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.service.EventoService;
 import java.util.List;
@@ -24,7 +26,7 @@ public class EventoEndpoint {
     }
 
     @PostMapping("/evento")
-    public ResponseEntity<String> salvaEvento(@RequestBody Evento evento) {
+    public ResponseEntity<String> salvaEvento(@RequestBody NovoEventoDTO evento) {
         System.out.println("evento que chegou: "+ evento.toString());
         if (es.salvarEvento(evento)) {
             return ResponseEntity.status(HttpStatus.OK).body("Evento salvo!");
