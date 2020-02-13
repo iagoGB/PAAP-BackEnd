@@ -38,7 +38,8 @@ public class EventoService {
     public boolean salvarEvento(NovoEventoDTO novoEventoDTO) {
         boolean salvo = false;
         
-        try {
+        try 
+        {
             System.out.println("evento que chegou no service: "+ novoEventoDTO);
             Categoria c = null;
             Optional<Categoria> optC;
@@ -50,13 +51,15 @@ public class EventoService {
             
             System.out.println("c: "+ c.toString());
             
+            Evento novoEvento = new Evento();
+            novoEvento.parse(novoEventoDTO, c);
             
-            
-            System.out.println(" CCCCCCCCCC: " + c.toString());
+            eventoRepository.save(novoEvento);
             salvo = true;
             
 
-        } catch (Exception e) {
+        } catch (Exception e) 
+        {
             Logger.getLogger(EventoEndpoint.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Erro ao criar evento, triste kk: "+ e);
         }

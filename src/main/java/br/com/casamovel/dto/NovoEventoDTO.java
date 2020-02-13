@@ -1,7 +1,7 @@
 package br.com.casamovel.dto;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Arrays;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -17,12 +17,11 @@ public class NovoEventoDTO {
 	private String titulo;
 	@NotNull @NotEmpty @PastOrPresent
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
-	private LocalDateTime dataHorario;
+	private LocalDateTime data_horario;
 	@NotNull @NotEmpty
 	private String local;
 	@NotNull @NotEmpty
-	@JsonFormat(pattern = "HH:mm", timezone = "GMT-3")
-	private LocalTime cargaHoraria;
+	private int carga_horaria;
 	@NotNull @NotEmpty
 	private String[] palestrantes;
 
@@ -43,11 +42,11 @@ public class NovoEventoDTO {
 	}
 
 	public LocalDateTime getDataHorario() {
-		return dataHorario;
+		return data_horario;
 	}
 
 	public void setDataHorario(LocalDateTime dataHorario) {
-		this.dataHorario = dataHorario;
+		this.data_horario = dataHorario;
 	}
 
 	public String getLocal() {
@@ -58,12 +57,12 @@ public class NovoEventoDTO {
 		this.local = local;
 	}
 
-	public LocalTime getCargaHoraria() {
-		return cargaHoraria;
+	public int getCargaHoraria() {
+		return carga_horaria;
 	}
 
-	public void setCargaHoraria(LocalTime cargaHoraria) {
-		this.cargaHoraria = cargaHoraria;
+	public void setCargaHoraria(int cargaHoraria) {
+		this.carga_horaria = cargaHoraria;
 	}
 
 	public String[] getPalestrantes() {
@@ -73,6 +72,15 @@ public class NovoEventoDTO {
 	public void setPalestrantes(String[] palestrantes) {
 		this.palestrantes = palestrantes;
 	}
+
+	@Override
+	public String toString() {
+		return "NovoEventoDTO [categoria=" + categoria + ", titulo=" + titulo + ", dataHorario=" + data_horario
+				+ ", local=" + local + ", carga Horaria=" + carga_horaria + ", palestrantes="
+				+ Arrays.toString(palestrantes) + "]";
+	}
+	
+	
 	
 	
 }

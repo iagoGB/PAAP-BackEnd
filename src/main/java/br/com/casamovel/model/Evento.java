@@ -1,18 +1,12 @@
 package br.com.casamovel.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.casamovel.dto.NovoEventoDTO;
-import br.com.casamovel.dto.NovoUsuarioDTO;
-import br.com.casamovel.repository.CategoriaRepository;
-import br.com.casamovel.repository.RoleRepository;
 
 import java.io.Serializable;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -24,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 
@@ -40,13 +33,13 @@ public class Evento implements Serializable {
 
 	private String foto;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
 	private LocalDateTime dataHorario;
 
 	private String local;
 
-	@JsonFormat(pattern = "HH:mm", timezone = "GMT-3")
-	private LocalTime cargaHoraria;
+	//@JsonFormat(pattern = "HH:mm", timezone = "GMT-3")
+	private Integer cargaHoraria;
 
 	@ManyToOne
 	@JoinColumn(
@@ -107,11 +100,11 @@ public class Evento implements Serializable {
 		this.local = local;
 	}
 
-	public LocalTime getCargaHoraria() {
+	public Integer getCargaHoraria() {
 		return cargaHoraria;
 	}
 
-	public void setCargaHoraria(LocalTime cargaHoraria) {
+	public void setCargaHoraria(Integer cargaHoraria) {
 		this.cargaHoraria = cargaHoraria;
 	}
 
@@ -214,15 +207,14 @@ public class Evento implements Serializable {
 	
 	public void parse(NovoEventoDTO eDto, Categoria categoria) {
 		
-		Evento e = new Evento();
         
-        e.setFoto("Caminho da foto aqui");
-        e.setTitulo(eDto.getTitulo());
-        e.setCategoria(categoria);
-        e.setCargaHoraria(e.getCargaHoraria());
-        e.setLocal(eDto.getLocal());
-        e.setDataHorario(eDto.getDataHorario());
-        categoria.getEventos().add(e);	
+        setFoto("Caminho da foto aqui");
+        setTitulo(eDto.getTitulo());
+        setCategoria(categoria);
+        setCargaHoraria(eDto.getCargaHoraria());
+        setLocal(eDto.getLocal());
+        setDataHorario(eDto.getDataHorario());
+        categoria.getEventos().add(this);	
 	}
 	
 }
