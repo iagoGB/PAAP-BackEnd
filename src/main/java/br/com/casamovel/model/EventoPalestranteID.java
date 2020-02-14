@@ -12,17 +12,17 @@ public class EventoPalestranteID implements Serializable {
 	
 	private Long evento_id;
 	
-	private String nome_palestrante_id;
+	private Long nome_palestrante_id;
 	
 	
 	public EventoPalestranteID() {
 		
 	}
 	
-	public String getPalestrante() {
+	public Long getPalestrante() {
 		return nome_palestrante_id;
 	}
-	public void setPalestrante(String palestrante) {
+	public void setPalestrante(Long palestrante) {
 		this.nome_palestrante_id = palestrante;
 	}
 	public Long getEvento_id() {

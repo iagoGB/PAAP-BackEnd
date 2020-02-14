@@ -41,14 +41,6 @@ public class NovoEventoDTO {
 		this.titulo = titulo;
 	}
 
-	public LocalDateTime getDataHorario() {
-		return data_horario;
-	}
-
-	public void setDataHorario(LocalDateTime dataHorario) {
-		this.data_horario = dataHorario;
-	}
-
 	public String getLocal() {
 		return local;
 	}
@@ -57,13 +49,6 @@ public class NovoEventoDTO {
 		this.local = local;
 	}
 
-	public int getCargaHoraria() {
-		return carga_horaria;
-	}
-
-	public void setCargaHoraria(int cargaHoraria) {
-		this.carga_horaria = cargaHoraria;
-	}
 
 	public String[] getPalestrantes() {
 		return palestrantes;
@@ -73,12 +58,30 @@ public class NovoEventoDTO {
 		this.palestrantes = palestrantes;
 	}
 
+	public LocalDateTime getData_horario() {
+		return data_horario;
+	}
+
+	public void setData_horario(LocalDateTime data_horario) {
+		this.data_horario = data_horario;
+	}
+
+	public int getCarga_horaria() {
+		return carga_horaria;
+	}
+
+	public void setCarga_horaria(int carga_horaria) {
+		this.carga_horaria = carga_horaria;
+	}
+
 	@Override
 	public String toString() {
-		return "NovoEventoDTO [categoria=" + categoria + ", titulo=" + titulo + ", dataHorario=" + data_horario
-				+ ", local=" + local + ", carga Horaria=" + carga_horaria + ", palestrantes="
+		return "NovoEventoDTO [categoria=" + categoria + ", titulo=" + titulo + ", data_horario=" + data_horario
+				+ ", local=" + local + ", carga_horaria=" + carga_horaria + ", palestrantes="
 				+ Arrays.toString(palestrantes) + "]";
 	}
+	
+	
 	
 	
 	

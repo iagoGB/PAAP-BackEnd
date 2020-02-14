@@ -39,7 +39,7 @@ public class Evento implements Serializable {
 	private String local;
 
 	//@JsonFormat(pattern = "HH:mm", timezone = "GMT-3")
-	private Integer cargaHoraria;
+	private int cargaHoraria;
 
 	@ManyToOne
 	@JoinColumn(
@@ -104,7 +104,7 @@ public class Evento implements Serializable {
 		return cargaHoraria;
 	}
 
-	public void setCargaHoraria(Integer cargaHoraria) {
+	public void setCargaHoraria(int cargaHoraria) {
 		this.cargaHoraria = cargaHoraria;
 	}
 
@@ -136,7 +136,7 @@ public class Evento implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cargaHoraria == null) ? 0 : cargaHoraria.hashCode());
+		result = prime * result + cargaHoraria;
 		result = prime * result + ((categoria == null) ? 0 : categoria.hashCode());
 		result = prime * result + ((dataHorario == null) ? 0 : dataHorario.hashCode());
 		result = prime * result + ((foto == null) ? 0 : foto.hashCode());
@@ -148,6 +148,8 @@ public class Evento implements Serializable {
 		return result;
 	}
 
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -157,10 +159,7 @@ public class Evento implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Evento other = (Evento) obj;
-		if (cargaHoraria == null) {
-			if (other.cargaHoraria != null)
-				return false;
-		} else if (!cargaHoraria.equals(other.cargaHoraria))
+		if (cargaHoraria != other.cargaHoraria)
 			return false;
 		if (categoria == null) {
 			if (other.categoria != null)
@@ -204,16 +203,16 @@ public class Evento implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 	public void parse(NovoEventoDTO eDto, Categoria categoria) {
 		
         
         setFoto("Caminho da foto aqui");
         setTitulo(eDto.getTitulo());
         setCategoria(categoria);
-        setCargaHoraria(eDto.getCargaHoraria());
+        setCargaHoraria(eDto.getCarga_horaria());
         setLocal(eDto.getLocal());
-        setDataHorario(eDto.getDataHorario());
+        setDataHorario(eDto.getData_horario());
         categoria.getEventos().add(this);	
 	}
 	

@@ -4,17 +4,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import br.com.casamovel.dto.NovoPalestranteDTO;
 
 @Entity
 public class Palestrante implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	private String id;
+	@Id 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Long id;
+	private String nome;
 	private String foto; 
+	private String descricao;
 	
 	@OneToMany(mappedBy = "evento_id")
 	private List<EventoPalestrante> eventos = new ArrayList<>();
@@ -23,7 +30,7 @@ public class Palestrante implements Serializable {
 		
 	}
 
-	public Palestrante(String id, String foto) {
+	public Palestrante(Long id, String foto) {
 		super();
 		this.id = id;
 		this.foto = foto;
@@ -54,12 +61,14 @@ public class Palestrante implements Serializable {
 		return true;
 	}
 
-	public String getNome_palestrante() {
+	
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setNome_palestrante(String nome_palestrante) {
-		this.id = nome_palestrante;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getFoto() {
@@ -77,7 +86,29 @@ public class Palestrante implements Serializable {
 	public void setEventos(List<EventoPalestrante> eventos) {
 		this.eventos = eventos;
 	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 	
+	public void parse(NovoPalestranteDTO pDto) {
+		
+        setFoto("http://localhost:9999/foto-default");
+        setDescricao(pDto.getDescricao());
+        setNome(pDto.getNome());
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 	
 	
 	

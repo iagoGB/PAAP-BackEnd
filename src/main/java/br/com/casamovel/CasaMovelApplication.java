@@ -15,7 +15,7 @@ public class CasaMovelApplication {
 	
 	public static void main(String[] args) {		
 		SpringApplication.run(CasaMovelApplication.class, args);
-		System.out.println("Senha criptografada: " + new BCryptPasswordEncoder().encode("abcd1234"));
+		System.out.println("Senha criptografada: " + new BCryptPasswordEncoder().encode("abc"));
 	}	
 	
 	@RequestMapping("/login")
