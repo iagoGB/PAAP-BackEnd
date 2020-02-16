@@ -1,8 +1,6 @@
 package br.com.casamovel.endpoint;
 
-import java.net.URI;
-import java.util.Optional;
-
+import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,35 +13,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.casamovel.dto.NovoPalestranteDTO;
-import br.com.casamovel.dto.PalestranteDTO;
-import br.com.casamovel.model.Palestrante;
-import br.com.casamovel.repository.PalestranteRepository;
+import br.com.casamovel.dto.palestrante.DetalhePalestranteDTO;
+import br.com.casamovel.dto.palestrante.NovoPalestranteDTO;
+import br.com.casamovel.dto.palestrante.PalestranteDTO;
+import br.com.casamovel.service.PalestranteService;
 
 @RestController
 @RequestMapping("/palestrante")
 public class PalestranteEndpoint {
 	@Autowired
-	PalestranteRepository palestranteRepository;
+	PalestranteService palestranteService;
+	
+	@GetMapping
+	public List<PalestranteDTO> getAll() 
+	{
+		 return palestranteService.getAll();
+	}
+	
 	
 	@GetMapping("/{id}")
-	public Optional<Palestrante> usuarioPorId(@PathVariable(value="id") Long id) {
-		return palestranteRepository.findById(id);
+	public DetalhePalestranteDTO usuarioPorId(@PathVariable(value="id") Long id) 
+	{
+		return palestranteService.findById(id);
 	}
 	
 
 	@PostMapping
-	public ResponseEntity<PalestranteDTO> salvarUsuario(@RequestBody @Valid NovoPalestranteDTO novoPalestranteDTO,
-			UriComponentsBuilder uriBuilder) throws Exception {
-		Palestrante novoPalestranteModel = new Palestrante();
-		novoPalestranteModel.parse(novoPalestranteDTO);
-		// Salvar
-		palestranteRepository.save(novoPalestranteModel);
-		PalestranteDTO palestranteDTO = PalestranteDTO.parse(novoPalestranteModel);
-		// Caminho do novo recurso criado
-		URI uri = uriBuilder.path("/palestrante/{id}").buildAndExpand(novoPalestranteModel.getId()).toUri();
-		return ResponseEntity.created(uri).body(palestranteDTO);
-
+	public ResponseEntity<PalestranteDTO> salvarUsuario
+	(
+			@RequestBody @Valid NovoPalestranteDTO novoPalestranteDTO,
+			UriComponentsBuilder uriBuilder
+	) 
+	throws Exception 
+	{
+		return palestranteService.save(novoPalestranteDTO, uriBuilder);
 	} 
 	
 }

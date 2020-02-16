@@ -1,4 +1,4 @@
-package br.com.casamovel.dto;
+package br.com.casamovel.dto.palestrante;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

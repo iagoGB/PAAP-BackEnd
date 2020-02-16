@@ -1,4 +1,4 @@
-package br.com.casamovel.dto;
+package br.com.casamovel.dto.palestrante;
 
 import br.com.casamovel.model.Palestrante;
 

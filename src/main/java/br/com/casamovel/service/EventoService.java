@@ -5,12 +5,15 @@
  */
 package br.com.casamovel.service;
 
-import br.com.casamovel.dto.NovoEventoDTO;
+import br.com.casamovel.dto.evento.DetalhesEventoDTO;
+import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.endpoint.EventoEndpoint;
 import br.com.casamovel.model.Categoria;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.repository.CategoriaRepository;
 import br.com.casamovel.repository.EventoRepository;
+import br.com.casamovel.repository.PalestranteRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -31,6 +34,9 @@ public class EventoService {
     @Autowired
     CategoriaRepository categoriaRepository;
     
+    @Autowired
+    PalestranteRepository palestranteRepository;
+    
     public List<Evento> listarEventos(){
         return eventoRepository.findAll();
     }
@@ -48,13 +54,11 @@ public class EventoService {
             if (optC.isPresent()){
                 c = optC.get();
             }
+                       
+            Evento novoEventoModel = new Evento();
+            novoEventoModel.parse(novoEventoDTO, c, palestranteRepository);
             
-            System.out.println("c: "+ c.toString());
-            
-            Evento novoEvento = new Evento();
-            novoEvento.parse(novoEventoDTO, c);
-            
-            eventoRepository.save(novoEvento);
+            eventoRepository.save(novoEventoModel);
             salvo = true;
             
 
@@ -76,4 +80,13 @@ public class EventoService {
         }
         return deletou;
     }
+
+	public DetalhesEventoDTO findById(Long id) {
+		Optional<Evento> result = eventoRepository.findById(id);
+		if (result.isPresent()) {
+			Evento evento = result.get();
+			return DetalhesEventoDTO.parse(evento);
+		}
+		return null;
+	}
 }

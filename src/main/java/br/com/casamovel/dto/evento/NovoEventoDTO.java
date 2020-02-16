@@ -1,7 +1,7 @@
-package br.com.casamovel.dto;
+package br.com.casamovel.dto.evento;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public class NovoEventoDTO {
 	@NotNull @NotEmpty
 	private int carga_horaria;
 	@NotNull @NotEmpty
-	private String[] palestrantes;
+	private List<String> palestrantes;
 
 	public Long getCategoria() {
 		return categoria;
@@ -50,11 +50,11 @@ public class NovoEventoDTO {
 	}
 
 
-	public String[] getPalestrantes() {
+	public List<String> getPalestrantes() {
 		return palestrantes;
 	}
 
-	public void setPalestrantes(String[] palestrantes) {
+	public void setPalestrantes(@NotNull @NotEmpty List<String> palestrantes) {
 		this.palestrantes = palestrantes;
 	}
 
@@ -77,9 +77,10 @@ public class NovoEventoDTO {
 	@Override
 	public String toString() {
 		return "NovoEventoDTO [categoria=" + categoria + ", titulo=" + titulo + ", data_horario=" + data_horario
-				+ ", local=" + local + ", carga_horaria=" + carga_horaria + ", palestrantes="
-				+ Arrays.toString(palestrantes) + "]";
+				+ ", local=" + local + ", carga_horaria=" + carga_horaria + ", palestrantes=" + palestrantes + "]";
 	}
+
+	
 	
 	
 	

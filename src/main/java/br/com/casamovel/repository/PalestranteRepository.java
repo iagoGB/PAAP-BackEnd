@@ -6,4 +6,6 @@ import br.com.casamovel.model.Palestrante;
 
 public interface PalestranteRepository extends JpaRepository<Palestrante, Long>{
 
+	Palestrante findByNome(String nome);
+
 }

@@ -2,13 +2,16 @@ package br.com.casamovel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.casamovel.dto.NovoEventoDTO;
+import br.com.casamovel.dto.evento.NovoEventoDTO;
+import br.com.casamovel.repository.PalestranteRepository;
 
 import java.io.Serializable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -51,10 +54,10 @@ public class Evento implements Serializable {
 	private Categoria categoria;
 
 	@OneToMany(mappedBy = "usuario_id")
-	List<EventoUsuario> usuarios;
+	List<EventoUsuario> usuarios = new ArrayList<EventoUsuario>();
 
-	@OneToMany(mappedBy = "nome_palestrante_id")
-	List<EventoPalestrante> palestrantes;
+	@OneToMany(mappedBy = "nome_palestrante_id", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+	List<EventoPalestrante> palestrantes = new ArrayList<EventoPalestrante>();
 
 	public Evento() {
 
@@ -204,7 +207,7 @@ public class Evento implements Serializable {
 		return true;
 	}
 
-	public void parse(NovoEventoDTO eDto, Categoria categoria) {
+	public void parse(NovoEventoDTO eDto, Categoria categoria, PalestranteRepository pr) {
 		
         
         setFoto("Caminho da foto aqui");
@@ -213,7 +216,19 @@ public class Evento implements Serializable {
         setCargaHoraria(eDto.getCarga_horaria());
         setLocal(eDto.getLocal());
         setDataHorario(eDto.getData_horario());
-        categoria.getEventos().add(this);	
+        categoria.getEventos().add(this);
+        //Relação palestrante e evento
+        eDto.getPalestrantes().forEach( nome -> {
+        	System.out.println("Nome: "+ nome);
+        	Palestrante palestrante = pr.findByNome(nome);
+        	EventoPalestrante ep = new EventoPalestrante();
+        	ep.setEvento_id(this);
+        	ep.setNome_palestrante_id(palestrante);
+//        	palestrante.getEventos().add(ep);
+        	this.palestrantes.add(ep);
+        	System.out.println("Terminou de executar  kkj");
+        	
+        });
 	}
 	
 }

@@ -8,35 +8,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.casamovel.dto.NovoEventoDTO;
+import br.com.casamovel.dto.evento.DetalhesEventoDTO;
+import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.service.EventoService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-@RestController
+@RestController("/evento")
 public class EventoEndpoint {
     @Autowired
     EventoService es;
 
-    @GetMapping("/evento")
-    public List<Evento> listaEvento() {
+    @GetMapping
+    public List<Evento> getAll() {
         return es.listarEventos();
     }
+    
+    @GetMapping("/{id}")
+    public DetalhesEventoDTO findById(@PathVariable(value="id") Long id) {
+    	return es.findById(id);
+    }
 
-    @PostMapping("/evento")
+    @PostMapping
     public ResponseEntity<String> salvaEvento(@RequestBody NovoEventoDTO evento) {
-        System.out.println("evento que chegou: "+ evento.toString());
         if (es.salvarEvento(evento)) {
             return ResponseEntity.status(HttpStatus.OK).body("Evento salvo!");
         } else {
             return ResponseEntity.badRequest().body("Erro ao criar evento");
         }
-        //return null;
     }
 
-    @DeleteMapping("/evento/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deletaEvento(@PathVariable(value = "id") long id) {
         if (es.deletarEvento(id)) {
             return ResponseEntity.status(HttpStatus.OK).body("Evento excluido!");

@@ -1,4 +1,4 @@
-package br.com.casamovel.dto;
+package br.com.casamovel.dto.usuario;
 
 
 import javax.validation.constraints.Email;

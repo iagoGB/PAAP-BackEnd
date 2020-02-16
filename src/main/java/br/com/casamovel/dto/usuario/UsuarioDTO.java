@@ -1,4 +1,4 @@
-package br.com.casamovel.dto;
+package br.com.casamovel.dto.usuario;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

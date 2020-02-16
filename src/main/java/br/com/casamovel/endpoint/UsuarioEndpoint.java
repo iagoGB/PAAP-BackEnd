@@ -1,8 +1,8 @@
 package br.com.casamovel.endpoint;
 
-import br.com.casamovel.dto.AtualizarUsuarioDTO;
-import br.com.casamovel.dto.NovoUsuarioDTO;
-import br.com.casamovel.dto.UsuarioDTO;
+import br.com.casamovel.dto.usuario.AtualizarUsuarioDTO;
+import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
+import br.com.casamovel.dto.usuario.UsuarioDTO;
 
 import java.net.URI;
 import java.time.LocalDate;

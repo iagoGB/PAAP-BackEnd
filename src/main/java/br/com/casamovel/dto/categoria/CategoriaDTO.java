@@ -1,4 +1,4 @@
-package br.com.casamovel.dto;
+package br.com.casamovel.dto.categoria;
 
 public class CategoriaDTO {
 	

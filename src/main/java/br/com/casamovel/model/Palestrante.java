@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import br.com.casamovel.dto.NovoPalestranteDTO;
+import br.com.casamovel.dto.palestrante.NovoPalestranteDTO;
 
 @Entity
 public class Palestrante implements Serializable {
