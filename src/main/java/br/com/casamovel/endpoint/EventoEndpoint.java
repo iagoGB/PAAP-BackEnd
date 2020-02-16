@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
@@ -16,18 +17,21 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-@RestController("/evento")
+@RestController
+@RequestMapping("/evento")
 public class EventoEndpoint {
     @Autowired
     EventoService es;
 
     @GetMapping
     public List<Evento> getAll() {
+    	System.out.println("Passou por aqui");
         return es.listarEventos();
     }
     
     @GetMapping("/{id}")
     public DetalhesEventoDTO findById(@PathVariable(value="id") Long id) {
+    	System.out.println("Passou com id");
     	return es.findById(id);
     }
 
