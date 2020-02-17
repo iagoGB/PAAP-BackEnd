@@ -25,13 +25,11 @@ public class EventoEndpoint {
 
     @GetMapping
     public List<Evento> getAll() {
-    	System.out.println("Passou por aqui");
         return es.listarEventos();
     }
     
     @GetMapping("/{id}")
     public DetalhesEventoDTO findById(@PathVariable(value="id") Long id) {
-    	System.out.println("Passou com id");
     	return es.findById(id);
     }
 

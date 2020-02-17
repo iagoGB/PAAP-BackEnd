@@ -40,6 +40,7 @@ public class DetalhesEventoDTO {
 	public static DetalhesEventoDTO parse(Evento evento) {
 		List<String> palestrantes = new ArrayList<>();
 		List<String> participantes = new ArrayList<>();
+		System.out.println("kk "+evento.getPalestrantes());
 		evento.getPalestrantes().forEach( p -> 
 		{
 			palestrantes.add(p.getNome_palestrante_id().getNome());

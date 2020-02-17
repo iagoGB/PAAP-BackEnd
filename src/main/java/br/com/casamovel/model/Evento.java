@@ -56,7 +56,7 @@ public class Evento implements Serializable {
 	@OneToMany(mappedBy = "usuario_id")
 	List<EventoUsuario> usuarios = new ArrayList<EventoUsuario>();
 
-	@OneToMany(mappedBy = "nome_palestrante_id", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+	@OneToMany(mappedBy = "evento_id", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	List<EventoPalestrante> palestrantes = new ArrayList<EventoPalestrante>();
 
 	public Evento() {
@@ -218,14 +218,14 @@ public class Evento implements Serializable {
         setDataHorario(eDto.getData_horario());
         categoria.getEventos().add(this);
         //Relação palestrante e evento
-        eDto.getPalestrantes().forEach( nome -> {
-        	System.out.println("Nome: "+ nome);
+        eDto.getPalestrantes().forEach( nome -> 
+        {
         	Palestrante palestrante = pr.findByNome(nome);
         	EventoPalestrante ep = new EventoPalestrante();
         	ep.setEvento_id(this);
         	ep.setNome_palestrante_id(palestrante);
-//        	palestrante.getEventos().add(ep);
         	this.palestrantes.add(ep);
+        	palestrante.getEventos().add(ep);
         	System.out.println("Terminou de executar  kkj");
         	
         });

@@ -3,6 +3,8 @@ package br.com.casamovel.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +25,7 @@ public class Palestrante implements Serializable {
 	private String foto; 
 	private String descricao;
 	
-	@OneToMany(mappedBy = "evento_id")
+	@OneToMany(mappedBy = "nome_palestrante_id", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private List<EventoPalestrante> eventos = new ArrayList<>();
 	
 	public Palestrante() {
