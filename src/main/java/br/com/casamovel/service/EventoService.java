@@ -41,9 +41,8 @@ public class EventoService {
         return eventoRepository.findAll();
     }
     
-    public boolean salvarEvento(NovoEventoDTO novoEventoDTO) {
-        boolean salvo = false;
-        
+    public Evento salvarEvento(NovoEventoDTO novoEventoDTO) {
+    	Evento result = null;
         try 
         {
             System.out.println("evento que chegou no service: "+ novoEventoDTO);
@@ -57,17 +56,14 @@ public class EventoService {
                        
             Evento novoEventoModel = new Evento();
             novoEventoModel.parse(novoEventoDTO, c, palestranteRepository);
+            result = eventoRepository.save(novoEventoModel);
             
-            eventoRepository.save(novoEventoModel);
-            salvo = true;
-            
-
         } catch (Exception e) 
         {
             Logger.getLogger(EventoEndpoint.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Erro ao criar evento, triste kk: "+ e);
         }
-        return salvo;
+        return result;
     }
     
     public boolean deletarEvento(long id) {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
@@ -34,11 +35,17 @@ public class EventoEndpoint {
     }
 
     @PostMapping
-    public ResponseEntity<String> salvaEvento(@RequestBody NovoEventoDTO evento) {
-        if (es.salvarEvento(evento)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Evento salvo!");
+    public ResponseEntity<DetalhesEventoDTO> salvaEvento(
+    		@RequestBody NovoEventoDTO evento,
+    		UriComponentsBuilder uriBuilder
+    ) 
+    {
+    	Evento salvarEvento = es.salvarEvento(evento);
+        if (salvarEvento != null ) {
+        	DetalhesEventoDTO parse = DetalhesEventoDTO.parse(salvarEvento);
+            return ResponseEntity.status(HttpStatus.CREATED).body(parse);
         } else {
-            return ResponseEntity.badRequest().body("Erro ao criar evento");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
