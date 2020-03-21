@@ -11,9 +11,9 @@ public class DetalhesEventoDTO {
 	private Long id;
 	private String foto;
 	private String titulo;
-	private String local;
-	private LocalDateTime dataHorario;
-	private Integer cargaHoraria;
+	private String localizacao;
+	private LocalDateTime data_horario;
+	private Integer carga_horaria;
 	private String categoria;
 	private List<String> palestrantes = new ArrayList<>();
 	private List<String> participantes = new ArrayList<>();
@@ -29,9 +29,9 @@ public class DetalhesEventoDTO {
 		this.id = id;
 		this.foto = foto;
 		this.titulo = titulo;
-		this.local = local;
-		this.dataHorario = dataHorario;
-		this.cargaHoraria = cargaHoraria;
+		this.localizacao = local;
+		this.setData_horario(dataHorario);
+		this.setCarga_horaria(cargaHoraria);
 		this.categoria = categoria;
 		this.palestrantes = palestrantes;
 		this.participantes = participantes;
@@ -75,18 +75,6 @@ public class DetalhesEventoDTO {
 		return titulo;
 	}
 
-	public String getLocal() {
-		return local;
-	}
-
-	public LocalDateTime getDataHorario() {
-		return dataHorario;
-	}
-
-	public Integer getCargaHoraria() {
-		return cargaHoraria;
-	}
-
 	public String getCategorias() {
 		return categoria;
 	}
@@ -97,6 +85,30 @@ public class DetalhesEventoDTO {
 
 	public List<String> getParticipantes() {
 		return participantes;
+	}
+
+	public LocalDateTime getData_horario() {
+		return data_horario;
+	}
+
+	public void setData_horario(LocalDateTime data_horario) {
+		this.data_horario = data_horario;
+	}
+
+	public Integer getCarga_horaria() {
+		return carga_horaria;
+	}
+
+	public void setCarga_horaria(Integer carga_horaria) {
+		this.carga_horaria = carga_horaria;
+	}
+
+	public String getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(String localizacao) {
+		this.localizacao = localizacao;
 	}
 	
 	
