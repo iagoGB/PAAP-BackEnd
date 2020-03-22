@@ -59,6 +59,12 @@ public class UsuarioEndpoint {
 		return usuarioRepository.findById(id);
 	}
 	
+	@GetMapping("/email/{username}")
+	public UsuarioDTO usuarioPorId(@PathVariable(value="username") String username) {
+		 Usuario findByEmail = usuarioRepository.findByEmail(username);
+		 return UsuarioDTO.parse(findByEmail);
+	}
+	
 	@PostMapping
 	public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO,
 			UriComponentsBuilder uriBuilder) throws Exception {

@@ -13,20 +13,22 @@ public class UsuarioDTO {
 	private String email;
 	private Long cpf;
 	private String nome;
-	private LocalTime cargaHoraria;
+	private LocalTime carga_horaria;
 	private String departamento;
 	private String telefone;
-	private LocalDate dataIngresso;
+	private LocalDate data_ingresso;
+	private String avatar;
 	
 	public UsuarioDTO(Usuario usuario) {
 		this.id = usuario.getId();
 		this.nome = usuario.getNome();
 		this.cpf = usuario.getCpf();
 		this.email = usuario.getEmail();
-		this.cargaHoraria = usuario.getCargaHoraria();
+		this.setCarga_horaria(usuario.getCargaHoraria());
 		this.departamento = usuario.getDepartamento();
 		this.telefone = usuario.getTelefone();
-		this.dataIngresso = usuario.getDataIngresso();
+		this.setData_ingresso(usuario.getDataIngresso());
+		this.setAvatar(usuario.getAvatar());
 	}
 	
 	public UsuarioDTO() {
@@ -64,13 +66,6 @@ public class UsuarioDTO {
 		this.nome = nome;
 	}
 	
-	public LocalTime getCargaHoraria() {
-		return cargaHoraria;
-	}
-
-	public void setCargaHoraria(LocalTime cargaHoraria) {
-		this.cargaHoraria = cargaHoraria;
-	}
 
 	public String getDepartamento() {
 		return departamento;
@@ -84,12 +79,6 @@ public class UsuarioDTO {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	public LocalDate getDataIngresso() {
-		return dataIngresso;
-	}
-	public void setDataIngresso(LocalDate dataIngresso) {
-		this.dataIngresso = dataIngresso;
-	}
 	
 	public static Page<UsuarioDTO> parse(Page<Usuario> usuarios) {
 		return usuarios.map(UsuarioDTO::new);
@@ -97,6 +86,30 @@ public class UsuarioDTO {
 	
 	public static UsuarioDTO parse(Usuario usuario) {
 		return new UsuarioDTO(usuario);
+	}
+
+	public LocalTime getCarga_horaria() {
+		return carga_horaria;
+	}
+
+	public void setCarga_horaria(LocalTime carga_horaria) {
+		this.carga_horaria = carga_horaria;
+	}
+
+	public LocalDate getData_ingresso() {
+		return data_ingresso;
+	}
+
+	public void setData_ingresso(LocalDate data_ingresso) {
+		this.data_ingresso = data_ingresso;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 	

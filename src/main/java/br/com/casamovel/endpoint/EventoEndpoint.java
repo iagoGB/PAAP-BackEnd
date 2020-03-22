@@ -25,7 +25,7 @@ public class EventoEndpoint {
     EventoService es;
 
     @GetMapping
-    public List<Evento> getAll() {
+    public List<DetalhesEventoDTO> getAll() {
         return es.listarEventos();
     }
     

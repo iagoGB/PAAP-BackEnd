@@ -31,7 +31,9 @@ public class Evento implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
-
+	
+	private Boolean estaAberto = true;
+	
 	private String titulo;
 
 	private String foto;
@@ -216,6 +218,7 @@ public class Evento implements Serializable {
         setCargaHoraria(eDto.getCarga_horaria());
         setLocal(eDto.getLocal());
         setDataHorario(eDto.getData_horario());
+        setEstaAberto(true);
         categoria.getEventos().add(this);
         //Relação palestrante e evento
         eDto.getPalestrantes().forEach( nome -> 
@@ -229,6 +232,14 @@ public class Evento implements Serializable {
         	System.out.println("Terminou de executar  kkj");
         	
         });
+	}
+
+	public Boolean getEstaAberto() {
+		return estaAberto;
+	}
+
+	public void setEstaAberto(Boolean estaAberto) {
+		this.estaAberto = estaAberto;
 	}
 	
 }

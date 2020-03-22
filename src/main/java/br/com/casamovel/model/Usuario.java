@@ -49,7 +49,7 @@ public class Usuario implements Serializable,UserDetails{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-    private String avatar = "C:/CASaMovel/usuarioAvatar/default.jpg";
+    private String avatar = "../assets/images/default_avatar.png";
     
 	private long cpf;
 	

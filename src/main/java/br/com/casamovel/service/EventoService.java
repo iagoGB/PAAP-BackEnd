@@ -14,6 +14,7 @@ import br.com.casamovel.repository.CategoriaRepository;
 import br.com.casamovel.repository.EventoRepository;
 import br.com.casamovel.repository.PalestranteRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -37,8 +38,12 @@ public class EventoService {
     @Autowired
     PalestranteRepository palestranteRepository;
     
-    public List<Evento> listarEventos(){
-        return eventoRepository.findAll();
+    public List<DetalhesEventoDTO> listarEventos(){
+    	List<DetalhesEventoDTO> result = new ArrayList<DetalhesEventoDTO>();
+    	//List<Evento> findAll = eventoRepository.findAll();
+    	List<Evento> findAll = eventoRepository.findByEstaAberto(true);
+    	findAll.forEach(evento -> result.add(DetalhesEventoDTO.parse(evento)));
+        return result;
     }
     
     public Evento salvarEvento(NovoEventoDTO novoEventoDTO) {

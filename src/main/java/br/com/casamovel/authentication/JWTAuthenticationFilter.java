@@ -69,7 +69,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.compact();
 		String bearerToken = (TOKEN_PREFIX + token);
 		//Escrever no body o Token e a role
-		response.getWriter().write("{\"token\":\""+bearerToken+"\", \"role\":\""+ r + "\"}");
+		response.getWriter().write("{\"token\":\""+bearerToken+"\", \"role\":\""+ r + "\", \"username\":\""+ username + "\"}");
 		//Escrever no header o token
 		response.addHeader(HEADER_STRING,bearerToken);
 	}
