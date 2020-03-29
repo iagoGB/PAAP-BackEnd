@@ -14,6 +14,8 @@ import br.com.casamovel.repository.CategoriaRepository;
 import br.com.casamovel.repository.EventoRepository;
 import br.com.casamovel.repository.PalestranteRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 /**
  *
@@ -41,7 +45,8 @@ public class EventoService {
     public List<DetalhesEventoDTO> listarEventos(){
     	List<DetalhesEventoDTO> result = new ArrayList<DetalhesEventoDTO>();
     	//List<Evento> findAll = eventoRepository.findAll();
-    	List<Evento> findAll = eventoRepository.findByEstaAberto(true);
+    	System.out.println("Data do Brasil: "+ LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+    	List<Evento> findAll = eventoRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
     	findAll.forEach(evento -> result.add(DetalhesEventoDTO.parse(evento)));
         return result;
     }

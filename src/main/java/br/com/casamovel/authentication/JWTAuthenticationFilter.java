@@ -54,8 +54,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			FilterChain chain, Authentication authResult
 	) throws IOException, ServletException {
 		System.out.println("Entrou no método autenticação bem sucedida");
-		String username = ((User) authResult.getPrincipal()).getUsername(); // authResult.getPrincipal()).getUsername();
-		Collection<GrantedAuthority> u = ((User) authResult.getPrincipal()).getAuthorities();
+		User us = ((User) authResult.getPrincipal());
+		String username = us.getUsername(); // authResult.getPrincipal()).getUsername();
+		Collection<GrantedAuthority> u = us.getAuthorities();
 
 		//Pesquisar uma método mais elegante para trazer o dado depois
 			//Verifica qual role o usuário tem através do toString, então da um replace nos dados do objeto, deixando apenas o valor da role.
