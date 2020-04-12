@@ -4,7 +4,6 @@ import br.com.casamovel.dto.usuario.AtualizarUsuarioDTO;
 import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
 import br.com.casamovel.dto.usuario.UsuarioDTO;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -27,6 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UsuarioRepository;
+import br.com.casamovel.service.UsuarioService;
 
 import javax.validation.Valid;
 
@@ -36,10 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioEndpoint {
-	@Autowired
-	UsuarioRepository usuarioRepository;
-    @Autowired
-    RoleRepository roleRepository;       
+	@Autowired UsuarioRepository usuarioRepository;
+    @Autowired RoleRepository roleRepository;  
+	@Autowired UsuarioService usuarioService;    
 	
 	@GetMapping
 	public Page<UsuarioDTO> listaUsuario(
@@ -60,28 +59,20 @@ public class UsuarioEndpoint {
 	}
 	
 	@GetMapping("/email/{username}")
-	public UsuarioDTO usuarioPorId(@PathVariable(value="username") String username) {
-		 Usuario findByEmail = usuarioRepository.findByEmail(username);
-		 return UsuarioDTO.parse(findByEmail);
+	public ResponseEntity<?> usuarioPorId(@PathVariable(value = "username") String username) {
+		 return usuarioService.findByEmail(username);
 	}
 	
 	@PostMapping
 	public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO,
 			UriComponentsBuilder uriBuilder) throws Exception {
-		Usuario novoUsuario = new Usuario();
-		novoUsuario.parse(NovoUsuarioDTO, roleRepository);
-		// Salvar
-		usuarioRepository.save(novoUsuario);
-		UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
-		// Caminho do novo recurso criado
-		URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
-		return ResponseEntity.created(uri).body(usuarioDTO);
+		return usuarioService.save(NovoUsuarioDTO, uriBuilder);
 
 	} 
 	
 	@PutMapping("/{id}")
 	@Transactional
-	//Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
+	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
 	public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid AtualizarUsuarioDTO atualizarUsuarioDTO,
 			UriComponentsBuilder uriBuilder){
 		Usuario usuarioAtualizado = atualizarUsuarioDTO.atualizar(id, usuarioRepository);

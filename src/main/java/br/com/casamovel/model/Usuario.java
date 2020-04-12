@@ -1,8 +1,6 @@
 package br.com.casamovel.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import java.io.Serializable;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -42,7 +40,7 @@ import br.com.casamovel.repository.RoleRepository;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name="usuario")
-public class Usuario implements Serializable,UserDetails{
+public class Usuario implements UserDetails{
 	private static final long serialVersionUID = 1L;
 	
 	@Id

@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 /**
  *
@@ -55,7 +54,6 @@ public class EventoService {
     	Evento result = null;
         try 
         {
-            System.out.println("evento que chegou no service: "+ novoEventoDTO);
             Categoria c = null;
             Optional<Categoria> optC;
             System.out.println("categoria Rep: "+ categoriaRepository.findById(novoEventoDTO.getCategoria()).toString());
