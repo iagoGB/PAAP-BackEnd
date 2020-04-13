@@ -27,6 +27,7 @@ import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.service.UsuarioService;
+import javassist.NotFoundException;
 
 import javax.validation.Valid;
 
@@ -36,26 +37,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioEndpoint {
-	@Autowired UsuarioRepository usuarioRepository;
-    @Autowired RoleRepository roleRepository;  
-	@Autowired UsuarioService usuarioService;    
-	
+	@Autowired
+	UsuarioRepository usuarioRepository;
+	@Autowired
+	RoleRepository roleRepository;
+	@Autowired
+	UsuarioService usuarioService;
+
 	@GetMapping
-	public Page<UsuarioDTO> listaUsuario(
-		@RequestParam(required = false) LocalDate dataIngresso,
-		@RequestParam int pagina, 
-		@RequestParam int quantidade,
-		@RequestParam(defaultValue = "id") String ordenacao
-	) 
-	{
-		Pageable pagination = PageRequest.of(pagina, quantidade,Direction.DESC,ordenacao);
+	public Page<UsuarioDTO> listaUsuario(@RequestParam(required = false) LocalDate dataIngresso,
+			@RequestParam int pagina, @RequestParam int quantidade,
+			@RequestParam(defaultValue = "id") String ordenacao) {
+		Pageable pagination = PageRequest.of(pagina, quantidade, Direction.DESC, ordenacao);
 		Page<Usuario> usuarioEntidade = usuarioRepository.findAll(pagination);
 		return UsuarioDTO.parse(usuarioEntidade);
 	}
-	
+
 	@GetMapping("/{id}")
-	public Optional<Usuario> usuarioPorId(@PathVariable(value="id") Long id) {
-		return usuarioRepository.findById(id);
+	public Usuario usuarioPorId(@PathVariable(value = "id") Long id) throws NotFoundException {
+		return usuarioService.findById(id);
 	}
 	
 	@GetMapping("/email/{username}")
@@ -64,7 +64,7 @@ public class UsuarioEndpoint {
 	}
 	
 	@PostMapping
-	public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO,
+	public ResponseEntity<?> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO,
 			UriComponentsBuilder uriBuilder) throws Exception {
 		return usuarioService.save(NovoUsuarioDTO, uriBuilder);
 

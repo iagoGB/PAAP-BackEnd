@@ -35,15 +35,6 @@ public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 			// filtra outras requisições para verificar a presença do JWT no header
 			.addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService));
 		
-		
-//		BASIC AUTH FUNCIONAL
-//		http.csrf().disable().authorizeRequests()
-//		.antMatchers(HttpMethod.GET,"/home").permitAll()
-//		.antMatchers(HttpMethod.POST,"/home").permitAll()
-//		
-//		.anyRequest().authenticated()
-//		.and()
-//		.httpBasic(); 
 	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

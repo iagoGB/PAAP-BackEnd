@@ -34,8 +34,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
 import br.com.casamovel.repository.RoleRepository;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -95,13 +100,6 @@ public class Usuario implements UserDetails{
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
 	private LocalDateTime atualizadoEm = LocalDateTime.now();
-	
-	
-	
-	public Usuario() {
-		
-	}
-	
 	
 	public long getId() {
 		return id;
@@ -379,7 +377,7 @@ public class Usuario implements UserDetails{
 		this.senha = new BCryptPasswordEncoder().encode(uDto.getSenha());
 		this.cpf = uDto.getCpf();
 		this.departamento = uDto.getDepartamento();
-		this.dataIngresso = uDto.getDataIngresso();
+		this.dataIngresso = uDto.getData_ingresso();
 		this.telefone = uDto.getTelefone();
 		
 		Role roleDefault = new Role();

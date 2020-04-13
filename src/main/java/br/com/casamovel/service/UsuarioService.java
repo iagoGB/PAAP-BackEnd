@@ -1,6 +1,7 @@
 package br.com.casamovel.service;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.xml.ws.Response;
 
@@ -15,14 +16,23 @@ import br.com.casamovel.dto.usuario.UsuarioDTO;
 import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UsuarioRepository;
+import javassist.NotFoundException;
 
 @Service
 public class UsuarioService {
     @Autowired UsuarioRepository usuarioRepository;
-    @Autowired RoleRepository roleRepository; 
+    @Autowired RoleRepository roleRepository;
+
+    public Usuario findById(Long id) throws NotFoundException {
+        Optional<Usuario> findById = usuarioRepository.findById(id);
+        if (findById.isPresent())
+            return findById.get();
+        else
+            throw new NotFoundException("Usuário não encontrado");
+    }
     
-    public ResponseEntity<?> findByEmail(String username) {
-        Usuario findByEmail = usuarioRepository.findByEmail(username);
+    public ResponseEntity<?> findByEmail(final String username) {
+        final Usuario findByEmail = usuarioRepository.findByEmail(username);
         if (findByEmail == null) {
             return ResponseEntity.notFound().build();
         }
@@ -31,20 +41,20 @@ public class UsuarioService {
 
     public ResponseEntity<UsuarioDTO> save
     (
-        NovoUsuarioDTO NovoUsuarioDTO, 
-        UriComponentsBuilder uriBuilder
+        final NovoUsuarioDTO NovoUsuarioDTO, 
+        final UriComponentsBuilder uriBuilder
     )
     {
         try {
-            Usuario novoUsuario = new Usuario();
+            final Usuario novoUsuario = new Usuario();
             novoUsuario.parse(NovoUsuarioDTO, roleRepository);
             // Salvar
             usuarioRepository.save(novoUsuario);
-            UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
+            final UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
             // Caminho do novo recurso criado
-            URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
+            final URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
             return ResponseEntity.created(uri).body(usuarioDTO);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             return ResponseEntity.badRequest().build();
         }
        
