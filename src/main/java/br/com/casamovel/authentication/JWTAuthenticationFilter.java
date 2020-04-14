@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,13 +22,18 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.casamovel.dto.autenticacao.RespostaAutenticacao;
+import br.com.casamovel.dto.usuario.UsuarioDTO;
 import br.com.casamovel.model.Usuario;
+import br.com.casamovel.repository.UsuarioRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	//Gerenciador de autenticação
 	private AuthenticationManager authenticationManager;
+	@Autowired UsuarioRepository usuarioRepository;
+	@Autowired ObjectMapper objectMapper;
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager= authenticationManager;
@@ -58,8 +64,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String username = us.getUsername(); // authResult.getPrincipal()).getUsername();
 		Collection<GrantedAuthority> u = us.getAuthorities();
 
+		
+
 		//Pesquisar uma método mais elegante para trazer o dado depois
-			//Verifica qual role o usuário tem através do toString, então da um replace nos dados do objeto, deixando apenas o valor da role.
+		// Verifica qual role o usuário tem através do toString,
+		// então da um replace nos dados do objeto, deixando apenas o valor da role.
 		String r =  u.toString().replace("[Role [roleName=ROLE_", "").replace("]]", "");
 		System.out.println("Usuário tipo:" + r);
 		String token = Jwts
@@ -69,8 +78,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.signWith(SignatureAlgorithm.HS512, SECRET)
 				.compact();
 		String bearerToken = (TOKEN_PREFIX + token);
+		Usuario findByEmail = usuarioRepository.findByEmail(username);
+		RespostaAutenticacao resposta = RespostaAutenticacao.builder()
+			.token(bearerToken)
+			.usuario(new UsuarioDTO(findByEmail))
+			.build();
 		//Escrever no body o Token e a role
-		response.getWriter().write("{\"token\":\""+bearerToken+"\", \"role\":\""+ r + "\", \"username\":\""+ username + "\"}");
+		response.setContentType("application/json;charset=UTF-8");
+		response.getWriter().write(objectMapper.writeValueAsString(resposta));
+		// response.getWriter().write("{\"token\":\""+bearerToken+"\", \"role\":\""+ r + "\", \"username\":\""+ username + "\"}");
 		//Escrever no header o token
 		response.addHeader(HEADER_STRING,bearerToken);
 	}

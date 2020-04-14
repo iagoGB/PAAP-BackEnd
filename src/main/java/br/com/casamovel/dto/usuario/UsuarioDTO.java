@@ -7,7 +7,11 @@ import java.time.LocalTime;
 import org.springframework.data.domain.Page;
 
 import br.com.casamovel.model.Usuario;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
+@Builder
+@AllArgsConstructor
 public class UsuarioDTO {
 	private Long id;
 	private String email;
