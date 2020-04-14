@@ -114,7 +114,7 @@ public class UsuarioControllerTest {
 			.contentType("application/json")
 			.content(objectMapper.writeValueAsString(novoUsuarioDTO)))
 			// Então
-			.andExpect(status().isOk())
+			.andExpect(status().isCreated())
 			.andDo(print())
 			.andReturn();
 	}
