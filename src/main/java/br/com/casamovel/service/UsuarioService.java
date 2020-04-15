@@ -3,11 +3,8 @@ package br.com.casamovel.service;
 import java.net.URI;
 import java.util.Optional;
 
-import javax.xml.ws.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,7 +29,8 @@ public class UsuarioService {
     }
     
     public ResponseEntity<?> findByEmail(final String username) {
-        final Usuario findByEmail = usuarioRepository.findByEmail(username);
+        final Optional<Usuario> optFindByEmail = usuarioRepository.findByEmail(username);
+        Usuario findByEmail = optFindByEmail.get();
         if (findByEmail == null) {
             return ResponseEntity.notFound().build();
         }

@@ -5,8 +5,6 @@ import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
 import br.com.casamovel.dto.usuario.UsuarioDTO;
 
 import java.time.LocalDate;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

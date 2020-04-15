@@ -1,5 +1,7 @@
 package br.com.casamovel.authentication;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,8 @@ public class ImplementsUserDetailsService implements UserDetailsService {
 	private UsuarioRepository usuarioRepository;
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Usuario user = usuarioRepository.findByEmail(email);
+		Optional<Usuario> optUser = usuarioRepository.findByEmail(email);
+		Usuario user = optUser.get();
 		if (user == null) {
 			throw new UsernameNotFoundException("Usuário não encontrado");
 		}

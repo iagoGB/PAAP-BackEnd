@@ -1,8 +1,6 @@
 package br.com.casamovel.authentication;
 
-import static br.com.casamovel.authentication.SecurityConstants.*;
-import br.com.casamovel.authentication.JWTAuthenticationFilter;
-import br.com.casamovel.authentication.JWTAuthorizationFilter;
+import static br.com.casamovel.authentication.SecurityConstants.SIGN_UP_URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
