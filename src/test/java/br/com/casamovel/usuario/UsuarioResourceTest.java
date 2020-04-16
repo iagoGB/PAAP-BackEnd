@@ -1,18 +1,16 @@
 package br.com.casamovel.usuario;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import br.com.casamovel.CasamovelApplicationTests;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 
-@Sql(value="../resources/load-data.sql",executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class UsuarioResourceTest extends CasamovelApplicationTests {
 
