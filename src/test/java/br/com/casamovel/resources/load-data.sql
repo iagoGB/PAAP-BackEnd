@@ -33,7 +33,7 @@ VALUES (
     '2019-12-25 08:27:59.067', 
     '2016-12-20',
     'ICA',
-    'usuario.dois@teste.com',
+    'usuario@teste.com',
     'Usuario Dois',
     '$2a$10$uB6.WzxcB4dflWRxBZDuZuPrLeJtdastzakqbAeP9PTdk1ZlubOum',
     '83229080'

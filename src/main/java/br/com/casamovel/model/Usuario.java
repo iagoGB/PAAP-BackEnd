@@ -1,6 +1,5 @@
 package br.com.casamovel.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,14 +22,14 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
 import br.com.casamovel.repository.RoleRepository;
@@ -42,7 +41,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+// @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name="usuario")
 public class Usuario implements UserDetails{
@@ -60,7 +59,7 @@ public class Usuario implements UserDetails{
 	private String nome;
 	
 	@NotEmpty
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String email;
 	
 	private String senha;
