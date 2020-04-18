@@ -59,3 +59,7 @@ VALUES (
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (1, 'ROLE_ADMIN');
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (2, 'ROLE_USER');
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (3, 'ROLE_USER');
+
+INSERT INTO public.evento(
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
+	VALUES (10,2, '2020-09-10 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 2, true);

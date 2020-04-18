@@ -10,9 +10,13 @@ import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.endpoint.EventoEndpoint;
 import br.com.casamovel.model.Categoria;
 import br.com.casamovel.model.Evento;
+import br.com.casamovel.model.EventoUsuario;
+import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.CategoriaRepository;
 import br.com.casamovel.repository.EventoRepository;
+import br.com.casamovel.repository.EventoUsuarioRepository;
 import br.com.casamovel.repository.PalestranteRepository;
+import br.com.casamovel.repository.UsuarioRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,6 +26,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -40,6 +46,12 @@ public class EventoService {
     
     @Autowired
     PalestranteRepository palestranteRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
+    @Autowired
+    EventoUsuarioRepository eventoUsuarioRepository;
     
     public List<DetalhesEventoDTO> listarEventos(){
     	List<DetalhesEventoDTO> result = new ArrayList<DetalhesEventoDTO>();
@@ -92,5 +104,24 @@ public class EventoService {
 			return DetalhesEventoDTO.parse(evento);
 		}
 		return null;
+	}
+
+	public ResponseEntity<?> inscreverUsuarioNoEvento(Long id, String usermail) {
+        Optional<Evento> resultEvento = eventoRepository.findById(id);
+        Optional<Usuario> resultUsuario = usuarioRepository.findByEmail(usermail);
+        Evento evento = resultEvento.get();
+        Usuario usuario = resultUsuario.get();
+
+        EventoUsuario relacaoEventoUsuario = new EventoUsuario(
+            evento, 
+            usuario,
+            true, 
+            false
+        );
+        EventoUsuario save = eventoUsuarioRepository.save(relacaoEventoUsuario);
+        if (save == null) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 }

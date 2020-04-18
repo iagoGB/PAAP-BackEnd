@@ -10,7 +10,10 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.AllArgsConstructor;
+
 @Entity
+@AllArgsConstructor
 @IdClass(EventoUsuarioID.class)
 public class EventoUsuario implements Serializable {
 	
