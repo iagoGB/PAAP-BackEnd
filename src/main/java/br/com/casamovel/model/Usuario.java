@@ -68,7 +68,7 @@ public class Usuario implements UserDetails{
 	
 	private String telefone;
 	
-	@OneToMany(mappedBy = "evento_id")
+	@OneToMany(mappedBy = "usuario_id") // Trocar pelo outro lado que referencia aqui
 	private List<EventoUsuario> eventos = new ArrayList<>();
 	
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })

@@ -56,7 +56,7 @@ public class UsuarioEndpoint {
 		return usuarioService.findById(id);
 	}
 	
-	@GetMapping("/email/{username}")
+	@GetMapping("/username/{username}")
 	public ResponseEntity<?> usuarioPorId(@PathVariable(value = "username") String username) {
 		 return usuarioService.findByEmail(username);
 	}

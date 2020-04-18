@@ -55,7 +55,7 @@ public class Evento implements Serializable {
 	)
 	private Categoria categoria;
 
-	@OneToMany(mappedBy = "usuario_id")
+	@OneToMany(mappedBy = "evento_id") // acho que aqui é evento ID
 	List<EventoUsuario> usuarios = new ArrayList<EventoUsuario>();
 
 	@OneToMany(mappedBy = "evento_id", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })

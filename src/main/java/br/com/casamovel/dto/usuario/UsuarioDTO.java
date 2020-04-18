@@ -2,26 +2,31 @@ package br.com.casamovel.dto.usuario;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import br.com.casamovel.dto.evento.EventoDTO;
 import br.com.casamovel.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 @AllArgsConstructor
 public class UsuarioDTO {
-	private Long id;
-	private String email;
-	private Long cpf;
-	private String nome;
-	private LocalTime carga_horaria;
-	private String departamento;
-	private String telefone;
-	private LocalDate data_ingresso;
-	private String avatar;
+	public Long id;
+	public String email;
+	public Long cpf;
+	public String nome;
+	public LocalTime carga_horaria;
+	public String departamento;
+	public String telefone;
+	public LocalDate data_ingresso;
+	public String avatar;
+	public List<EventoDTO> eventos = new ArrayList<>();
 	
 	public UsuarioDTO(Usuario usuario) {
 		this.id = usuario.getId();
@@ -33,6 +38,9 @@ public class UsuarioDTO {
 		this.telefone = usuario.getTelefone();
 		this.setData_ingresso(usuario.getDataIngresso());
 		this.setAvatar(usuario.getAvatar());
+		usuario.getEventos().forEach(relacaoEventoUsuario ->{ 
+			this.eventos.add(new EventoDTO(relacaoEventoUsuario.getEvento()));
+		});
 	}
 	
 	public UsuarioDTO() {

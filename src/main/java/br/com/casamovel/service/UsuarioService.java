@@ -28,7 +28,7 @@ public class UsuarioService {
             throw new NotFoundException("Usuário não encontrado");
     }
     
-    public ResponseEntity<?> findByEmail(final String username) {
+    public ResponseEntity<UsuarioDTO> findByEmail(final String username) {
         final Optional<Usuario> optFindByEmail = usuarioRepository.findByEmail(username);
         Usuario findByEmail = optFindByEmail.get();
         if (findByEmail == null) {
