@@ -39,7 +39,7 @@ public class UsuarioDTO {
 		this.setData_ingresso(usuario.getDataIngresso());
 		this.setAvatar(usuario.getAvatar());
 		usuario.getEventos().forEach(relacaoEventoUsuario ->{ 
-			this.eventos.add(new EventoDTO(relacaoEventoUsuario.getEvento()));
+			this.eventos.add(new EventoDTO(relacaoEventoUsuario.getEvento_id()));
 		});
 	}
 	

@@ -62,4 +62,22 @@ INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (3, 'ROLE_USER');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
-	VALUES (10,2, '2020-09-10 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 2, true);
+	VALUES (10,2, '2020-09-10 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true);
+
+INSERT INTO public.evento(
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
+	VALUES (20,4, '2020-11-06 14:00:00.067', 'http://localhost:8080/evento/20/evento_20.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true);
+
+INSERT INTO public.evento(
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
+	VALUES (33,3, '2020-07-22 15:00:00.067', 'http://localhost:8080/evento/33/evento_33.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true);
+
+ --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
+    INSERT INTO public.evento_usuario(
+        fk_evento_id, fk_usuario_id, is_present, is_subscribed)
+        VALUES (20, 2, false, true);
+
+    INSERT INTO public.evento_usuario(
+        fk_evento_id, fk_usuario_id, is_present, is_subscribed)
+        VALUES (33, 2, false, true);
+-- 

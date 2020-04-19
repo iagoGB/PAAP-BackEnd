@@ -51,35 +51,4 @@ public class EventoUsuario implements Serializable {
 	
 	private boolean isPresent;
 	
-	public Evento getEvento() {
-		return evento_id;
-	}
-
-	public void setEvento(Evento evento) {
-		this.evento_id = evento;
-	}
-
-	public Usuario getUsuario() {
-		return usuario_id;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario_id = usuario;
-	}
-
-	public boolean isSubscribed() {
-		return isSubscribed;
-	}
-
-	public void setSubscribed(boolean isSubscribed) {
-		this.isSubscribed = isSubscribed;
-	}
-
-	public boolean isPresent() {
-		return isPresent;
-	}
-
-	public void setPresent(boolean isPresent) {
-		this.isPresent = isPresent;
-	}	
 }

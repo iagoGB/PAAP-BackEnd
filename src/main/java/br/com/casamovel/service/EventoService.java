@@ -11,6 +11,7 @@ import br.com.casamovel.endpoint.EventoEndpoint;
 import br.com.casamovel.model.Categoria;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.model.EventoUsuario;
+import br.com.casamovel.model.EventoUsuarioID;
 import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.CategoriaRepository;
 import br.com.casamovel.repository.EventoRepository;
@@ -27,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -106,22 +108,31 @@ public class EventoService {
 		return null;
 	}
 
-	public ResponseEntity<?> inscreverUsuarioNoEvento(Long id, String usermail) {
-        Optional<Evento> resultEvento = eventoRepository.findById(id);
+	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoId, String usermail) {
+        Optional<Evento> resultEvento = eventoRepository.findById(eventoId);
         Optional<Usuario> resultUsuario = usuarioRepository.findByEmail(usermail);
         Evento evento = resultEvento.get();
         Usuario usuario = resultUsuario.get();
-
-        EventoUsuario relacaoEventoUsuario = new EventoUsuario(
-            evento, 
-            usuario,
-            true, 
-            false
-        );
-        EventoUsuario save = eventoUsuarioRepository.save(relacaoEventoUsuario);
-        if (save == null) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        Optional<EventoUsuario> findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
+        if (findById.isPresent()) {
+            return  ResponseEntity
+            .badRequest()
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body("{\"mensagem\":\"Usuário já esta inscrito\"}");
+        } else {
+            EventoUsuario relacaoEventoUsuario = new EventoUsuario(
+                evento, 
+                usuario,
+                true, 
+                false
+            );
+            EventoUsuario save = eventoUsuarioRepository.save(relacaoEventoUsuario);
+            if (save == null) {
+                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            }
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        
 	}
 }
