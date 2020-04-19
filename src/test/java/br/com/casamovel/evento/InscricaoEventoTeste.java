@@ -82,4 +82,49 @@ public class InscricaoEventoTeste extends CasamovelApplicationTests{
                 "eventos[0].titulo", equalTo("Treinamento de Educação a Distância Para Professores")
             );      
     }
+
+    @Test
+    public void deveRemoverUsuarioDeUmEventoPreviamenteCadastrado() {
+        // Deve remover inscrição de um evento ao qual tenha se cadastrado
+        given()
+            .port(porta)
+            .param("username",usuarioAutenticado.getUsername())
+            .header("Authorization", usuarioAutenticado.getToken())
+            .pathParam("eventoId", 20)
+            .put("/evento/{eventoId}/remover-inscricao")
+        .then()
+            .statusCode(equalTo(200)) // BadRequest
+            .and()
+            .log().body();
+
+        // Checa se o evento vem nos dados do usuário
+        given()
+            .port(porta)
+            .header("Authorization", administradorAutenticado.getToken())
+            .pathParam("username", usuarioAutenticado.getUsername())
+            .get("/usuario/username/{username}")
+        .then()
+            .statusCode(equalTo(200)) // OK
+            .and()
+            .body("eventos", hasSize(1))
+            .and()
+            .log().body();// Deve conter apenas um evento);  
+    }
+
+    @Test  
+    public void deveLancarExcecaoAoTentarRemoverInscricaoQueNaoExiste() {
+         // O usuário tenta deletar inscrição que não existe, com um evento existente.
+        given()
+            .port(porta)
+            .param("username",usuarioAutenticado.getUsername())
+            .header("Authorization", usuarioAutenticado.getToken())
+            .pathParam("eventoId",10)
+            .put("/evento/{eventoId}/remover-inscricao")
+        .then() 
+            .statusCode(equalTo(500)) // Erro interno
+            .and()
+            .body("message", equalTo("O usuário não possui vínculo com evento"))
+            .and()
+            .log().body();
+    }
 }

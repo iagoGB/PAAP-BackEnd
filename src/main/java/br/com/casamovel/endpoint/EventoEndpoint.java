@@ -39,8 +39,8 @@ public class EventoEndpoint {
 
     @PostMapping
     public ResponseEntity<DetalhesEventoDTO> salvaEvento(
-    		@RequestBody final NovoEventoDTO evento,
-    		final UriComponentsBuilder uriBuilder
+    	@RequestBody final NovoEventoDTO evento,
+    	final UriComponentsBuilder uriBuilder
     ) 
     {
     	final Evento salvarEvento = es.salvarEvento(evento);
@@ -69,5 +69,15 @@ public class EventoEndpoint {
     )
     {
         return es.inscreverUsuarioNoEvento(id, usermail);
+    }
+
+    @PutMapping("/{id}/remover-inscricao")
+    public ResponseEntity<?> removerInscricaoEmEvento
+    (
+        @PathVariable(value ="id") Long id, 
+        @RequestParam(value ="username") String usermail
+    )
+    {
+        return es.removerInscricaoEmEvento(id, usermail);
     }
 }

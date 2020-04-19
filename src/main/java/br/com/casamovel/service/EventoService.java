@@ -5,6 +5,7 @@
  */
 package br.com.casamovel.service;
 
+import br.com.casamovel.dto.ErroValidacaoDTO;
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.endpoint.EventoEndpoint;
@@ -26,6 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,6 +58,9 @@ public class EventoService {
 
     @Autowired
     EventoUsuarioRepository eventoUsuarioRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
     
     public List<DetalhesEventoDTO> listarEventos(){
     	List<DetalhesEventoDTO> result = new ArrayList<DetalhesEventoDTO>();
@@ -132,7 +139,17 @@ public class EventoService {
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
+	}
 
-        
+	public ResponseEntity<?> removerInscricaoEmEvento(Long eventoId, String usermail) {
+        Optional<Usuario> resultUsuario = usuarioRepository.findByEmail(usermail);
+        Usuario usuario = resultUsuario.get();
+        Optional<EventoUsuario> findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
+        if (!findById.isPresent()){
+            throw new IllegalArgumentException("O usuário não possui vínculo com evento");
+        } else {
+            eventoUsuarioRepository.deleteById(new EventoUsuarioID(eventoId, usuario.getId()));
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
 	}
 }
