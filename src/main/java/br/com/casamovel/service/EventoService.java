@@ -5,7 +5,6 @@
  */
 package br.com.casamovel.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -160,11 +159,13 @@ public class EventoService {
         Usuario usuario = findUsuarioById(data.username);
         // Checa se usuário se inscreveu
         Optional<EventoUsuario> relacao = eventoUsuarioRepository.findById( new EventoUsuarioID(eventoId, usuario.getId()) );
+        EventoUsuario eventoUsuario = relacao.get();
         // Checa se a data do evento é hoje
         isToday(eventoId);
+        checaCodigoEvento(eventoUsuario,data.getKeyword());
         // Se a presença do usuário no evento já foi inserida
         if ( relacao.get().isPresent() ) {
-            // Não faça nada
+            throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
         } else {
             relacao.get().setPresent(true);
             Long cargaHoraria = new Long(relacao.get().getEvento_id().getCargaHoraria());
@@ -173,16 +174,21 @@ public class EventoService {
 		return ResponseEntity.status(HttpStatus.OK).build();
     }
     
-    private Usuario findUsuarioById(String username){
+    private void checaCodigoEvento(EventoUsuario relacao,String keyword) {
+        if (!relacao.getEvento_id().getEventKeyword().equals(keyword))
+            throw new IllegalArgumentException("Código do evento inválido");
+    }
+
+    private Usuario findUsuarioById(String username) {
         Optional<Usuario> findById = usuarioRepository.findByEmail(username);
-        return findById.orElseThrow( () -> new IllegalArgumentException("Recurso não encontrado"));
+        return findById.orElseThrow( () -> new IllegalArgumentException("Usuário não encontrado"));
     }
     // Checa se o evento ocorre hoje
     private void isToday(Long eventoId){
         Optional<Evento> findById = eventoRepository.findById(eventoId);
         Evento evento = findById.get();
         if ( LocalDateTime.now().isBefore(evento.getDataHorario())){
-            throw new RuntimeException("O Evento ainda não está na data");
+            throw new IllegalArgumentException("O Evento ainda não está na data");
         }
     }
 }

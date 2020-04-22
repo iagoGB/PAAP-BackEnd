@@ -29,4 +29,10 @@ public class ValidationErrorHandler {
 		});
 		return listaErros;	
 	}
+
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ErroValidacaoDTO handler(IllegalArgumentException ex){
+		return new ErroValidacaoDTO("erro", ex.getMessage());
+	}
 }

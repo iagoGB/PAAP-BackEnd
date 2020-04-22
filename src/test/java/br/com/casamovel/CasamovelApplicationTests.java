@@ -26,6 +26,7 @@ public abstract class CasamovelApplicationTests {
 	protected  final String URILogin = "/login";
 	protected  RespostaAutenticacao administradorAutenticado;
 	protected  RespostaAutenticacao usuarioAutenticado;
+	protected RespostaAutenticacao usuarioAutenticadoTres;
 
 	// @Test
 	// public void contextLoads() {
@@ -67,5 +68,22 @@ public abstract class CasamovelApplicationTests {
 			.extract()
 				.body()
 				.as(RespostaAutenticacao.class);
+		
+				usuarioAutenticadoTres = 
+				given()
+					.port(porta)
+					.body("{ \"email\":\"tres@usuario.com\", \"senha\":\"abc\"}")
+					.post(URILogin)
+				.then()
+					.log().body().and()
+					.statusCode(HttpStatus.OK.value())
+					.and()
+					.body(
+						"role", equalTo("USER"),
+						"username", equalTo("tres@usuario.com")
+					)
+				.extract()
+					.body()
+					.as(RespostaAutenticacao.class);
 	}
 }

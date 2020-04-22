@@ -45,7 +45,7 @@ INSERT INTO public.usuario(
 VALUES ( 
     '2017-02-02 16:31:29.124',
     '../assets/images/default_avatar.png',
-    '00:00:00',
+    '03:00:00',
     '6565',
     '2017-12-25 08:27:59.067', 
     '2017-10-20',
@@ -62,7 +62,7 @@ INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (3, 'ROLE_USER');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)
-	VALUES (10,2, '2020-09-10 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true,'abcd1234-10');
+	VALUES (10,2, '2020-04-12 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true,'CODeXXYYZ20-10');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
@@ -72,6 +72,10 @@ INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
 	VALUES (33,3, '2020-07-22 15:00:00.067', 'http://localhost:8080/evento/33/evento_33.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
 
+INSERT INTO public.evento(
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)
+	VALUES (50,3, '2020-04-22 18:00:00.067', 'http://localhost:8080/caminho-da-foto', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
+
  --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
     INSERT INTO public.evento_usuario(
         fk_evento_id, fk_usuario_id, is_present, is_subscribed)
@@ -80,4 +84,13 @@ INSERT INTO public.evento(
     INSERT INTO public.evento_usuario(
         fk_evento_id, fk_usuario_id, is_present, is_subscribed)
         VALUES (33, 2, false, true);
+
+    -- Usuario 3 Já possui 2 eventos cadastrados,1 com  presença e carga horaria computadas
+    INSERT INTO public.evento_usuario(
+        fk_evento_id, fk_usuario_id, is_present, is_subscribed)
+        VALUES (50, 3, true, true);
+
+     INSERT INTO public.evento_usuario(
+        fk_evento_id, fk_usuario_id, is_present, is_subscribed)
+        VALUES (10, 3, false, true);
 -- 
