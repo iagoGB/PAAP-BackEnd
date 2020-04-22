@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
+import br.com.casamovel.dto.evento.RegistroPresencaDTO;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.service.EventoService;
 
@@ -79,5 +80,15 @@ public class EventoEndpoint {
     )
     {
         return es.removerInscricaoEmEvento(id, usermail);
+    }
+
+    @PutMapping("/{id}/registro-presenca")
+    public ResponseEntity<?> registrarPresenca
+    (
+        @PathVariable(value ="id") Long id, 
+        @RequestBody RegistroPresencaDTO registroPresencaDTO
+    )
+    {
+        return es.registrarPresenca(id, registroPresencaDTO);
     }
 }

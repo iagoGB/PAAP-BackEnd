@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import br.com.casamovel.CasamovelApplicationTests;
 
-public class InscricaoEventoTeste extends CasamovelApplicationTests{
+public class InscricaoEventoTest extends CasamovelApplicationTests{
     // O usuário já possui 2 eventos cadastrados ao inicializar o banco
     @Test
     public void DeveCadastrarUsuarioExistenteEAindaNaoInscritoEmEventoExistenteERetornar201(){

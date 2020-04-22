@@ -61,16 +61,16 @@ INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (2, 'ROLE_USER');
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (3, 'ROLE_USER');
 
 INSERT INTO public.evento(
-	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
-	VALUES (10,2, '2020-09-10 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true);
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)
+	VALUES (10,2, '2020-09-10 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true,'abcd1234-10');
 
 INSERT INTO public.evento(
-	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
-	VALUES (20,4, '2020-11-06 14:00:00.067', 'http://localhost:8080/evento/20/evento_20.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true);
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
+	VALUES (20,4, '2020-04-21 14:00:00.067', 'http://localhost:8080/evento/20/evento_20.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
 
 INSERT INTO public.evento(
-	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto)
-	VALUES (33,3, '2020-07-22 15:00:00.067', 'http://localhost:8080/evento/33/evento_33.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true);
+	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
+	VALUES (33,3, '2020-07-22 15:00:00.067', 'http://localhost:8080/evento/33/evento_33.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
 
  --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
     INSERT INTO public.evento_usuario(

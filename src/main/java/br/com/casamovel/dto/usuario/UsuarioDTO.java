@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import br.com.casamovel.dto.evento.EventoDTO;
 import br.com.casamovel.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +25,7 @@ public class UsuarioDTO {
 	public String telefone;
 	public LocalDate data_ingresso;
 	public String avatar;
-	public List<EventoDTO> eventos = new ArrayList<>();
+	public List<EventoUsuarioDTO> eventos = new ArrayList<>();
 	
 	public UsuarioDTO(Usuario usuario) {
 		this.id = usuario.getId();
@@ -39,7 +38,7 @@ public class UsuarioDTO {
 		this.setData_ingresso(usuario.getDataIngresso());
 		this.setAvatar(usuario.getAvatar());
 		usuario.getEventos().forEach(relacaoEventoUsuario ->{ 
-			this.eventos.add(new EventoDTO(relacaoEventoUsuario.getEvento_id()));
+			this.eventos.add(new EventoUsuarioDTO(relacaoEventoUsuario));
 		});
 	}
 	

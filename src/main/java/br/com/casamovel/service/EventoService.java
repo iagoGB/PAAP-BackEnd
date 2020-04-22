@@ -5,21 +5,7 @@
  */
 package br.com.casamovel.service;
 
-import br.com.casamovel.dto.ErroValidacaoDTO;
-import br.com.casamovel.dto.evento.DetalhesEventoDTO;
-import br.com.casamovel.dto.evento.NovoEventoDTO;
-import br.com.casamovel.endpoint.EventoEndpoint;
-import br.com.casamovel.model.Categoria;
-import br.com.casamovel.model.Evento;
-import br.com.casamovel.model.EventoUsuario;
-import br.com.casamovel.model.EventoUsuarioID;
-import br.com.casamovel.model.Usuario;
-import br.com.casamovel.repository.CategoriaRepository;
-import br.com.casamovel.repository.EventoRepository;
-import br.com.casamovel.repository.EventoUsuarioRepository;
-import br.com.casamovel.repository.PalestranteRepository;
-import br.com.casamovel.repository.UsuarioRepository;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -35,6 +21,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.casamovel.dto.evento.DetalhesEventoDTO;
+import br.com.casamovel.dto.evento.NovoEventoDTO;
+import br.com.casamovel.dto.evento.RegistroPresencaDTO;
+import br.com.casamovel.endpoint.EventoEndpoint;
+import br.com.casamovel.model.Categoria;
+import br.com.casamovel.model.Evento;
+import br.com.casamovel.model.EventoUsuario;
+import br.com.casamovel.model.EventoUsuarioID;
+import br.com.casamovel.model.Usuario;
+import br.com.casamovel.repository.CategoriaRepository;
+import br.com.casamovel.repository.EventoRepository;
+import br.com.casamovel.repository.EventoUsuarioRepository;
+import br.com.casamovel.repository.PalestranteRepository;
+import br.com.casamovel.repository.UsuarioRepository;
 
 
 /**
@@ -152,4 +154,35 @@ public class EventoService {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
 	}
+
+    @Transactional
+	public ResponseEntity<?> registrarPresenca(Long eventoId, RegistroPresencaDTO data) {
+        Usuario usuario = findUsuarioById(data.username);
+        // Checa se usuário se inscreveu
+        Optional<EventoUsuario> relacao = eventoUsuarioRepository.findById( new EventoUsuarioID(eventoId, usuario.getId()) );
+        // Checa se a data do evento é hoje
+        isToday(eventoId);
+        // Se a presença do usuário no evento já foi inserida
+        if ( relacao.get().isPresent() ) {
+            // Não faça nada
+        } else {
+            relacao.get().setPresent(true);
+            Long cargaHoraria = new Long(relacao.get().getEvento_id().getCargaHoraria());
+            usuario.setCargaHoraria( usuario.getCargaHoraria().plusHours(cargaHoraria));
+        }
+		return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    
+    private Usuario findUsuarioById(String username){
+        Optional<Usuario> findById = usuarioRepository.findByEmail(username);
+        return findById.orElseThrow( () -> new IllegalArgumentException("Recurso não encontrado"));
+    }
+    // Checa se o evento ocorre hoje
+    private void isToday(Long eventoId){
+        Optional<Evento> findById = eventoRepository.findById(eventoId);
+        Evento evento = findById.get();
+        if ( LocalDateTime.now().isBefore(evento.getDataHorario())){
+            throw new RuntimeException("O Evento ainda não está na data");
+        }
+    }
 }
