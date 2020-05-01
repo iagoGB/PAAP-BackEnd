@@ -56,9 +56,27 @@ VALUES (
     '3498873'
 );
 
+INSERT INTO public.usuario(
+	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, senha, telefone
+)
+VALUES ( 
+    '2017-02-02 16:31:29.124',
+    '../assets/images/default_avatar.png',
+    '00:00:00',
+    '223344',
+    '2018-12-25 08:27:59.067', 
+    '2018-10-20',
+    'UFC Virtual',
+    'usuario',
+    'Usuário',
+    '$2a$10$uB6.WzxcB4dflWRxBZDuZuPrLeJtdastzakqbAeP9PTdk1ZlubOum',
+    '853498873'
+);
+
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (1, 'ROLE_ADMIN');
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (2, 'ROLE_USER');
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (3, 'ROLE_USER');
+INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (4, 'ROLE_USER');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)

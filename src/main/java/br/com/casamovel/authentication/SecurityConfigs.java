@@ -15,16 +15,22 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private ImplementsUserDetailsService userDetailsService;
+	private CorsConfiguration applyPermitDefaultValues;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		System.out.println("Executando configurações da classe Auth");
-		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+		http.cors().configurationSource(request -> {
+			applyPermitDefaultValues = new CorsConfiguration().applyPermitDefaultValues();
+			applyPermitDefaultValues.addAllowedMethod("*");
+			return applyPermitDefaultValues;
+		})
 			.and()
 			.csrf().disable().authorizeRequests()
 			.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-			.antMatchers(HttpMethod.GET,"/usuario").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET,"/usuario").hasAnyRole("ADMIN","USER")
 			.antMatchers(HttpMethod.POST,"/usuario").hasRole("ADMIN")
 			.antMatchers(HttpMethod.PUT,"/evento/**").hasAnyRole("ADMIN","USER")
+			.antMatchers(HttpMethod.PUT,"/evento/*/inscricao").hasRole("USER")
 			.and()
 			// filtra requisições de login
 			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
