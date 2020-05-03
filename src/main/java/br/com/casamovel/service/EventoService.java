@@ -156,10 +156,22 @@ public class EventoService {
 
     @Transactional
 	public ResponseEntity<?> registrarPresenca(Long eventoId, RegistroPresencaDTO data) {
+        EventoUsuario eventoUsuario = null;
         Usuario usuario = findUsuarioById(data.username);
         // Checa se usuário se inscreveu
         Optional<EventoUsuario> relacao = eventoUsuarioRepository.findById( new EventoUsuarioID(eventoId, usuario.getId()) );
-        EventoUsuario eventoUsuario = relacao.get();
+        // Se existe a relação:
+        if (relacao.isPresent()){
+            //Usuário está iscrito
+            eventoUsuario = relacao.get();
+        } else {
+            // tratamento para usuário que quer registrar presença mas não está inscrito no evento
+            // Se a relação nao existe, é necessário checkar se o evento existe, se o usuário esta inscrito
+            return  ResponseEntity
+            .badRequest()
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body("{\"mensagem\":\"Você não se inscreveu para o evento\"}");
+        }
         // Checa se a data do evento é hoje
         isToday(eventoId);
         checaCodigoEvento(eventoUsuario,data.getKeyword());

@@ -28,13 +28,13 @@ public class UsuarioService {
             throw new NotFoundException("Usuário não encontrado");
     }
     
-    public ResponseEntity<UsuarioDTO> findByEmail(final String username) {
-        final Optional<Usuario> optFindByEmail = usuarioRepository.findByEmail(username);
-        Usuario findByEmail = optFindByEmail.get();
-        if (findByEmail == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<UsuarioDTO> findByEmail(String username) {
+        Optional<Usuario> optFindByEmail = usuarioRepository.findByEmail(username);
+        if (optFindByEmail.isPresent()) {
+            Usuario findByEmail = optFindByEmail.get();
+            return ResponseEntity.ok().body(UsuarioDTO.parse(findByEmail));
         }
-        return ResponseEntity.ok().body(UsuarioDTO.parse(findByEmail));
+        return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<UsuarioDTO> save
