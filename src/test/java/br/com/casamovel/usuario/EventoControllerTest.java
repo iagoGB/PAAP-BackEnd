@@ -16,7 +16,7 @@ import br.com.casamovel.endpoint.EventoEndpoint;
 import br.com.casamovel.service.EventoService;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value=EventoEndpoint.class, secure = false)
+@WebMvcTest(value=EventoEndpoint.class)
 public class EventoControllerTest {
 
     private final String uri = "/evento/1/inscricao/";
