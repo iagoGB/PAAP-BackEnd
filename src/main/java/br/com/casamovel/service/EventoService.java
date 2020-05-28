@@ -180,7 +180,9 @@ public class EventoService {
             throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
         } else {
             relacao.get().setPresent(true);
-            Long cargaHoraria = new Long(relacao.get().getEvento_id().getCargaHoraria());
+            var value = new String();
+            value = relacao.get().getEvento_id().getCargaHoraria().toString();
+            var cargaHoraria =  Long.parseLong(value);
             usuario.setCargaHoraria( usuario.getCargaHoraria().plusHours(cargaHoraria));
         }
 		return ResponseEntity.status(HttpStatus.OK).build();

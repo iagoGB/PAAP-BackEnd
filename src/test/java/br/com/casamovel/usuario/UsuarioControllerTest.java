@@ -36,7 +36,7 @@ import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.service.UsuarioService;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value=UsuarioEndpoint.class, secure = false)
+@WebMvcTest(value=UsuarioEndpoint.class)
 public class UsuarioControllerTest {
 
 	@Autowired private MockMvc mockMvc;
