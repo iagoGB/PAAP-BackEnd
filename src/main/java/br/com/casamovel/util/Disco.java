@@ -3,20 +3,31 @@ package br.com.casamovel.util;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Disco {
     
-     public String salvarImagemUsuario(MultipartFile imageFile) throws Exception {
-            String folder = "/CASaMovel/usuarioAvatar";
-            try{
-                byte[] bytes = imageFile.getBytes();
-                Path path = Paths.get(folder, imageFile.getOriginalFilename());
-                Files.write(path, bytes);
-                return (folder+imageFile.getOriginalFilename());
-            } catch (Exception e){
-                System.out.println("Erro ao tentar salvar arquivo" + e);
-                return null;
-            }
+     public String salvarImagem(MultipartFile imageFile, String directory)  {
+        String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+        Path basePath = Paths.get(directory);
+        Path targetPath = Paths.get(directory+fileName);
+            // String folder = "/CASaMovel/usuarioAvatar";
+        try{
+            if (!directoryExists(basePath)) 
+                Files.createDirectories(basePath);  
+            Files.copy(imageFile.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            return "Seu arquivo foi salvo";
+                
+        } catch (Exception e){
+            e.printStackTrace();
+            return "Erro ao tentar salvar arquivo -" + e;
         }
+       
+    }
+
+    private boolean directoryExists(Path basePath) {
+        return Files.exists(basePath);
+    }
 }

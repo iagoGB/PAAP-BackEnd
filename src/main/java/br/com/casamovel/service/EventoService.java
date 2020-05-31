@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
@@ -36,6 +37,7 @@ import br.com.casamovel.repository.EventoRepository;
 import br.com.casamovel.repository.EventoUsuarioRepository;
 import br.com.casamovel.repository.PalestranteRepository;
 import br.com.casamovel.repository.UsuarioRepository;
+import br.com.casamovel.util.Disco;
 
 
 /**
@@ -45,6 +47,8 @@ import br.com.casamovel.repository.UsuarioRepository;
 @Service
 public class EventoService {
     
+    private static final Disco disco = new Disco();
+
     @Autowired
     EventoRepository eventoRepository;
 
@@ -205,4 +209,10 @@ public class EventoService {
             throw new IllegalArgumentException("O Evento ainda não está na data");
         }
     }
+
+	public ResponseEntity<?> salvarImagemEvento(MultipartFile image) {
+        String eventImageDir = "C:\\CasaMovel\\eventos\\";
+        String imagemSalva = disco.salvarImagem(image, eventImageDir);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\""+imagemSalva+"\"}");
+	}
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
@@ -90,5 +91,10 @@ public class EventoEndpoint {
     )
     {
         return es.registrarPresenca(id, registroPresencaDTO);
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImagemEvento(MultipartFile image){
+        System.out.println("Original name"+ image.getOriginalFilename());
+        return es.salvarImagemEvento(image);
     }
 }
