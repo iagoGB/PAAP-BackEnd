@@ -92,9 +92,11 @@ public class EventoEndpoint {
     {
         return es.registrarPresenca(id, registroPresencaDTO);
     }
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadImagemEvento(MultipartFile image){
-        System.out.println("Original name"+ image.getOriginalFilename());
+    @PostMapping("/{id}/upload")
+    public ResponseEntity<?> uploadImagemEvento(
+        @PathVariable(value ="id") Long id, 
+        MultipartFile image
+    ){
         return es.salvarImagemEvento(image);
     }
 }
