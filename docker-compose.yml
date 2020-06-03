@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  casamovel-db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - 5432:5432
+    volumes:
+      - /home/iago/Database/PostgreSQL:/var/lib/postgresql/data

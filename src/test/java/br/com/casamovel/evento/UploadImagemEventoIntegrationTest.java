@@ -19,7 +19,7 @@ public class UploadImagemEventoIntegrationTest extends CasamovelApplicationInteg
     private final Path root = FileSystems.getDefault().getPath("").toAbsolutePath();
     private final String FILENAME = "eventoImagem.png";
     private Path filePath = Paths.get(root.toString(),
-        "src", "test","java","br","com","casamovel", "resources", FILENAME
+        "src", "test","resources", FILENAME
     );
     private final File file = new File(filePath.toString());
     
