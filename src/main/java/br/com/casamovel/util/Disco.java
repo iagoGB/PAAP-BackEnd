@@ -18,7 +18,7 @@ public class Disco {
             if (!directoryExists(basePath)) 
                 Files.createDirectories(basePath);  
             Files.copy(imageFile.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-            return "Seu arquivo foi salvo";
+            return targetPath.toString();
                 
         } catch (Exception e){
             e.printStackTrace();

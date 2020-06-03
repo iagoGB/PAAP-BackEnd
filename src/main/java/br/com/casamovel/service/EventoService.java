@@ -5,6 +5,9 @@
  */
 package br.com.casamovel.service;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +72,8 @@ public class EventoService {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    private String eventImageDir = "C:\\CasaMovel\\eventos\\";
     
     public List<DetalhesEventoDTO> listarEventos(){
     	List<DetalhesEventoDTO> result = new ArrayList<DetalhesEventoDTO>();
@@ -164,7 +172,7 @@ public class EventoService {
     @Transactional
 	public ResponseEntity<?> registrarPresenca(Long eventoId, RegistroPresencaDTO data) {
         EventoUsuario eventoUsuario = null;
-        Usuario usuario = findUsuarioById(data.username);
+        Usuario usuario = findUsuarioByEmail(data.username);
         // Checa se usuário se inscreveu
         Optional<EventoUsuario> relacao = eventoUsuarioRepository.findById( new EventoUsuarioID(eventoId, usuario.getId()) );
         // Se existe a relação:
@@ -200,8 +208,13 @@ public class EventoService {
             throw new IllegalArgumentException("Código do evento inválido");
     }
 
-    private Usuario findUsuarioById(String username) {
+    private Usuario findUsuarioByEmail(String username) {
         Optional<Usuario> findById = usuarioRepository.findByEmail(username);
+        return findById.orElseThrow( () -> new IllegalArgumentException("Usuário não encontrado"));
+    }
+
+    private Evento findEventoById(Long id) {
+        var findById = eventoRepository.findById(id);
         return findById.orElseThrow( () -> new IllegalArgumentException("Usuário não encontrado"));
     }
     // Checa se o evento ocorre hoje
@@ -213,9 +226,26 @@ public class EventoService {
         }
     }
 
-	public ResponseEntity<?> salvarImagemEvento(MultipartFile image) {
-        String eventImageDir = "C:\\CasaMovel\\eventos\\";
-        String imagemSalva = disco.salvarImagem(image, eventImageDir);
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\""+imagemSalva+"\"}");
-	}
+	public ResponseEntity<?> salvarImagemEvento(Long id, MultipartFile image) {
+        
+        var saveImagePath = disco.salvarImagem(image, eventImageDir);
+        var eventoFound = findEventoById(id);
+        eventoFound.setFoto(saveImagePath);
+        eventoRepository.save(eventoFound);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("{\"url\":\""+saveImagePath+"\"}");
+    }
+    
+    public ResponseEntity<?> getImageEvent(String filename){
+        Path path = Paths.get(eventImageDir + filename);
+	    Resource resource = null;
+        try {
+            resource = new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType("image/png")) // "application/octet-stream"
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+            .body(resource);
+    }
 }

@@ -92,11 +92,19 @@ public class EventoEndpoint {
     {
         return es.registrarPresenca(id, registroPresencaDTO);
     }
+
+    @GetMapping("/imagem/{fileName:.+}")
+    public ResponseEntity<?> downloadImagemEvento(@PathVariable(value ="fileName") String filename ){
+        System.out.println("--------FILENAME-----------");
+        System.out.println(filename);
+        return es.getImageEvent(filename);
+    }
+
     @PostMapping("/{id}/upload")
     public ResponseEntity<?> uploadImagemEvento(
         @PathVariable(value ="id") Long id, 
         MultipartFile image
     ){
-        return es.salvarImagemEvento(image);
+        return es.salvarImagemEvento(id,image);
     }
 }

@@ -42,14 +42,25 @@ public class UploadImagemEventoIntegrationTest extends CasamovelApplicationInteg
         .then()
             .statusCode(equalTo(HttpStatus.SC_OK))
             .and()
-            .header("location", "http://localhost/casamovel/evento/10.png")
             .body(
-                "mensagem",equalTo("Seu arquivo foi salvo"),
-                "uri", equalTo("http://localhost/casamovel/evento/10.png")
+                "uri", equalTo("http://localhost/evento/imagem/10.png")
             )
-            .log().body();
+            .and()
+            .log().body();  
+    }
 
-        
-        
+    @Test
+    @DisplayName("Test if returns 200 OK at access download imagem")
+    public void deveBaixarFotoDeUmEvento(){
+        given()
+            .port(porta)
+            .pathParam("eventoId", 10)
+            .header("Authorization", usuarioAutenticado.getToken())
+            // .accept("application/octet-stream")
+        .when()
+            .get("/evento/imagem/{eventoId}.png")
+        .then()
+            .statusCode(equalTo(HttpStatus.SC_OK))
+            .log().all();
     }
 }
