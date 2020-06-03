@@ -151,7 +151,10 @@ public class EventoService {
         Usuario usuario = resultUsuario.get();
         Optional<EventoUsuario> findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
         if (!findById.isPresent()){
-            throw new IllegalArgumentException("O usuário não possui vínculo com evento");
+            return  ResponseEntity
+            .badRequest()
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body("{\"mensagem\":\"O usuário não possui vínculo com evento\"}");
         } else {
             eventoUsuarioRepository.deleteById(new EventoUsuarioID(eventoId, usuario.getId()));
             return ResponseEntity.status(HttpStatus.OK).build();

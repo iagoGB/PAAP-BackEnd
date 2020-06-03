@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import br.com.casamovel.CasamovelApplicationTests;
+import br.com.casamovel.CasamovelApplicationIntegrationIT;
 
-public class UsuarioEmailTest extends CasamovelApplicationTests {
+public class UsuarioEmailIntegrationTest extends CasamovelApplicationIntegrationIT {
     @Test
     public void deveRetornarUmUsuarioExistenteEStatus200OK() throws Exception {
         given()

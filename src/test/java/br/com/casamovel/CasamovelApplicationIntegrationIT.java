@@ -19,7 +19,7 @@ import br.com.casamovel.dto.autenticacao.RespostaAutenticacao;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @TestPropertySource(value = "resources/application-test.properties")
-public abstract class CasamovelApplicationTests {
+public abstract class CasamovelApplicationIntegrationIT {
 	
 	@Value("${local.server.port}")
 	protected  int porta;

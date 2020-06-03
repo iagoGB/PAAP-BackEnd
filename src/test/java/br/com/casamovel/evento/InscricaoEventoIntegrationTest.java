@@ -2,12 +2,18 @@ package br.com.casamovel.evento;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+
 import org.junit.Test;
 
-import br.com.casamovel.CasamovelApplicationTests;
+import br.com.casamovel.CasamovelApplicationIntegrationIT;
 
-public class InscricaoEventoTest extends CasamovelApplicationTests{
+public class InscricaoEventoIntegrationTest extends CasamovelApplicationIntegrationIT {
     // O usuário já possui 2 eventos cadastrados ao inicializar o banco
+    private static final String USUARIO_EMAIL_PATH = "/usuario/email";
+    private static final String EVENTO_POR_ID_PATH = "/evento/{eventoId}";
+    private static final String EVENTO_INSCRICAO_PATH = "/evento/{eventoId}/inscricao";
+    private static final String REMOVER_INSCRICAO_PATH = "/evento/{eventoId}/remover-inscricao";
+
     @Test
     public void DeveCadastrarUsuarioExistenteEAindaNaoInscritoEmEventoExistenteERetornar201(){
         // Se inscreve com usuário comum
@@ -15,9 +21,10 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
             .port(porta)
             .param("username",usuarioAutenticado.getUsername())
             .header("Authorization", usuarioAutenticado.getToken())
+        .when()
             .pathParam("eventoId", 10)
             // .log().all()
-            .put("/evento/{eventoId}/inscricao")
+            .put(EVENTO_INSCRICAO_PATH)
         .then()
             .statusCode(equalTo(201)) // Created
             .and()
@@ -28,7 +35,8 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
             .port(porta)
             .header("Authorization", administradorAutenticado.getToken())
             .pathParam("eventoId", 10)
-            .get("/evento/{eventoId}")
+        .when()
+            .get(EVENTO_POR_ID_PATH)
         .then()
             .statusCode(equalTo(200)) // OK
             .and()
@@ -37,8 +45,9 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
         given()
             .port(porta)
             .header("Authorization", administradorAutenticado.getToken())
-            .pathParam("username", usuarioAutenticado.getUsername())
-            .get("/usuario/username/{username}")
+            .param("username", usuarioAutenticado.getUsername())
+        .when()
+            .get(USUARIO_EMAIL_PATH)
         .then()
             .statusCode(equalTo(200)) // OK
             .and()
@@ -46,7 +55,7 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
             .and()
             .body(
                 "eventos", hasSize(3), // Agora será 3
-                "eventos[2].titulo", equalTo("Evento Spring Boot Test")
+                "eventos[2].id", equalTo(10)
             );     
     }
 
@@ -58,7 +67,8 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
             .param("username",usuarioAutenticado.getUsername())
             .header("Authorization", usuarioAutenticado.getToken())
             .pathParam("eventoId", 20)
-            .put("/evento/{eventoId}/inscricao")
+        .when()
+            .put(EVENTO_INSCRICAO_PATH)
         .then()
             .statusCode(equalTo(400)) // BadRequest
             .and()
@@ -70,16 +80,16 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
         given()
             .port(porta)
             .header("Authorization", administradorAutenticado.getToken())
-            .pathParam("username", usuarioAutenticado.getUsername())
-            .get("/usuario/username/{username}")
+            .param("username", usuarioAutenticado.getUsername())
+        .when()
+            .get(USUARIO_EMAIL_PATH)
         .then()
             .statusCode(equalTo(200)) // OK
             .and()
             .log().body()
             .and()
             .body(
-                "eventos", hasSize(2), // Deve continuar dois eventos
-                "eventos[0].titulo", equalTo("Treinamento de Educação a Distância Para Professores")
+                "eventos", hasSize(2)// Deve continuar dois eventos
             );      
     }
 
@@ -91,9 +101,10 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
             .param("username",usuarioAutenticado.getUsername())
             .header("Authorization", usuarioAutenticado.getToken())
             .pathParam("eventoId", 20)
-            .put("/evento/{eventoId}/remover-inscricao")
+        .when()
+            .put(REMOVER_INSCRICAO_PATH)
         .then()
-            .statusCode(equalTo(200)) // BadRequest
+            .statusCode(equalTo(200)) // Status OK
             .and()
             .log().body();
 
@@ -101,8 +112,9 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
         given()
             .port(porta)
             .header("Authorization", administradorAutenticado.getToken())
-            .pathParam("username", usuarioAutenticado.getUsername())
-            .get("/usuario/username/{username}")
+            .param("username", usuarioAutenticado.getUsername())
+        .when()
+            .get(USUARIO_EMAIL_PATH)
         .then()
             .statusCode(equalTo(200)) // OK
             .and()
@@ -119,11 +131,12 @@ public class InscricaoEventoTest extends CasamovelApplicationTests{
             .param("username",usuarioAutenticado.getUsername())
             .header("Authorization", usuarioAutenticado.getToken())
             .pathParam("eventoId",10)
-            .put("/evento/{eventoId}/remover-inscricao")
+        .when()
+            .put(REMOVER_INSCRICAO_PATH)
         .then() 
-            .statusCode(equalTo(500)) // Erro interno
+            .statusCode(equalTo(400)) // Bad Request
             .and()
-            .body("message", equalTo("O usuário não possui vínculo com evento"))
+            .body("mensagem", equalTo("O usuário não possui vínculo com evento"))
             .and()
             .log().body();
     }

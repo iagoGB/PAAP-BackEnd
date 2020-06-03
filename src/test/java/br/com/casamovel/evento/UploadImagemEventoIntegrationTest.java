@@ -13,9 +13,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import br.com.casamovel.CasamovelApplicationTests;
+import br.com.casamovel.CasamovelApplicationIntegrationIT;
 
-public class UploadImagemEventoTest extends CasamovelApplicationTests {
+public class UploadImagemEventoIntegrationTest extends CasamovelApplicationIntegrationIT {
     private final Path root = FileSystems.getDefault().getPath("").toAbsolutePath();
     private final String FILENAME = "eventoImagem.png";
     private Path filePath = Paths.get(root.toString(),

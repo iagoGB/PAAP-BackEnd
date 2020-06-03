@@ -6,9 +6,9 @@ import static org.hamcrest.Matchers.equalTo;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import br.com.casamovel.CasamovelApplicationTests;
+import br.com.casamovel.CasamovelApplicationIntegrationIT;
 
-public class UsuarioTokenTest extends CasamovelApplicationTests {
+public class UsuarioTokenIntegrationTest extends CasamovelApplicationIntegrationIT {
 
     @Test
     public void deveRetornarRecursosDeAdministradorAoTentarAutenticar() throws Exception {
