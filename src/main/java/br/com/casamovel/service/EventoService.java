@@ -5,6 +5,7 @@
  */
 package br.com.casamovel.service;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,8 +18,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
@@ -232,20 +237,23 @@ public class EventoService {
         var eventoFound = findEventoById(id);
         eventoFound.setFoto(saveImagePath);
         eventoRepository.save(eventoFound);
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("{\"url\":\""+saveImagePath+"\"}");
+        return ResponseEntity.ok().build();
     }
     
     public ResponseEntity<?> getImageEvent(String filename){
         Path path = Paths.get(eventImageDir + filename);
-	    Resource resource = null;
+	    // Resource resource = null;
         try {
-            resource = new UrlResource(path.toUri());
-        } catch (MalformedURLException e) {
+            var resource = new FileSystemResource(path);
+            System.out.println("Path: "+ path.toString());
+            var bytes = StreamUtils.copyToByteArray(resource.getInputStream());
+            return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG) // "application/octet-stream"
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+            .body(bytes);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType("image/png")) // "application/octet-stream"
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-            .body(resource);
+        return null;
     }
 }

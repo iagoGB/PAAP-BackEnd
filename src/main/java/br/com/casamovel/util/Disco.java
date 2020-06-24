@@ -18,7 +18,7 @@ public class Disco {
             if (!directoryExists(basePath)) 
                 Files.createDirectories(basePath);  
             Files.copy(imageFile.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-            return targetPath.toString();
+            return fileName;
                 
         } catch (Exception e){
             e.printStackTrace();

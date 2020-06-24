@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   casamovel-db:
@@ -8,4 +8,4 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - /home/iago/Database/PostgreSQL:/var/lib/postgresql/data
+      - C:/database:/var/lib/postgresql/data
