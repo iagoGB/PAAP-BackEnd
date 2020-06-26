@@ -146,7 +146,7 @@ public class Evento implements Serializable {
 	public void parse(NovoEventoDTO eDto, Categoria categoria, PalestranteRepository pr) {
 		
         
-        setFoto("Caminho da foto aqui");
+        setFoto("default.png");
         setTitulo(eDto.getTitulo());
         setCategoria(categoria);
         setCargaHoraria(eDto.getCarga_horaria());

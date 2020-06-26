@@ -5,6 +5,7 @@
  */
 package br.com.casamovel.service;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -95,7 +96,6 @@ public class EventoService {
         {
             Categoria c = null;
             Optional<Categoria> optC;
-            System.out.println("categoria Rep: "+ categoriaRepository.findById(novoEventoDTO.getCategoria()).toString());
             optC = categoriaRepository.findById(novoEventoDTO.getCategoria());
             if (optC.isPresent()){
                 c = optC.get();
@@ -108,7 +108,6 @@ public class EventoService {
         } catch (Exception e) 
         {
             Logger.getLogger(EventoEndpoint.class.getName()).log(Level.SEVERE, null, e);
-            System.out.println("Erro ao criar evento, triste kk: "+ e);
         }
         return result;
     }
@@ -251,9 +250,15 @@ public class EventoService {
             .contentType(MediaType.IMAGE_JPEG) // "application/octet-stream"
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
             .body(bytes);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } 
+        catch(FileNotFoundException ex){
+            System.out.println("Arquivo não encontrado!!!!!!");
+            return ResponseEntity.notFound().build();
+        } 
+        catch (Exception e) {
+            System.out.println("Outro erro qualquer!!!!!!");
+            return ResponseEntity.status(500).build();
         }
-        return null;
+        
     }
 }

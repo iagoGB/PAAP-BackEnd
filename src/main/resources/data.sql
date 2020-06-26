@@ -5,6 +5,12 @@ INSERT INTO public.categoria(id, nome) VALUES (1, 'Ciência e Tecnologia');
 INSERT INTO public.categoria(id, nome) VALUES (2, 'Cultura e Arte');
 INSERT INTO public.categoria(id, nome) VALUES (3, 'Educação e Pesquisa');
 
+INSERT INTO public.palestrante(descricao, foto, nome) VALUES ('Departamento de Tecnologia', '/palestrante/numerodafotox.png', 'João Ribeiro');
+INSERT INTO public.palestrante(descricao, foto, nome) VALUES ('Professor da Universidade do Texas', '/palestrante/numerodafotoy.png', 'Luce Hasenberg');
+INSERT INTO public.palestrante(descricao, foto, nome) VALUES ('Socióloga do Departamento de Cidadania da Alemanha', '/palestrante/numerodafotoz.png', 'Ashley Monrow');
+
+
+
 INSERT INTO public.usuario(
 	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, senha, telefone
 )
