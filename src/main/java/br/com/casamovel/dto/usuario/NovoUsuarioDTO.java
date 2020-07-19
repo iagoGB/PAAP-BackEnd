@@ -35,7 +35,7 @@ public class NovoUsuarioDTO {
 	@NotNull @NotEmpty
 	private String telefone;
 	@NotNull @PastOrPresent
-	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" ,timezone = "GMT-3")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" ,timezone = "GMT-3")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" ,timezone = "GMT-3")
+	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" ,timezone = "GMT-3")
 	private LocalDate data_ingresso;
 }

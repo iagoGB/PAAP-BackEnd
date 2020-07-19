@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com</groupId>
-	<artifactId>casamovel</artifactId>
+	<artifactId>paap</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>CasaMovelAPI</name>
-	<description>API para aplicativo móvel do programa CASa UFC</description>
+	<name>PAAPAPI</name>
+	<description>API para aplicativo móvel do programa PAAP UFC</description>
 
 	<properties>
 		<java.version>13</java.version>

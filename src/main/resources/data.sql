@@ -90,15 +90,15 @@ INSERT INTO public.evento(
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
-	VALUES (20,4, '2020-04-21 14:00:00.067', 'http://localhost:8080/evento/20/evento_20.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
+	VALUES (20,4, '2020-04-21 14:00:00.067', 'default.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
-	VALUES (33,3, '2020-07-22 15:00:00.067', 'http://localhost:8080/evento/33/evento_33.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
+	VALUES (33,3, '2020-07-22 15:00:00.067', 'default.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)
-	VALUES (50,3, '2020-04-22 18:00:00.067', 'http://localhost:8080/caminho-da-foto', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
+	VALUES (50,3, '2020-09-22 18:00:00.067', 'default.png', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
 
  --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
     INSERT INTO public.evento_usuario(

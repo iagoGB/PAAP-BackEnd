@@ -6,8 +6,6 @@
 package br.com.casamovel.service;
 
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -19,13 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -104,6 +97,8 @@ public class EventoService {
             Evento novoEventoModel = new Evento();
             novoEventoModel.parse(novoEventoDTO, c, palestranteRepository);
             result = eventoRepository.save(novoEventoModel);
+            result.setEventKeyword("XYZ-"+result.getId());
+            result = eventoRepository.save(result);
             
         } catch (Exception e) 
         {
@@ -208,6 +203,7 @@ public class EventoService {
     }
     
     private void checaCodigoEvento(EventoUsuario relacao,String keyword) {
+        System.out.println("Keyword:  "+keyword+", eventoKeyWord: "+ relacao.getEvento_id().getEventKeyword());
         if (!relacao.getEvento_id().getEventKeyword().equals(keyword))
             throw new IllegalArgumentException("Código do evento inválido");
     }

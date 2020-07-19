@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class CasaMovelApplication {
-	
-	public static void main(String[] args) {	
-		
-		SpringApplication.run(CasaMovelApplication.class, args);
+public class PAAPApplication {
+
+	public static void main(String[] args) {
+
+		SpringApplication.run(PAAPApplication.class, args);
 		System.out.println("Senha criptografada: " + new BCryptPasswordEncoder().encode("abc"));
 		
 	}	
