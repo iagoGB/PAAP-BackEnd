@@ -41,18 +41,12 @@ public class EventoEndpoint {
     }
 
     @PostMapping
-    public ResponseEntity<DetalhesEventoDTO> salvaEvento(
+    public ResponseEntity<?> salvaEvento(
     	@RequestBody final NovoEventoDTO evento,
     	final UriComponentsBuilder uriBuilder
     ) 
     {
-    	final Evento salvarEvento = es.salvarEvento(evento);
-        if (salvarEvento != null ) {
-        	final DetalhesEventoDTO parse = DetalhesEventoDTO.parse(salvarEvento);
-            return ResponseEntity.status(HttpStatus.CREATED).body(parse);
-        } else {
-            return ResponseEntity.badRequest().body(null);
-        }
+    	return es.salvarEvento(evento);
     }
 
     @DeleteMapping("/{id}")

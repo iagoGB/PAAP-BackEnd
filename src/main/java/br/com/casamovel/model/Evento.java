@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.repository.PalestranteRepository;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.var;
 
 import java.io.Serializable;
 
@@ -22,7 +26,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@Getter
+@Setter
+@NoArgsConstructor
 @EqualsAndHashCode
 @Entity
 public class Evento implements Serializable {
@@ -40,14 +47,13 @@ public class Evento implements Serializable {
 
 	private String foto;
 
-	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =
-	// "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
+	private String qrCode;
+
 	private LocalDateTime dataHorario;
 
 	private String local;
 
-	// @JsonFormat(pattern = "HH:mm", timezone = "GMT-3")
-	private int cargaHoraria;
+	private Integer cargaHoraria;
 
 	@ManyToOne
 	@JoinColumn(name = "fk_categoria_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_categoria_id"), nullable = false)
@@ -59,93 +65,8 @@ public class Evento implements Serializable {
 	@OneToMany(mappedBy = "evento_id", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	List<EventoPalestrante> palestrantes = new ArrayList<EventoPalestrante>();
 
-	public Evento() {
-
-	}
-
-	public String getEventKeyword() {
-		return keyword;
-	}
-
-	public void setEventKeyword(String eventKeyword) {
-		this.keyword = eventKeyword;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getFoto() {
-		return foto;
-	}
-
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
-
-	public LocalDateTime getDataHorario() {
-		return dataHorario;
-	}
-
-	public void setDataHorario(LocalDateTime dataHorario) {
-		this.dataHorario = dataHorario;
-	}
-
-	public String getLocal() {
-		return local;
-	}
-
-	public void setLocal(String local) {
-		this.local = local;
-	}
-
-	public Integer getCargaHoraria() {
-		return cargaHoraria;
-	}
-
-	public void setCargaHoraria(int cargaHoraria) {
-		this.cargaHoraria = cargaHoraria;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
-
-	public List<EventoUsuario> getUsuarios() {
-		return usuarios;
-	}
-
-	public void setUsuarios(List<EventoUsuario> usuarios) {
-		this.usuarios = usuarios;
-	}
-
-	public List<EventoPalestrante> getPalestrantes() {
-		return palestrantes;
-	}
-
-	public void setPalestrantes(List<EventoPalestrante> palestrantes) {
-		this.palestrantes = palestrantes;
-	}
-
 	public void parse(NovoEventoDTO eDto, Categoria categoria, PalestranteRepository pr) {
 		
-        
         setFoto("default.png");
         setTitulo(eDto.getTitulo());
         setCategoria(categoria);
@@ -155,25 +76,15 @@ public class Evento implements Serializable {
         setEstaAberto(true);
         categoria.getEventos().add(this);
         //Relação palestrante e evento
-        eDto.getPalestrantes().forEach( nome -> 
-        {
-        	Palestrante palestrante = pr.findByNome(nome);
-        	EventoPalestrante ep = new EventoPalestrante();
+        eDto.getPalestrantes().forEach( nome ->  {
+        	var palestrante = pr.findByNome(nome);
+        	var ep = new EventoPalestrante();
         	ep.setEvento_id(this);
         	ep.setNome_palestrante_id(palestrante);
         	this.palestrantes.add(ep);
         	palestrante.getEventos().add(ep);
-        	System.out.println("Terminou de executar  kkj");
+        	System.out.println("Terminou de executar  relação de um palestrante com evento");
         	
         });
-	}
-
-	public Boolean getEstaAberto() {
-		return estaAberto;
-	}
-
-	public void setEstaAberto(Boolean estaAberto) {
-		this.estaAberto = estaAberto;
-	}
-	
+	}	
 }

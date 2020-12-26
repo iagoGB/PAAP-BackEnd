@@ -22,7 +22,7 @@ public class PAAPApplication {
 	
 	@RequestMapping("/login")
 	public String home() {
-		return "Hello World! \n Welcome to CASa Móvel API";
+		return "Hello World! \n Welcome to PAAP API";
 		
 	} 
 	

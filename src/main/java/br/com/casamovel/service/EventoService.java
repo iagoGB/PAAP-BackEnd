@@ -5,6 +5,7 @@
  */
 package br.com.casamovel.service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,11 +14,12 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,8 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
-import br.com.casamovel.endpoint.EventoEndpoint;
-import br.com.casamovel.model.Categoria;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.model.EventoUsuario;
 import br.com.casamovel.model.EventoUsuarioID;
@@ -43,6 +43,8 @@ import br.com.casamovel.repository.EventoUsuarioRepository;
 import br.com.casamovel.repository.PalestranteRepository;
 import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.util.Disco;
+import br.com.casamovel.util.QRCodeGenerator;
+import net.bytebuddy.utility.RandomString;
 
 
 /**
@@ -72,6 +74,17 @@ public class EventoService {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    QRCodeGenerator qrCodeGenerator;
+
+    @Autowired
+    S3StorageService s3StorageService;
+    
+    @Value("${events.folder}")
+    private String EVENTS_FOLDER;
+    @Value("${qrcodes.folder}")
+    private String QRCODES_FOLDER;
+
     private String eventImageDir = "C:\\CasaMovel\\eventos\\";
     
     public List<DetalhesEventoDTO> listarEventos(){
@@ -83,30 +96,35 @@ public class EventoService {
         return result;
     }
     
-    public Evento salvarEvento(NovoEventoDTO novoEventoDTO) {
-    	Evento result = null;
-        try 
-        {
-            Categoria c = null;
-            Optional<Categoria> optC;
-            optC = categoriaRepository.findById(novoEventoDTO.getCategoria());
-            if (optC.isPresent()){
-                c = optC.get();
-            }
-                       
-            Evento novoEventoModel = new Evento();
-            novoEventoModel.parse(novoEventoDTO, c, palestranteRepository);
-            result = eventoRepository.save(novoEventoModel);
-            result.setEventKeyword("XYZ-"+result.getId());
-            result = eventoRepository.save(result);
-            
-        } catch (Exception e) 
-        {
-            Logger.getLogger(EventoEndpoint.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return result;
+    public ResponseEntity<?> salvarEvento(NovoEventoDTO novoEventoDTO) {
+            // TODO - Tratar erro para categoria invalida e nome do palestrante inexistente
+            return categoriaRepository.findById(novoEventoDTO.getCategoria())
+            .map(findedCategory -> {
+                var newEventoModel = new Evento();
+                newEventoModel.parse(novoEventoDTO, findedCategory, palestranteRepository);
+                newEventoModel = eventoRepository.save(newEventoModel);
+                var keyword = RandomString.make() + newEventoModel.getId();
+                newEventoModel.setKeyword(keyword);
+                var qrCodeURL = this.generateQRCodeEvent(newEventoModel);
+                newEventoModel.setQrCode(qrCodeURL);
+                newEventoModel = eventoRepository.save(newEventoModel);
+                var response = DetalhesEventoDTO.parse(newEventoModel);
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            }).orElse(ResponseEntity.badRequest().body(null));
     }
     
+    private String generateQRCodeEvent(Evento newEvent) {
+        String resourceURL = null;
+        try {
+            var file = File.createTempFile( String.format("qrcode_%d", newEvent.getId()), ".png");
+            file = qrCodeGenerator.create(newEvent.getKeyword(), 200, 200, file);
+            resourceURL = s3StorageService.saveImage(file, newEvent.getId(), QRCODES_FOLDER);
+        } catch (Exception e) {
+            System.out.println("OCORREU UM ERRO AO TENTAR SALVAR QRCODE: "+e);
+        }
+        return resourceURL;
+    }
+
     public boolean deletarEvento(long id) {
         boolean deletou = false;
         try {
@@ -203,8 +221,8 @@ public class EventoService {
     }
     
     private void checaCodigoEvento(EventoUsuario relacao,String keyword) {
-        System.out.println("Keyword:  "+keyword+", eventoKeyWord: "+ relacao.getEvento_id().getEventKeyword());
-        if (!relacao.getEvento_id().getEventKeyword().equals(keyword))
+        System.out.println("Keyword:  "+keyword+", eventoKeyWord: "+ relacao.getEvento_id().getKeyword());
+        if (!relacao.getEvento_id().getKeyword().equals(keyword))
             throw new IllegalArgumentException("Código do evento inválido");
     }
 
