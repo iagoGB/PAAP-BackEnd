@@ -44,6 +44,7 @@ import br.com.casamovel.repository.PalestranteRepository;
 import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.util.Disco;
 import br.com.casamovel.util.QRCodeGenerator;
+import lombok.var;
 import net.bytebuddy.utility.RandomString;
 
 
@@ -95,7 +96,7 @@ public class EventoService {
     	findAll.forEach(evento -> result.add(DetalhesEventoDTO.parse(evento)));
         return result;
     }
-    
+    @Transactional
     public ResponseEntity<?> salvarEvento(NovoEventoDTO novoEventoDTO) {
             // TODO - Tratar erro para categoria invalida e nome do palestrante inexistente
             return categoriaRepository.findById(novoEventoDTO.getCategoria())
@@ -110,7 +111,7 @@ public class EventoService {
                 newEventoModel = eventoRepository.save(newEventoModel);
                 var response = DetalhesEventoDTO.parse(newEventoModel);
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            }).orElse(ResponseEntity.badRequest().body(null));
+            }).orElseThrow(() -> new RuntimeException(String.format("Categoria com ID %s não existe", novoEventoDTO.getCategoria())));
     }
     
     private String generateQRCodeEvent(Evento newEvent) {
@@ -120,7 +121,7 @@ public class EventoService {
             file = qrCodeGenerator.create(newEvent.getKeyword(), 200, 200, file);
             resourceURL = s3StorageService.saveImage(file, newEvent.getId(), QRCODES_FOLDER);
         } catch (Exception e) {
-            System.out.println("OCORREU UM ERRO AO TENTAR SALVAR QRCODE: "+e);
+            throw new RuntimeException("Erro ao gerar QRCode");
         }
         return resourceURL;
     }
@@ -146,11 +147,11 @@ public class EventoService {
 	}
 
 	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoId, String usermail) {
-        Optional<Evento> resultEvento = eventoRepository.findById(eventoId);
-        Optional<Usuario> resultUsuario = usuarioRepository.findByEmail(usermail);
-        Evento evento = resultEvento.get();
-        Usuario usuario = resultUsuario.get();
-        Optional<EventoUsuario> findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
+        var resultEvento = eventoRepository.findById(eventoId);
+        var resultUsuario = usuarioRepository.findByEmail(usermail);
+        var evento = resultEvento.get();
+        var usuario = resultUsuario.get();
+        var findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
         if (findById.isPresent()) {
             return  ResponseEntity
             .badRequest()
@@ -172,9 +173,9 @@ public class EventoService {
 	}
 
 	public ResponseEntity<?> removerInscricaoEmEvento(Long eventoId, String usermail) {
-        Optional<Usuario> resultUsuario = usuarioRepository.findByEmail(usermail);
-        Usuario usuario = resultUsuario.get();
-        Optional<EventoUsuario> findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
+        var resultUsuario = usuarioRepository.findByEmail(usermail);
+        var usuario = resultUsuario.get();
+        var findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
         if (!findById.isPresent()){
             return  ResponseEntity
             .badRequest()

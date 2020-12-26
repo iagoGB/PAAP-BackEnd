@@ -3,13 +3,16 @@ package br.com.casamovel.endpoint.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.casamovel.dto.ErroDTO;
 import br.com.casamovel.dto.ErroValidacaoDTO;
 
 @RestControllerAdvice
@@ -28,6 +31,13 @@ public class ValidationErrorHandler {
 			listaErros.add(erroValidacaoDTO);
 		});
 		return listaErros;	
+	}
+
+	@ResponseStatus(code = HttpStatus.NOT_FOUND)
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<?> handler(RuntimeException exception) {
+		var erroDTO = new ErroDTO(HttpStatus.NOT_FOUND.value(), exception.getClass().getName(), exception.getMessage());	
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroDTO);
 	}
 
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
