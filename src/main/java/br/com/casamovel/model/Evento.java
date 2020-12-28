@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -75,24 +76,21 @@ public class Evento implements Serializable {
         setEstaAberto(true);
         categoria.getEventos().add(this);
 		//Relação palestrante e evento
-		setPalestrantes(eDto.getPalestrantes().stream()
 		//TODO - Verificar se o relacionamento esta realmente funcional em ambos os lados
-		.map(nome -> this.findPalestrante(nome, pr))
-		.map(palestrante -> this.setRelationship(palestrante))
-		.collect(Collectors.toList()));
+		setPalestrantes(
+			eDto.getPalestrantes().stream()
+			.map(nome -> this.findPalestrante(nome, pr))
+			.map(palestrante -> this.setRelationship(palestrante))
+			.collect(Collectors.toList())
+		);
 	}	
 
 	private Palestrante findPalestrante(String nome, PalestranteRepository pr){
-		var palestrante = pr.findByNome(nome);
-		if (palestrante.isPresent()) return palestrante.get();
-		else throw new RuntimeException(String.format("Palestrante %s não encontrado(a)", nome));
+		return pr.findByNome(nome).orElseThrow(() -> new RuntimeException(String.format("Palestrante %s não encontrado(a)", nome)));
 
 	}
 	private EventoPalestrante setRelationship(Palestrante palestrante){
-		var ep = new EventoPalestrante();
-		ep.setEvento_id(this);
-    	ep.setNome_palestrante_id(palestrante);
-		return ep;
+		return new EventoPalestrante(palestrante,this);
 	}
 	// this.palestrantes.add(ep);
 	// palestrante.getEventos().add(ep);
