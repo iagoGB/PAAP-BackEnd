@@ -99,6 +99,7 @@ public class S3StorageService  {
 
         } catch (Exception e) {
             System.err.println(e);
+            throw new RuntimeException("Erro ao salvar imagem no servidor");
         }
         return resourceUrl;
     }

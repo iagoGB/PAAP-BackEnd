@@ -85,6 +85,27 @@ public class Evento implements Serializable {
 		);
 	}	
 
+	public static Evento parseFrom(NovoEventoDTO eDto, Categoria categoria, PalestranteRepository pr) {
+		var evento = new Evento();
+        evento.setFoto("default.png");
+        evento.setTitulo(eDto.getTitulo());
+        evento.setCategoria(categoria);
+        evento.setCargaHoraria(eDto.getCarga_horaria());
+        evento.setLocal(eDto.getLocal());
+        evento.setDataHorario(eDto.getData_horario());
+        evento.setEstaAberto(true);
+        categoria.getEventos().add(evento);
+		//Relação palestrante e evento
+		//TODO - Verificar se o relacionamento esta realmente funcional em ambos os lados
+		evento.setPalestrantes(
+			eDto.getPalestrantes().stream()
+			.map(nome -> evento.findPalestrante(nome, pr))
+			.map(palestrante -> evento.setRelationship(palestrante))
+			.collect(Collectors.toList())
+		);
+		return evento;
+	}	
+
 	private Palestrante findPalestrante(String nome, PalestranteRepository pr){
 		return pr.findByNome(nome).orElseThrow(() -> new RuntimeException(String.format("Palestrante %s não encontrado(a)", nome)));
 

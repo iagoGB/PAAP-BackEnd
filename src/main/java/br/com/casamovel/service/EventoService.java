@@ -100,18 +100,21 @@ public class EventoService {
     public ResponseEntity<?> salvarEvento(NovoEventoDTO novoEventoDTO) {
             // TODO - Tratar erro para categoria invalida e nome do palestrante inexistente
             return categoriaRepository.findById(novoEventoDTO.getCategoria())
-            .map(findedCategory -> {
-                var newEventoModel = new Evento();
-                newEventoModel.parse(novoEventoDTO, findedCategory, palestranteRepository);
-                newEventoModel = eventoRepository.save(newEventoModel);
-                var keyword = RandomString.make() + newEventoModel.getId();
-                newEventoModel.setKeyword(keyword);
-                var qrCodeURL = this.generateQRCodeEvent(newEventoModel);
-                newEventoModel.setQrCode(qrCodeURL);
-                newEventoModel = eventoRepository.save(newEventoModel);
-                var response = DetalhesEventoDTO.parse(newEventoModel);
+            .map(categoria -> Evento.parseFrom(novoEventoDTO, categoria, palestranteRepository))
+            .map(evento -> {
+                evento = eventoRepository.save(evento);
+                evento.setKeyword(this.createKeyword(evento));
+                var qrCodeURL = this.generateQRCodeEvent(evento);
+                evento.setQrCode(qrCodeURL);
+                evento = eventoRepository.save(evento);
+                var response = DetalhesEventoDTO.parse(evento);
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            }).orElseThrow(() -> new RuntimeException(String.format("Categoria com ID %s não existe", novoEventoDTO.getCategoria())));
+            })
+            .orElseThrow(() -> new RuntimeException(String.format("Categoria com ID %s não existe", novoEventoDTO.getCategoria())));
+    }
+
+    private String createKeyword(Evento evento){
+        return RandomString.make() + evento.getId();
     }
     
     private String generateQRCodeEvent(Evento newEvent) {
@@ -121,7 +124,7 @@ public class EventoService {
             file = qrCodeGenerator.create(newEvent.getKeyword(), 200, 200, file);
             resourceURL = s3StorageService.saveImage(file, newEvent.getId(), QRCODES_FOLDER);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar QRCode");
+            throw new RuntimeException("Erro ao gerar QRCode: " + e.getMessage());
         }
         return resourceURL;
     }
