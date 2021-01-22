@@ -33,7 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/user")
 public class UsuarioEndpoint {
 	@Autowired
 	UsuarioRepository usuarioRepository;
@@ -81,6 +81,14 @@ public class UsuarioEndpoint {
 	public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
 		usuarioRepository.deleteById(id);
 		return ResponseEntity.ok().build();
+		
+	}
+	
+	public ResponseEntity<?> getCertificate(
+			@RequestParam(value="eventID") Long eventID,
+			@RequestParam(value="userID") Long userID
+	) {
+		return null;
 		
 	}
 }

@@ -9,7 +9,7 @@ import br.com.casamovel.CasamovelApplicationIntegrationIT;
 
 public class InscricaoEventoIntegrationTest extends CasamovelApplicationIntegrationIT {
     // O usuário já possui 2 eventos cadastrados ao inicializar o banco
-    private static final String USUARIO_EMAIL_PATH = "/usuario/email";
+    private static final String USUARIO_EMAIL_PATH = "/user/email";
     private static final String EVENTO_POR_ID_PATH = "/evento/{eventoId}";
     private static final String EVENTO_INSCRICAO_PATH = "/evento/{eventoId}/inscricao";
     private static final String REMOVER_INSCRICAO_PATH = "/evento/{eventoId}/remover-inscricao";
@@ -54,8 +54,8 @@ public class InscricaoEventoIntegrationTest extends CasamovelApplicationIntegrat
             .log().body()
             .and()
             .body(
-                "eventos", hasSize(3), // Agora será 3
-                "eventos[2].id", equalTo(10)
+                "events", hasSize(3), // Agora será 3
+                "events[2].id", equalTo(10)
             );     
     }
 
@@ -89,7 +89,7 @@ public class InscricaoEventoIntegrationTest extends CasamovelApplicationIntegrat
             .log().body()
             .and()
             .body(
-                "eventos", hasSize(2)// Deve continuar dois eventos
+                "events", hasSize(2)// Deve continuar dois eventos
             );      
     }
 
@@ -118,7 +118,7 @@ public class InscricaoEventoIntegrationTest extends CasamovelApplicationIntegrat
         .then()
             .statusCode(equalTo(200)) // OK
             .and()
-            .body("eventos", hasSize(1))
+            .body("events", hasSize(1))
             .and()
             .log().body();// Deve conter apenas um evento);  
     }

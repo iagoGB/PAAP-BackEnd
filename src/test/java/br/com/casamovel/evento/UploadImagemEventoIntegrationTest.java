@@ -42,10 +42,6 @@ public class UploadImagemEventoIntegrationTest extends CasamovelApplicationInteg
         .then()
             .statusCode(equalTo(HttpStatus.SC_OK))
             .and()
-            .body(
-                "url", equalTo("http://localhost/evento/imagem/10.png")
-            )
-            .and()
             .log().body();  
     }
 

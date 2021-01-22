@@ -14,7 +14,7 @@ public class AtualizarUsuarioDTO {
 	@NotNull @NotEmpty @Email(message = "Não é um endereço de email válido")
 	private String email;
 	@NotNull @NotEmpty
-	private String senha;
+	private String password;
 	@NotNull @NotEmpty
 	private String departamento;
 	@NotNull @NotEmpty
@@ -23,7 +23,7 @@ public class AtualizarUsuarioDTO {
 	
 	public AtualizarUsuarioDTO(Usuario usuario) {
 		this.email = usuario.getEmail();
-		this.senha = usuario.getSenha();
+		this.password = usuario.getPassword();
 		this.departamento = usuario.getDepartamento();
 		this.telefone = usuario.getTelefone();
 	}
@@ -39,10 +39,10 @@ public class AtualizarUsuarioDTO {
 	}
 	
 	public String getSenha() {
-		return senha;
+		return password;
 	}
 	public void setSenha(String senha) {
-		this.senha = senha;
+		this.password = senha;
 	}
 	public String getDepartamento() {
 		return departamento;
@@ -62,7 +62,7 @@ public class AtualizarUsuarioDTO {
 		
 		Usuario usuario = usuarioRepository.getOne(id);
 		usuario.setEmail(this.email);
-		usuario.setSenha(new BCryptPasswordEncoder().encode(this.senha));
+		usuario.setPassword(new BCryptPasswordEncoder().encode(this.password));
 		usuario.setDepartamento(this.departamento);
 		usuario.setTelefone(this.telefone);
 		return usuario;
@@ -70,7 +70,7 @@ public class AtualizarUsuarioDTO {
 
 	@Override
 	public String toString() {
-		return "AtualizarUsuarioDTO [email=" + email + ", senha=" + senha + ", departamento=" + departamento
+		return "AtualizarUsuarioDTO [email=" + email + ", senha=" + password + ", departamento=" + departamento
 				+ ", telefone=" + telefone + "]";
 	}
 

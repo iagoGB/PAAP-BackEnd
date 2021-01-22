@@ -3,6 +3,8 @@ package br.com.casamovel;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import br.com.casamovel.dto.autenticacao.RespostaAutenticacao;
+
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +14,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import br.com.casamovel.dto.autenticacao.RespostaAutenticacao;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,7 +38,7 @@ public abstract class CasamovelApplicationIntegrationIT {
 		administradorAutenticado = 
 			given()
 				.port(porta)
-				.body("{ \"email\":\"admin\", \"senha\":\"abc\"}")
+				.body("{ \"email\":\"admin\", \"password\":\"abc\"}")
 				.post(URILogin)
 			.then()
 				.log().body().and()
@@ -55,7 +55,7 @@ public abstract class CasamovelApplicationIntegrationIT {
 		usuarioAutenticado = 
 			given()
 				.port(porta)
-				.body("{ \"email\":\"usuario@teste.com\", \"senha\":\"abc\"}")
+				.body("{ \"email\":\"usuario@teste.com\", \"password\":\"abc\"}")
 				.post(URILogin)
 			.then()
 				.log().body().and()
@@ -72,7 +72,7 @@ public abstract class CasamovelApplicationIntegrationIT {
 				usuarioAutenticadoTres = 
 				given()
 					.port(porta)
-					.body("{ \"email\":\"tres@usuario.com\", \"senha\":\"abc\"}")
+					.body("{ \"email\":\"tres@usuario.com\", \"password\":\"abc\"}")
 					.post(URILogin)
 				.then()
 					.log().body().and()

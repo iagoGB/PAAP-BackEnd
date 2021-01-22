@@ -11,7 +11,7 @@ import io.restassured.http.ContentType;
  * PresencaEventoTest
  */
 public class PresencaEventoIntegrationTest extends CasamovelApplicationIntegrationIT  {
-    private static final String USUARIO_EMAIL_PATH = "/usuario/email";
+    private static final String USUARIO_EMAIL_PATH = "/user/email";
 
     @Test
     public void deveRegistrarPresencaECargaHorariaDeUsuarioJaInscritoEmEventoExistente() {
@@ -44,10 +44,11 @@ public class PresencaEventoIntegrationTest extends CasamovelApplicationIntegrati
             .log().body()
             .and()
             .body(
-                "eventos", hasSize(2),
-                "eventos[0].id", equalTo(20),
-                "eventos[0].presente", equalTo(true)
-                // "carga_horaria", equalTo("04:00:00")
+                "events", hasSize(2),
+                "events[0].id", equalTo(20),
+                "events[0].presente", equalTo(true),
+                //1500 o usuário já possuia, O evento registrado possui 4h
+                "workload", equalTo(1500+(4*60))
             );     
     }
 
@@ -82,10 +83,10 @@ public class PresencaEventoIntegrationTest extends CasamovelApplicationIntegrati
             .log().body()
             .and()
             .body(
-                "eventos", hasSize(2),
-                "eventos[0].id", equalTo(50),
-                "eventos[0].presente", equalTo(true)
-                // "carga_horaria", equalTo("03:00:00")
+                "events", hasSize(2),
+                "events[0].id", equalTo(50),
+                "events[0].presente", equalTo(true),
+                "workload", equalTo(600)
             );     
     }
 

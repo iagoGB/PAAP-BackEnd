@@ -29,7 +29,7 @@ public class NovoUsuarioDTO {
 	@NotNull @NotEmpty
 	private String nome;
 	@NotNull @NotEmpty
-	private String senha;
+	private String password;
 	@NotNull @NotEmpty
 	private String departamento;
 	@NotNull @NotEmpty

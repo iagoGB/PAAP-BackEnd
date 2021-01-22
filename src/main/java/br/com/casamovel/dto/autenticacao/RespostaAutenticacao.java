@@ -1,15 +1,13 @@
 package br.com.casamovel.dto.autenticacao;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * RespostaAutenticacao
  */
 
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Builder
 @Getter

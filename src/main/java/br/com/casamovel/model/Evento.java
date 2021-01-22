@@ -3,35 +3,22 @@ package br.com.casamovel.model;
 
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.repository.PalestranteRepository;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.var;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @Entity
+@Builder
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +49,7 @@ public class Evento implements Serializable {
 	@OneToMany(mappedBy = "evento_id") // acho que aqui é evento ID
 	List<EventoUsuario> usuarios = new ArrayList<EventoUsuario>();
 
-	@OneToMany(mappedBy = "evento_id", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+	@OneToMany(mappedBy = "evento_id", cascade = { CascadeType.ALL })
 	List<EventoPalestrante> palestrantes = new ArrayList<EventoPalestrante>();
 
 	public void parse(NovoEventoDTO eDto, Categoria categoria, PalestranteRepository pr) {

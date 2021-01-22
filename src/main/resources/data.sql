@@ -12,12 +12,12 @@ INSERT INTO public.palestrante(descricao, foto, nome) VALUES ('Socióloga do Dep
 
 
 INSERT INTO public.usuario(
-	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, senha, telefone
+	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, password, telefone
 )
 VALUES ( 
     '2019-12-25 18:26:29.124',
     '../assets/images/default_avatar.png',
-    '00:00:00',
+    120,
     '99999',
     '2019-12-25 10:57:29.067', 
     '2019-12-20',
@@ -29,12 +29,12 @@ VALUES (
 );
 
 INSERT INTO public.usuario(
-	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, senha, telefone
+	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, password, telefone
 )
 VALUES ( 
     '2016-09-15 14:26:29.124',
     '../assets/images/default_avatar.png',
-    '00:00:00',
+    1500,
     '5555',
     '2019-12-25 08:27:59.067', 
     '2016-12-20',
@@ -46,12 +46,12 @@ VALUES (
 );
 
 INSERT INTO public.usuario(
-	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, senha, telefone
+	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, password, telefone
 )
 VALUES ( 
     '2017-02-02 16:31:29.124',
     '../assets/images/default_avatar.png',
-    '03:00:00',
+    600,
     '6565',
     '2017-12-25 08:27:59.067', 
     '2017-10-20',
@@ -63,12 +63,12 @@ VALUES (
 );
 
 INSERT INTO public.usuario(
-	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, senha, telefone
+	atualizado_em, avatar, carga_horaria, cpf, criado_em, data_ingresso, departamento, email, nome, password, telefone
 )
 VALUES ( 
     '2017-02-02 16:31:29.124',
     '../assets/images/default_avatar.png',
-    '00:00:00',
+    2550,
     '223344',
     '2018-12-25 08:27:59.067', 
     '2018-10-20',
@@ -86,19 +86,19 @@ INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (4, 'ROLE_USER');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)
-	VALUES (10,2, '2020-04-12 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true,'CODeXXYYZ20-10');
+	VALUES (10,2*60, '2020-04-12 09:00:00.067', 'caminho', 'Rua Juscelino Kubicheck','Evento Spring Boot Test', 1, true,'CODeXXYYZ20-10');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
-	VALUES (20,4, '2020-04-21 14:00:00.067', 'default.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
+	VALUES (20,4*60, '2020-04-21 14:00:00.067', 'default.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto,keyword)
-	VALUES (33,3, '2020-07-22 15:00:00.067', 'default.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
+	VALUES (33,3*60, '2020-07-22 15:00:00.067', 'default.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
 
 INSERT INTO public.evento(
 	id, carga_horaria, data_horario, foto, local, titulo, fk_categoria_id, esta_aberto, keyword)
-	VALUES (50,3, '2020-09-22 18:00:00.067', 'default.png', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
+	VALUES (50,3*60, '2020-09-22 18:00:00.067', 'default.png', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
 
  --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
     INSERT INTO public.evento_usuario(

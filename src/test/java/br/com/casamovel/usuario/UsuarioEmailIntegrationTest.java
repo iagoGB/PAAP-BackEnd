@@ -15,7 +15,7 @@ public class UsuarioEmailIntegrationTest extends CasamovelApplicationIntegration
             .port(porta)
             .header("Authorization", usuarioAutenticado.getToken())
             .param("username", usuarioAutenticado.getUsername())
-        .get("/usuario/email")
+        .get("/user/email")
         .then()
             .log().all().and()
             .statusCode(HttpStatus.OK.value())
@@ -30,7 +30,7 @@ public class UsuarioEmailIntegrationTest extends CasamovelApplicationIntegration
             .port(porta)
             .header("Authorization", usuarioAutenticado.getToken())
             .param("username", "emailinexistente@email.com")
-        .get("/usuario/email")
+        .get("/user/email")
         .then()
             .log().all().and()
             .statusCode(HttpStatus.NOT_FOUND.value());

@@ -22,13 +22,17 @@ import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
 import br.com.casamovel.model.Evento;
+import br.com.casamovel.repository.EventoRepository;
 import br.com.casamovel.service.EventoService;
 
 @RestController
 @RequestMapping("/evento")
 public class EventoEndpoint {
-    @Autowired
-    EventoService es;
+    private final EventoService es;
+
+    public EventoEndpoint(EventoService es) {
+        this.es = es;
+    }
 
     @GetMapping
     public List<DetalhesEventoDTO> getAll() {
@@ -50,12 +54,8 @@ public class EventoEndpoint {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletaEvento(@PathVariable(value = "id") long id) {
-        if (es.deletarEvento(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Evento excluido!");
-        } else {
-            return ResponseEntity.badRequest().body("Erro ao excluir evento");
-        }
+    public ResponseEntity<?> deletaEvento(@PathVariable(value = "id") long id) {
+        return es.deletarEvento(id);
     }
 
     @PutMapping("/{id}/inscricao")
@@ -102,4 +102,13 @@ public class EventoEndpoint {
     ){
         return es.salvarImagemEvento(id,image);
     }
+    
+    @PostMapping("/certification")
+    public ResponseEntity<?> getCertificate(
+			@RequestParam(value="eventID") Long eventID,
+			@RequestParam(value="userID") Long userID
+	) {
+		return es.getCertification(eventID,userID);
+		
+	}
 }

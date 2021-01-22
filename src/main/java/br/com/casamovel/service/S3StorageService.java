@@ -1,7 +1,9 @@
 package br.com.casamovel.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -9,13 +11,11 @@ import java.util.List;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
+
+import br.com.casamovel.model.EventoUsuario;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -63,7 +63,7 @@ public class S3StorageService  {
                 targetPath,
                 fileInputStream,
                 metadata
-            );  
+            );
             s3client.putObject(por.withCannedAcl(CannedAccessControlList.PublicRead));
             resourceUrl = s3client.getResourceUrl(bucketName,targetPath);
 
@@ -103,6 +103,37 @@ public class S3StorageService  {
         }
         return resourceUrl;
     }
+    
+    public String saveCertificate(File imageFile, EventoUsuario eu) {
+        String resourceUrl = null;
+        System.out.println(this.REGION);
+        try {
+            AWSCredentials credentials = new BasicAWSCredentials(
+                this.ACCESSKEY,
+                this.SECRETKEY
+            );
+            AmazonS3Client s3client = (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(this.REGION)
+                .build();
+            var bucketName = this.BUCKET;
+            var targetPath = "certificados"+"/"+eu.getEvento_id().getId()+"/"+eu.getUsuario_id().getId();
+            var por = new PutObjectRequest( 
+                bucketName, 
+                targetPath,
+                imageFile
+            );  
+            s3client.putObject(por.withCannedAcl(CannedAccessControlList.PublicRead));
+            resourceUrl = s3client.getResourceUrl(bucketName,targetPath);
+            System.out.println("Url do recurso: "+resourceUrl);
+
+        } catch (Exception e) {
+            System.err.println(e);
+            throw new RuntimeException("Erro ao salvar imagem no servidor");
+        }
+        return resourceUrl;
+    }
 
 
     public ResponseEntity<?> getResource(Long portfolioID, String filename, String directory) {
@@ -121,6 +152,28 @@ public class S3StorageService  {
         } catch (Exception e) {
             System.out.println("Outro erro qualquer!!!!!!");
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    public ByteArrayInputStream getResource(String directory, String filename) {
+
+        AWSCredentials credentials = new BasicAWSCredentials(
+                this.ACCESSKEY,
+                this.SECRETKEY
+        );
+        AmazonS3Client s3client = (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(this.REGION)
+                .build();
+        var key = String.format("%s/%s",directory,filename);
+        System.out.println("KEY : "+ key);
+        var s3object = s3client.getObject(BUCKET, key);
+        try {
+            return new ByteArrayInputStream(s3object.getObjectContent().readAllBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao recuperar arquivos do certificado no repositório");
         }
     }
 }

@@ -41,4 +41,14 @@ public class UsuarioTokenIntegrationTest extends CasamovelApplicationIntegration
                 "username", equalTo("usuario@teste.com")
             );
     }
+    @Test
+    public void deveRetornarNaoAutorizadoAoTentarAutenticar() throws Exception {
+        given()
+                .port(porta)
+                .body("{ \"email\":\"inexistente@teste.com\", \"senha\":\"abc\"}")
+                .post(URILogin)
+                .then()
+                .log().body().and()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
 }

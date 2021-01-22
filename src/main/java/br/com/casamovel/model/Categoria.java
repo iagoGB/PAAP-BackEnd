@@ -1,6 +1,9 @@
 package br.com.casamovel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,8 @@ import javax.persistence.Table;
 
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "categoria")
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -19,32 +19,33 @@ public class UsuarioDTO {
 	public Long id;
 	public String email;
 	public Long cpf;
-	public String nome;
-	public LocalTime carga_horaria;
-	public String departamento;
-	public String telefone;
-	public LocalDate data_ingresso;
+	public String name;
+	public Integer workload;
+	public String departament;
+	public String telephone;
+	public LocalDate entryDate;
 	public String avatar;
-	public List<EventoUsuarioDTO> eventos = new ArrayList<>();
+	public List<EventoUsuarioDTO> events;
 	
 	public UsuarioDTO(Usuario usuario) {
 		this.id = usuario.getId();
-		this.nome = usuario.getNome();
+		this.name = usuario.getNome();
 		this.cpf = usuario.getCpf();
 		this.email = usuario.getEmail();
-		this.setCarga_horaria(usuario.getCargaHoraria());
-		this.departamento = usuario.getDepartamento();
-		this.telefone = usuario.getTelefone();
-		this.setData_ingresso(usuario.getDataIngresso());
+		this.workload = usuario.getCargaHoraria();
+		this.departament = usuario.getDepartamento();
+		this.telephone = usuario.getTelefone();
+		this.setEntryDate(usuario.getDataIngresso());
 		this.setAvatar(usuario.getAvatar());
 		usuario.getEventos().forEach(relacaoEventoUsuario ->{ 
-			this.eventos.add(new EventoUsuarioDTO(relacaoEventoUsuario));
+			this.events.add(new EventoUsuarioDTO(relacaoEventoUsuario));
 		});
 	}
 	
 	public UsuarioDTO() {
 		
 	}
+
 	public Long getId() {
 		return id;
 	}
@@ -69,26 +70,29 @@ public class UsuarioDTO {
 		this.cpf = cpf;
 	}
 	
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 	
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 
-	public String getDepartamento() {
-		return departamento;
+	public String getDepartament() {
+		return departament;
 	}
-	public void setDepartamento(String departamento) {
-		this.departamento = departamento;
+
+	public void setDepartament(String departament) {
+		this.departament = departament;
 	}
-	public String getTelefone() {
-		return telefone;
+
+	public String getTelephone() {
+		return telephone;
 	}
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 	
 	public static Page<UsuarioDTO> parse(Page<Usuario> usuarios) {
@@ -99,20 +103,20 @@ public class UsuarioDTO {
 		return new UsuarioDTO(usuario);
 	}
 
-	public LocalTime getCarga_horaria() {
-		return carga_horaria;
+	public Integer getWorkload() {
+		return workload;
 	}
 
-	public void setCarga_horaria(LocalTime carga_horaria) {
-		this.carga_horaria = carga_horaria;
+	public void setWorkload(Integer workload) {
+		this.workload = workload;
 	}
 
-	public LocalDate getData_ingresso() {
-		return data_ingresso;
+	public LocalDate getEntryDate() {
+		return entryDate;
 	}
 
-	public void setData_ingresso(LocalDate data_ingresso) {
-		this.data_ingresso = data_ingresso;
+	public void setEntryDate(LocalDate entryDate) {
+		this.entryDate = entryDate;
 	}
 
 	public String getAvatar() {
