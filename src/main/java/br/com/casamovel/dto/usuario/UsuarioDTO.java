@@ -1,7 +1,6 @@
 package br.com.casamovel.dto.usuario;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,8 @@ public class UsuarioDTO {
 	public String telephone;
 	public LocalDate entryDate;
 	public String avatar;
-	public List<EventoUsuarioDTO> events;
+	@Builder.Default
+	public List<EventoUsuarioDTO> events = new ArrayList<>();
 	
 	public UsuarioDTO(Usuario usuario) {
 		this.id = usuario.getId();

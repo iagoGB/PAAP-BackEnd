@@ -32,7 +32,7 @@ public class EventoUsuario implements Serializable {
 		referencedColumnName = "id",
 		foreignKey = @ForeignKey(name="fk_evento_id")
 	)
-	private Evento evento_id;
+	private Evento eventoID;
 	
 	@Id
 	@ManyToOne
@@ -41,12 +41,14 @@ public class EventoUsuario implements Serializable {
 		referencedColumnName = "id",
 		foreignKey = @ForeignKey(name="fk_usuario_id")
 	)
-	private Usuario usuario_id;
+	private Usuario usuarioID;
+	
+	private String certificate;
 	
 	private boolean isSubscribed;
 	
 	private boolean isPresent;
 
-	private String certificate;
+	
 	
 }

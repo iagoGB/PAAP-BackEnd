@@ -29,12 +29,15 @@ public class UsuarioService {
     }
     
     public ResponseEntity<UsuarioDTO> findByEmail(String username) {
-        Optional<Usuario> optFindByEmail = usuarioRepository.findByEmail(username);
-        if (optFindByEmail.isPresent()) {
-            Usuario findByEmail = optFindByEmail.get();
-            return ResponseEntity.ok().body(UsuarioDTO.parse(findByEmail));
-        }
-        return ResponseEntity.notFound().build();
+    	System.out.println("old " +username);
+    	return usuarioRepository.findByEmail(username)
+    			.map(user -> {
+    				System.out.println(user.getId());
+    				System.out.println(user.getNome());
+
+    				return ResponseEntity.ok().body(UsuarioDTO.parse(user));
+    			})
+    			.orElse(ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<UsuarioDTO> save

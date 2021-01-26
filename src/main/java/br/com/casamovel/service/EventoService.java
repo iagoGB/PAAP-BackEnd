@@ -166,9 +166,9 @@ public class EventoService {
             EventoUsuario relacaoEventoUsuario = new EventoUsuario(
                 evento, 
                 usuario,
+                null,
                 true, 
-                false,
-                null
+                false
             );
             EventoUsuario save = eventoUsuarioRepository.save(relacaoEventoUsuario);
             if (save == null) {
@@ -219,7 +219,7 @@ public class EventoService {
             throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
         } else {
             relacao.get().setPresent(true);
-            var cargaHoraria = relacao.get().getEvento_id().getCargaHoraria();
+            var cargaHoraria = relacao.get().getEventoID().getCargaHoraria();
             usuario.setCargaHoraria( usuario.getCargaHoraria() + cargaHoraria);
             this.generateCertificate(relacao.get());
         }
@@ -235,14 +235,14 @@ public class EventoService {
                 .map((relation) -> {
                 	var participated = relation.isPresent();
                 	if (!participated) {
-                		throw new RuntimeException(String.format("%s não possui registro de presença no evento %s", relation.getUsuario_id().getNome(), relation.getEvento_id().getTitulo()));
+                		throw new RuntimeException(String.format("%s não possui registro de presença no evento %s", relation.getUsuarioID().getNome(), relation.getEventoID().getTitulo()));
                 	}
                     if (relation.getCertificate() == null) {
                         relation.setCertificate(generateCertificate(relation));
                     }
                     return ResponseEntity.ok()
     	                    .contentType(MediaType.APPLICATION_PDF) // "application/octet-stream"
-    	                    .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s_%s.pdf\"", relation.getEvento_id().getTitulo(), relation.getUsuario_id().getNome()))
+    	                    .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s_%s.pdf\"", relation.getEventoID().getTitulo(), relation.getUsuarioID().getNome()))
     	                    .body(getDocumentStream(relation.getCertificate()));
                 })
                 .orElseThrow(() -> new RuntimeException("Cadastro em evento inexistente"));
@@ -262,8 +262,8 @@ public class EventoService {
 
     public String generateCertificate(EventoUsuario relacao){
         try {
-        	var user = relacao.getUsuario_id();
-        	var event = relacao.getEvento_id();
+        	var user = relacao.getUsuarioID();
+        	var event = relacao.getEventoID();
             var resource = s3StorageService.getResource("certificados", "teste_template.jrxml");
             var template = JRXmlLoader.load(resource);
             var relatorio = JasperCompileManager.compileReport( template );
@@ -311,7 +311,7 @@ public class EventoService {
     }
 
     private void checaCodigoEvento(EventoUsuario relacao,String keyword) {
-        if (!relacao.getEvento_id().getKeyword().equals(keyword))
+        if (!relacao.getEventoID().getKeyword().equals(keyword))
             throw new IllegalArgumentException("Código do evento inválido");
     }
 

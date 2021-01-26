@@ -51,8 +51,8 @@ public class GenerateCertificationTest {
                 .build();
         
         var eu = EventoUsuario.builder()
-                .evento_id(evento)
-                .usuario_id(usuario)
+                .eventoID(evento)
+                .usuarioID(usuario)
                 .isPresent(true)
                 .build();
 		return eu;
@@ -75,15 +75,15 @@ public class GenerateCertificationTest {
     	
     	eventoUsuario.setCertificate("https://image.freepik.com/vetores-gratis/modelo-de-certificado-elegante_23-2148402681.jpg");
         
-        when(eur.findById(new EventoUsuarioID(eventoUsuario.getEvento_id().getId(), eventoUsuario.getUsuario_id().getId())))
+        when(eur.findById(new EventoUsuarioID(eventoUsuario.getEventoID().getId(), eventoUsuario.getUsuarioID().getId())))
         .thenReturn(Optional.of(eventoUsuario));
         
-        ResponseEntity<?> certificationResp = eventoService.getCertification(eventoUsuario.getEvento_id().getId(), eventoUsuario.getUsuario_id().getId());
+        ResponseEntity<?> certificationResp = eventoService.getCertification(eventoUsuario.getEventoID().getId(), eventoUsuario.getUsuarioID().getId());
         
         assertTrue(certificationResp.hasBody());
         assertEquals(200, certificationResp.getStatusCode().value());
         assertEquals( 
-        	String.format("%s_%s.pdf", eventoUsuario.getEvento_id().getTitulo(), eventoUsuario.getUsuario_id().getNome()), 
+        	String.format("%s_%s.pdf", eventoUsuario.getEventoID().getTitulo(), eventoUsuario.getUsuarioID().getNome()), 
         	certificationResp.getHeaders().getContentDisposition().getFilename()
         ); 
     }
@@ -92,15 +92,15 @@ public class GenerateCertificationTest {
     public void shouldThrowAnErrorWhenTryingDownloadCertificateThatUserDidNotParticipate(){
     	eventoUsuario.setPresent(false);
     	       
-        when(eur.findById(new EventoUsuarioID(eventoUsuario.getEvento_id().getId(), eventoUsuario.getUsuario_id().getId())))
+        when(eur.findById(new EventoUsuarioID(eventoUsuario.getEventoID().getId(), eventoUsuario.getUsuarioID().getId())))
         .thenReturn(Optional.of(eventoUsuario));
         
         RuntimeException exception = assertThrows(
         	RuntimeException.class,  
-        	() -> eventoService.getCertification(eventoUsuario.getEvento_id().getId(), eventoUsuario.getUsuario_id().getId())
+        	() -> eventoService.getCertification(eventoUsuario.getEventoID().getId(), eventoUsuario.getUsuarioID().getId())
         );
         assertEquals(
-        	String.format("%s não possui registro de presença no evento %s", eventoUsuario.getUsuario_id().getNome(), eventoUsuario.getEvento_id().getTitulo()), 
+        	String.format("%s não possui registro de presença no evento %s", eventoUsuario.getUsuarioID().getNome(), eventoUsuario.getEventoID().getTitulo()), 
         	exception.getMessage()
         );
        

@@ -2,7 +2,6 @@ package br.com.casamovel.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,10 +21,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,7 +64,7 @@ public class Usuario implements UserDetails{
 
 	private Integer cargaHoraria = 0;
 
-	@OneToMany(mappedBy = "usuario_id") // Trocar pelo outro lado que referencia aqui
+	@OneToMany(mappedBy = "usuarioID") // Trocar pelo outro lado que referencia aqui
 	private List<EventoUsuario> eventos = new ArrayList<>();
 	
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })

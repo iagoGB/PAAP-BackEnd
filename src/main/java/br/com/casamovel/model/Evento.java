@@ -46,7 +46,7 @@ public class Evento implements Serializable {
 	@JoinColumn(name = "fk_categoria_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_categoria_id"), nullable = false)
 	private Categoria categoria;
 
-	@OneToMany(mappedBy = "evento_id") // acho que aqui é evento ID
+	@OneToMany(mappedBy = "eventoID") // acho que aqui é evento ID
 	List<EventoUsuario> usuarios = new ArrayList<EventoUsuario>();
 
 	@OneToMany(mappedBy = "evento_id", cascade = { CascadeType.ALL })

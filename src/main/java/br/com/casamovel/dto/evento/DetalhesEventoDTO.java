@@ -47,7 +47,7 @@ public class DetalhesEventoDTO {
 			palestrantes.add(p.getNome_palestrante_id().getNome());
 		});
 		evento.getUsuarios().forEach(u -> {
-			participantes.add(u.getUsuario_id().getNome());
+			participantes.add(u.getUsuarioID().getNome());
 		});
 		return new DetalhesEventoDTO(
 					evento.getId(),

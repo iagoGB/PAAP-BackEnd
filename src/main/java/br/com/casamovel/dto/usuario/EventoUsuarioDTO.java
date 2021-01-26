@@ -10,7 +10,7 @@ public class EventoUsuarioDTO {
     public Boolean presente;
 
     public EventoUsuarioDTO(EventoUsuario eventoUsuario) {
-        this.id = eventoUsuario.getEvento_id().getId();
+        this.id = eventoUsuario.getEventoID().getId();
         this.inscrito = eventoUsuario.isSubscribed();
         this.presente = eventoUsuario.isPresent();
     }

@@ -118,7 +118,7 @@ public class S3StorageService  {
                 .withRegion(this.REGION)
                 .build();
             var bucketName = this.BUCKET;
-            var targetPath = "certificados"+"/"+eu.getEvento_id().getId()+"/"+eu.getUsuario_id().getId();
+            var targetPath = "certificados"+"/"+eu.getEventoID().getId()+"/"+eu.getUsuarioID().getId();
             var por = new PutObjectRequest( 
                 bucketName, 
                 targetPath,
