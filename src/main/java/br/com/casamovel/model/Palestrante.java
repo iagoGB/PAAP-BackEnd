@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import br.com.casamovel.dto.palestrante.NovoPalestranteDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +22,10 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@Setter 
+@Setter
+@Builder
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Palestrante implements Serializable {

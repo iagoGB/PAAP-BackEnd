@@ -61,10 +61,13 @@ public class Usuario implements UserDetails{
 	private String departamento;
 	
 	private String telefone;
-
+	
+	@Builder.Default
 	private Integer cargaHoraria = 0;
 
+	
 	@OneToMany(mappedBy = "usuarioID") // Trocar pelo outro lado que referencia aqui
+	@Builder.Default
 	private List<EventoUsuario> eventos = new ArrayList<>();
 	
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -92,12 +93,11 @@ public class EventoService {
 
 
     public List<DetalhesEventoDTO> listarEventos(){
-    	List<DetalhesEventoDTO> result = new ArrayList<DetalhesEventoDTO>();
-    	//List<Evento> findAll = eventoRepository.findAll();
     	System.out.println("Data do Brasil: "+ LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
-    	List<Evento> findAll = eventoRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
-    	findAll.forEach(evento -> result.add(DetalhesEventoDTO.parse(evento)));
-        return result;
+
+    	return eventoRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))
+            .stream().map(DetalhesEventoDTO::parse).collect(Collectors.toList());
+    	
     }
 
     @Transactional
@@ -118,7 +118,7 @@ public class EventoService {
     }
 
     private String createKeyword(Evento evento){
-        return RandomString.make() + evento.getId();
+        return  String.format("%s_%s", RandomString.make(),evento.getId());
     }
     
     private String generateQRCodeEvent(Evento newEvent) {

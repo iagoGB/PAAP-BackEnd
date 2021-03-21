@@ -47,6 +47,7 @@ public class Evento implements Serializable {
 	private Categoria categoria;
 
 	@OneToMany(mappedBy = "eventoID") // acho que aqui é evento ID
+	@Builder.Default
 	List<EventoUsuario> usuarios = new ArrayList<EventoUsuario>();
 
 	@OneToMany(mappedBy = "evento_id", cascade = { CascadeType.ALL })

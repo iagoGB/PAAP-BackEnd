@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.casamovel.model.Evento;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class DetalhesEventoDTO {
 	
 	private Long id;
@@ -41,6 +43,7 @@ public class DetalhesEventoDTO {
 	}
 	
 	public static DetalhesEventoDTO parse(Evento evento) {
+		// TODO - Refatorar for each para map. Tratar momentos em que lista de usuarios vem nulo.
 		var palestrantes = new ArrayList<String>();
 		var participantes = new ArrayList<String>();
 		evento.getPalestrantes().forEach( p -> {

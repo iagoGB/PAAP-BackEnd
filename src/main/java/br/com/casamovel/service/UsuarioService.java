@@ -13,30 +13,22 @@ import br.com.casamovel.dto.usuario.UsuarioDTO;
 import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UsuarioRepository;
-import javassist.NotFoundException;
 
 @Service
 public class UsuarioService {
+
     @Autowired UsuarioRepository usuarioRepository;
     @Autowired RoleRepository roleRepository;
 
-    public Usuario findById(Long id) throws NotFoundException {
-        Optional<Usuario> findById = usuarioRepository.findById(id);
-        if (findById.isPresent())
-            return findById.get();
-        else
-            throw new NotFoundException("Usuário não encontrado");
+    public ResponseEntity<UsuarioDTO> findById(Long id) {
+        return usuarioRepository.findById(id)
+            .map( user -> ResponseEntity.ok().body(UsuarioDTO.parse(user)))
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
     
     public ResponseEntity<UsuarioDTO> findByEmail(String username) {
-    	System.out.println("old " +username);
     	return usuarioRepository.findByEmail(username)
-    			.map(user -> {
-    				System.out.println(user.getId());
-    				System.out.println(user.getNome());
-
-    				return ResponseEntity.ok().body(UsuarioDTO.parse(user));
-    			})
+    			.map(user -> ResponseEntity.ok().body(UsuarioDTO.parse(user)))
     			.orElse(ResponseEntity.notFound().build());
     }
 
