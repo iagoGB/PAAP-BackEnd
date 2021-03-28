@@ -151,12 +151,17 @@ public class EventoService {
 		return null;
 	}
 
-	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoId, String usermail) {
-        var resultEvento = eventoRepository.findById(eventoId);
+    /**
+   * Inscreve um usuário em um evento.
+   * @param eventoID ID do Evento ao qual o usuário deseja participar.  
+   * @param usermail String unica que identifica o email do usuário.  
+   */
+	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoID, String usermail) {
+        var resultEvento = eventoRepository.findById(eventoID);
         var resultUsuario = usuarioRepository.findByEmail(usermail);
         var evento = resultEvento.get();
         var usuario = resultUsuario.get();
-        var findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
+        var findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoID, usuario.getId()));
         if (findById.isPresent()) {
             return  ResponseEntity
             .badRequest()
@@ -221,7 +226,6 @@ public class EventoService {
             relacao.get().setPresent(true);
             var cargaHoraria = relacao.get().getEventoID().getCargaHoraria();
             usuario.setCargaHoraria( usuario.getCargaHoraria() + cargaHoraria);
-            this.generateCertificate(relacao.get());
         }
 		return ResponseEntity.status(HttpStatus.OK).build();
     }

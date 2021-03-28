@@ -46,6 +46,7 @@ public class Usuario implements UserDetails{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@Builder.Default
     private String avatar = "../assets/images/default_avatar.png";
     
 	private long cpf;
@@ -84,15 +85,18 @@ public class Usuario implements UserDetails{
 				foreignKey = @ForeignKey(name = "fk_role_id")
 		)
 	)
+	@Builder.Default
 	private List<Role> roles = new ArrayList<>();
 
 	
 	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT-3")
 	private LocalDate dataIngresso; 
 	
+	@Builder.Default
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
 	private LocalDateTime criadoEm = LocalDateTime.now();
 	
+	@Builder.Default
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
 	private LocalDateTime atualizadoEm = LocalDateTime.now();
 

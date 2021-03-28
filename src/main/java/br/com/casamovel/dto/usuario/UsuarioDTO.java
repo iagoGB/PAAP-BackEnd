@@ -10,9 +10,11 @@ import br.com.casamovel.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Builder
 @Getter
+@ToString
 @AllArgsConstructor
 public class UsuarioDTO {
 	public Long id;

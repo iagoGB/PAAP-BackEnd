@@ -43,16 +43,12 @@ public class UsuarioEndpoint {
 	UsuarioService usuarioService;
 
 	@GetMapping
-	public Page<UsuarioDTO> listaUsuario(@RequestParam(required = false) LocalDate dataIngresso,
-			@RequestParam int pagina, @RequestParam int quantidade,
-			@RequestParam(defaultValue = "id") String ordenacao) {
-		Pageable pagination = PageRequest.of(pagina, quantidade, Direction.DESC, ordenacao);
-		Page<Usuario> usuarioEntidade = usuarioRepository.findAll(pagination);
-		return UsuarioDTO.parse(usuarioEntidade);
+	public ResponseEntity<Page<UsuarioDTO>> listaUsuario(Pageable pagination) {
+		return usuarioService.findAll(pagination);
 	}
 
 	@GetMapping("/{id}")
-	public Usuario usuarioPorId(@PathVariable(value = "id") Long id) throws NotFoundException {
+	public ResponseEntity<UsuarioDTO> usuarioPorId(@PathVariable(value = "id") Long id) throws NotFoundException {
 		return usuarioService.findById(id);
 	}
 	
@@ -88,7 +84,6 @@ public class UsuarioEndpoint {
 			@RequestParam(value="eventID") Long eventID,
 			@RequestParam(value="userID") Long userID
 	) {
-		return null;
-		
+		return null;	
 	}
 }

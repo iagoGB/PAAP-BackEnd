@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 @Getter
 public class RespostaAutenticacao {
+	private Long id;
 	private String token;
 	private String role;
 	private String username;

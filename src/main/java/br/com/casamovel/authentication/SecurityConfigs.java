@@ -11,10 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 
+import br.com.casamovel.repository.UsuarioRepository;
+
 @EnableWebSecurity
 public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private ImplementsUserDetailsService userDetailsService;
+	@Autowired
+	private UsuarioRepository userRepository;
 	private CorsConfiguration applyPermitDefaultValues;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
@@ -33,7 +37,7 @@ public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.PUT,"/evento/*/inscricao").hasRole("USER")
 			.and()
 			// filtra requisições de login
-			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+			.addFilter(new JWTAuthenticationFilter(authenticationManager(), userRepository))
 			// filtra outras requisições para verificar a presença do JWT no header
 			.addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService));
 		

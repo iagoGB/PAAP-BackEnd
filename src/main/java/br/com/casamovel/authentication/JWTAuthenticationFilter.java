@@ -8,7 +8,6 @@ import static br.com.casamovel.authentication.SecurityConstants.TOKEN_PREFIX;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,16 +25,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import br.com.casamovel.dto.autenticacao.RespostaAutenticacao;
 import br.com.casamovel.model.Usuario;
+import br.com.casamovel.repository.UsuarioRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	// Gerenciador de autenticação
 	private AuthenticationManager authenticationManager;
+	private UsuarioRepository userRepository;
 	private ObjectMapper objectMapper = new ObjectMapper();
+	
 	
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager= authenticationManager;
+	}
+
+	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, UsuarioRepository userRepository) {
+		this.authenticationManager= authenticationManager;
+		this.userRepository = userRepository;
+
 	}
 	// Tentativa de autenticação
 	@Override
@@ -62,6 +70,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		User us = ((User) authResult.getPrincipal());
 		String username = us.getUsername();
 		Collection<GrantedAuthority> u = us.getAuthorities();
+		var user = userRepository.findByEmail(username).get();
 
 		// Verifica qual role o usuário tem através do toString,
 		// então da um replace nos dados do objeto, deixando apenas o valor da role.
@@ -75,6 +84,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String bearerToken = (TOKEN_PREFIX + token);
 		response.setContentType("application/json;charset=UTF-8");
 		RespostaAutenticacao respostaAutenticacao = RespostaAutenticacao.builder()
+			.id(user.getId())
 			.token(bearerToken)
 			.role(r)
 			.username(username)

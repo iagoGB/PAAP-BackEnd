@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -16,15 +17,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.model.Categoria;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.model.EventoPalestrante;
 import br.com.casamovel.model.EventoUsuario;
+import br.com.casamovel.model.EventoUsuarioID;
 import br.com.casamovel.model.Palestrante;
 import br.com.casamovel.model.Usuario;
 import br.com.casamovel.repository.EventoRepository;
+import br.com.casamovel.repository.EventoUsuarioRepository;
+import br.com.casamovel.repository.UsuarioRepository;
 import br.com.casamovel.service.EventoService;
 
 /**
@@ -37,6 +43,12 @@ public class EventoUnitTest {
 
     @Mock
     private EventoRepository eventoRepository;
+
+    @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private EventoUsuarioRepository euRepository;
 
     private EventoUsuario eventoUsuario;
 
@@ -57,7 +69,8 @@ public class EventoUnitTest {
                 .titulo("Evento de teste")
                 .build();
    	 
-        var usuario = Usuario.builder().id(10L)
+        var usuario = Usuario.builder()
+                .id(10L)
                 .nome("Tidinha")
                 .build();
         
@@ -72,7 +85,9 @@ public class EventoUnitTest {
         var eu = EventoUsuario.builder()
                 .eventoID(evento)
                 .usuarioID(usuario)
+                .isSubscribed(true)
                 .isPresent(false)
+                .certificate(null)
                 .build();
         
 		return eu;
@@ -100,4 +115,30 @@ public class EventoUnitTest {
         // assertEquals(expectedList,resultList);
         assertTrue(expectedList.equals(resultList));
     }
+
+    @Test
+    public void deveInscreverUsuarioNoEventoComSucesso(){
+        var evento = eventoUsuario.getEventoID();
+        var usuario = eventoUsuario.getUsuarioID();
+
+        when(
+            eventoRepository.findById(evento.getId())
+        ).thenReturn(Optional.of(evento));
+        when(
+            usuarioRepository.findByEmail(usuario.getEmail())
+        ).thenReturn(Optional.of(usuario));
+        when(
+            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
+        ).thenReturn(Optional.ofNullable(null));
+        when(
+            euRepository.save(eventoUsuario)
+        ).thenReturn(eventoUsuario);
+
+        ResponseEntity<?> result = eventoService.inscreverUsuarioNoEvento(evento.getId(),usuario.getEmail());
+
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+    
+    }
+
+
 }
