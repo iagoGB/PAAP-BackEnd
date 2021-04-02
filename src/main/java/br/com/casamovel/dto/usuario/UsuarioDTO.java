@@ -3,6 +3,7 @@ package br.com.casamovel.dto.usuario;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 
@@ -10,12 +11,14 @@ import br.com.casamovel.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Builder
 @Getter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class UsuarioDTO {
 	public Long id;
 	public String email;
@@ -39,14 +42,10 @@ public class UsuarioDTO {
 		this.telephone = usuario.getTelefone();
 		this.setEntryDate(usuario.getDataIngresso());
 		this.setAvatar(usuario.getAvatar());
-		usuario.getEventos().forEach(relacaoEventoUsuario ->{ 
-			this.events.add(new EventoUsuarioDTO(relacaoEventoUsuario));
-		});
+		var collect = usuario.getEventos().stream().map(eu -> new EventoUsuarioDTO(eu)).collect(Collectors.toList());
+		this.events = collect;
 	}
 	
-	public UsuarioDTO() {
-		
-	}
 
 	public Long getId() {
 		return id;

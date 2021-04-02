@@ -58,20 +58,20 @@ public class EventoEndpoint {
     public ResponseEntity<?> inscreverEmEvento
     (
         @PathVariable(value ="id") Long id, 
-        @RequestParam(value ="username") String usermail
+        @RequestParam(value ="username") Long userID
     )
     {
-        return es.inscreverUsuarioNoEvento(id, usermail);
+        return es.inscreverUsuarioNoEvento(id, userID);
     }
 
     @PutMapping("/{id}/remover-inscricao")
     public ResponseEntity<?> removerInscricaoEmEvento
     (
         @PathVariable(value ="id") Long id, 
-        @RequestParam(value ="username") String usermail
+        @RequestParam(value ="username") Long userID
     )
     {
-        return es.removerInscricaoEmEvento(id, usermail);
+        return es.removerInscricao(id, userID);
     }
 
     @PutMapping("/{id}/registro-presenca")

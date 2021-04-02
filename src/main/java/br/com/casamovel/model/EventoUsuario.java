@@ -45,9 +45,8 @@ public class EventoUsuario implements Serializable {
 	
 	private String certificate;
 	
-	private boolean isSubscribed;
-	
-	private boolean isPresent;
+	@Builder.Default
+	private boolean isPresent = false;
 
 	
 	

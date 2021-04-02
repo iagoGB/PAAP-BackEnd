@@ -35,6 +35,7 @@ import com.amazonaws.util.IOUtils;
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
+import br.com.casamovel.dto.usuario.UsuarioDTO;
 import br.com.casamovel.model.Evento;
 import br.com.casamovel.model.EventoUsuario;
 import br.com.casamovel.model.EventoUsuarioID;
@@ -93,7 +94,7 @@ public class EventoService {
 
 
     public List<DetalhesEventoDTO> listarEventos(){
-    	System.out.println("Data do Brasil: "+ LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+    	// System.out.println("Data do Brasil: "+ LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
 
     	return eventoRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))
             .stream().map(DetalhesEventoDTO::parse).collect(Collectors.toList());
@@ -151,59 +152,52 @@ public class EventoService {
 		return null;
 	}
 
+    public Evento findEvent(Long id) {
+        return eventoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+    }
+
+    public Usuario findUser(Long id) {
+        return usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
     /**
    * Inscreve um usuário em um evento.
    * @param eventoID ID do Evento ao qual o usuário deseja participar.  
-   * @param usermail String unica que identifica o email do usuário.  
+   * @param userID String unica que identifica o email do usuário.  
    */
-	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoID, String usermail) {
-        var resultEvento = eventoRepository.findById(eventoID);
-        var resultUsuario = usuarioRepository.findByEmail(usermail);
-        var evento = resultEvento.get();
-        var usuario = resultUsuario.get();
-        var findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoID, usuario.getId()));
-        if (findById.isPresent()) {
-            return  ResponseEntity
-            .badRequest()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("{\"mensagem\":\"Usuário já esta inscrito\"}");
-        } else {
-            EventoUsuario relacaoEventoUsuario = new EventoUsuario(
-                evento, 
-                usuario,
-                null,
-                true, 
-                false
-            );
-            EventoUsuario save = eventoUsuarioRepository.save(relacaoEventoUsuario);
-            if (save == null) {
-                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-            }
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
+	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoID, Long userID) {
+        var event = findEvent(eventoID);
+        var user  = findUser(userID);
+        var findRelation = eventoUsuarioRepository.findById(new EventoUsuarioID(event.getId(), user.getId()));
+        if (findRelation.isPresent())
+            throw new RuntimeException(String.format("Usuário(a) %s já inscrito no evento", user.getNome()));
+        var relation = EventoUsuario.builder()
+            .eventoID(event)
+            .usuarioID(user)
+            .build();
+        eventoUsuarioRepository.save(relation);
+        return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<?> removerInscricaoEmEvento(Long eventoId, String usermail) {
-        var resultUsuario = usuarioRepository.findByEmail(usermail);
-        var usuario = resultUsuario.get();
-        var findById = eventoUsuarioRepository.findById(new EventoUsuarioID(eventoId, usuario.getId()));
-        if (!findById.isPresent()){
-            return  ResponseEntity
-            .badRequest()
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .body("{\"mensagem\":\"O usuário não possui vínculo com evento\"}");
-        } else {
-            eventoUsuarioRepository.deleteById(new EventoUsuarioID(eventoId, usuario.getId()));
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
+	public ResponseEntity<?> removerInscricao(Long eventoID, Long userID) {
+        var event = findEvent(eventoID);
+        var user  = findUser(userID);
+        var relationID = new EventoUsuarioID(event.getId(), user.getId());
+        return eventoUsuarioRepository.findById(relationID)
+            .map(relation -> {
+                eventoUsuarioRepository.deleteById(relationID);
+                return ResponseEntity.ok().build();
+            }).orElseThrow( () -> new RuntimeException("Usuário não possui inscrição no evento"));
 	}
 
     @Transactional
 	public ResponseEntity<?> registrarPresenca(Long eventoId, RegistroPresencaDTO data) {
         EventoUsuario eventoUsuario = null;
-        Usuario usuario = findUsuarioByEmail(data.username);
+        var usuario = findUser(data.userID);
         // Checa se usuário se inscreveu
-        Optional<EventoUsuario> relacao = eventoUsuarioRepository.findById( new EventoUsuarioID(eventoId, usuario.getId()) );
+        var relacao = eventoUsuarioRepository.findById( new EventoUsuarioID(eventoId, usuario.getId()) );
         // Se existe a relação:
         if (relacao.isPresent()){
             //Usuário está iscrito
@@ -211,10 +205,7 @@ public class EventoService {
         } else {
             // tratamento para usuário que quer registrar presença mas não está inscrito no evento
             // Se a relação nao existe, é necessário checkar se o evento existe, se o usuário esta inscrito
-            return  ResponseEntity
-            .badRequest()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("{\"mensagem\":\"Usuário  não inscrito para o evento\"}");
+           throw new RuntimeException("Usuário  não inscrito para o evento");
         }
         // Checa se a data do evento é hoje
         this.isToday(eventoId);
@@ -226,8 +217,9 @@ public class EventoService {
             relacao.get().setPresent(true);
             var cargaHoraria = relacao.get().getEventoID().getCargaHoraria();
             usuario.setCargaHoraria( usuario.getCargaHoraria() + cargaHoraria);
+            relacao.get().getUsuarioID().getEventos().add(relacao.get());
         }
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.ok().body(UsuarioDTO.parse(usuario));
     }
 
     private Optional<EventoUsuario> findRelation(Long eventoID, Long userID){
