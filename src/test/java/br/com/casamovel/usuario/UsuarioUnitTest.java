@@ -13,14 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 
 import br.com.casamovel.dto.usuario.UsuarioDTO;
 import br.com.casamovel.model.Usuario;
@@ -115,29 +109,5 @@ public class UsuarioUnitTest {
 
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());   
     }
-
-    @Test
-    public void deveTrazerUmaPaginaDeUsuariosComSucesso(){
-        Pageable pagination = PageRequest.of(0,1);
-
-        Page<Usuario> userPage = new PageImpl<Usuario>(usuarios,pagination,usuarios.size());
-        PagedListHolder pagedListHolder = new PagedListHolder(usuarios);
-        System.out.println(pagedListHolder.getPageSize());
-        System.out.println(userPage.getContent());
-
-        when(usuarioRepository.findAll(pagination))
-            .thenReturn(userPage);
         
-
-        ResponseEntity<Page<UsuarioDTO>> response = usuarioService.findAll(pagination);
-        System.out.println(response.getBody().getContent());
-        assertEquals(3L, response.getBody().getTotalElements());
-        assertEquals(2, response.getBody().getContent().size());
-
-    }
-    
-
-   
-
-    
 }

@@ -99,22 +99,6 @@ public class EventoUnitTest {
         MockitoAnnotations.initMocks(this);
         eventoUsuario = initEventUser();
     }
-    
-    @Test
-    public void deveListarTodosOsEventosAbertos(){
-        var events = Arrays.asList(eventoUsuario.getEventoID());
-        var expectedList = events.stream()
-            .map(DetalhesEventoDTO::parse)
-            .collect(Collectors.toList());
-            
-        when(
-            eventoRepository.findAllOpen(any(LocalDateTime.class))
-        ).thenReturn(events);
-        var resultList = this.eventoService.listarEventos();
-        
-        // assertEquals(expectedList,resultList);
-        assertTrue(expectedList.equals(resultList));
-    }
 
     @Test
     public void deveInscreverUsuarioNoEventoComSucesso(){
@@ -143,7 +127,7 @@ public class EventoUnitTest {
     }
 
     @Test
-    public void deveLancarErroAoTentarInscreverUsuarioEmEventoQueJaInscrito(){
+    public void deveLancarErroAoTentarInscreverUsuarioEmEventoJaInscrito(){
         var evento = eventoUsuario.getEventoID();
         var usuario = eventoUsuario.getUsuarioID();
 
