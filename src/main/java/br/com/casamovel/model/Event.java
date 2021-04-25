@@ -60,7 +60,7 @@ public class Event implements Serializable {
 	@JoinColumn(name = "fk_categoria_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_categoria_id"), nullable = false)
 	private Category category;
 
-	@OneToMany(mappedBy = "event") // nome da chave do outro lado do relacionamento
+	@OneToMany(mappedBy = "event",orphanRemoval = true) // nome da chave do outro lado do relacionamento
 	@Builder.Default
 	List<EventUser> users = new ArrayList<>();
 

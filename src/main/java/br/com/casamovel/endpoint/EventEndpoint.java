@@ -39,7 +39,7 @@ public class EventEndpoint {
         return es.findAllOpen();
     }
     
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Page<DetalhesEventoDTO>> findAll(Pageable pagination) {
         return es.findAll(pagination);
     }
@@ -51,11 +51,11 @@ public class EventEndpoint {
 
     @PostMapping
     public ResponseEntity<?> save(
-    	@RequestBody final NovoEventoDTO evento,
+    	@RequestBody final NovoEventoDTO event,
     	final UriComponentsBuilder uriBuilder
     ) 
     {
-    	return es.save(evento);
+    	return es.save(event);
     }
 
     @DeleteMapping("/{id}")
