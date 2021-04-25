@@ -53,7 +53,7 @@ public class CertificationUnitTest {
         var eu = EventUser.builder()
                 .event(event)
                 .user(user)
-                .isPresent(true)
+                .isUserPresent(true)
                 .build();
 		return eu;
 	}
@@ -84,7 +84,7 @@ public class CertificationUnitTest {
     
     @Test
     public void deveLancarUmErroAoTentarBaixarCertificadoDeUsuarioSemRegistroDePresencaNoEvento(){
-    	eventoUsuario.setPresent(false);
+    	eventoUsuario.setUserPresent(false);
     	       
         when(eur.findById(new EventUserID(eventoUsuario.getEvent().getId(), eventoUsuario.getUser().getId())))
         .thenReturn(Optional.of(eventoUsuario));

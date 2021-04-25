@@ -101,7 +101,7 @@ public class EventUnitTest {
             euRepository.save(EventUser)
         ).thenReturn(EventUser);
 
-        var result = eventoService.inscreverUsuarioNoEvento(evento.getId(),usuario.getId());
+        var result = eventoService.subscribe(evento.getId(),usuario.getId());
 
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
     }
@@ -129,7 +129,7 @@ public class EventUnitTest {
 
         var result = assertThrows(
             RuntimeException.class, () ->
-            eventoService.inscreverUsuarioNoEvento(evento.getId(),usuario.getId())
+            eventoService.subscribe(evento.getId(),usuario.getId())
         );
 
         assertEquals("Usuário(a) Tidinha já inscrito no evento", result.getMessage());
@@ -153,7 +153,7 @@ public class EventUnitTest {
             euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
         ).thenReturn(Optional.of(EventUser));
 
-        var result = eventoService.removerInscricao(evento.getId(),usuario.getId());
+        var result = eventoService.removeSubscribe(evento.getId(),usuario.getId());
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
@@ -178,7 +178,7 @@ public class EventUnitTest {
 
         var result =  assertThrows(
             RuntimeException.class, 
-            () -> eventoService.removerInscricao(evento.getId(),usuario.getId())
+            () -> eventoService.removeSubscribe(evento.getId(),usuario.getId())
         );
 
         assertEquals("Usuário não possui inscrição no evento", result.getMessage());
@@ -213,7 +213,7 @@ public class EventUnitTest {
 
 
         @SuppressWarnings("unchecked")
-		ResponseEntity<UsuarioDTO>  result = (ResponseEntity<UsuarioDTO>) eventoService.registrarPresenca(evento.getId(), presencaDTO);
+		ResponseEntity<UsuarioDTO>  result = (ResponseEntity<UsuarioDTO>) eventoService.registerPresence(evento.getId(), presencaDTO);
         var eventoParticipado = result.getBody().getEvents().stream().filter(e -> e.titulo == evento.getTitle()).findFirst().orElse(null);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(cargaHorariaEsperada, result.getBody().getWorkload());
@@ -244,7 +244,7 @@ public class EventUnitTest {
         ).thenReturn(Optional.ofNullable(null));
 
 
-        var result =  assertThrows(RuntimeException.class, ()-> eventoService.registrarPresenca(evento.getId(), presencaDTO));
+        var result =  assertThrows(RuntimeException.class, ()-> eventoService.registerPresence(evento.getId(), presencaDTO));
      
         assertEquals("Usuário  não inscrito para o evento", result.getMessage());
 
@@ -275,7 +275,7 @@ public class EventUnitTest {
         ).thenReturn(Optional.ofNullable(EventUser));
 
 
-        var result =  assertThrows(RuntimeException.class, ()-> eventoService.registrarPresenca(evento.getId(), presencaDTO));
+        var result =  assertThrows(RuntimeException.class, ()-> eventoService.registerPresence(evento.getId(), presencaDTO));
      
         assertEquals("O Evento ainda não está na data", result.getMessage());     
     }
@@ -310,7 +310,7 @@ public class EventUnitTest {
         ).thenReturn(Optional.ofNullable(EventUser));
 
 
-        var result =  assertThrows(RuntimeException.class, ()-> eventoService.registrarPresenca(evento.getId(), presencaDTO));
+        var result =  assertThrows(RuntimeException.class, ()-> eventoService.registerPresence(evento.getId(), presencaDTO));
      
         assertEquals("Código do evento inválido", result.getMessage());     
     }

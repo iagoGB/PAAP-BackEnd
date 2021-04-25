@@ -67,7 +67,7 @@ public class User implements UserDetails {
 	private Integer workload = 0;
 
 	
-	@OneToMany(mappedBy = "user") // Trocar pelo outro lado que referencia aqui
+	@OneToMany(mappedBy = "user", orphanRemoval = true) // Trocar pelo outro lado que referencia aqui
 	@Builder.Default
 	private List<EventUser> events = new ArrayList<>();
 	

@@ -46,7 +46,7 @@ public class EventUser implements Serializable {
 	private String certificate;
 	
 	@Builder.Default
-	private boolean isPresent = false;
+	private boolean isUserPresent = false;
 
 	
 	

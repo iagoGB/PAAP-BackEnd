@@ -59,38 +59,38 @@ public class EventEndpoint {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletaEvento(@PathVariable(value = "id") long id) {
-        return es.deletarEvento(id);
+    public ResponseEntity<?> delete(@PathVariable(value = "id") long id) {
+        return es.delete(id);
     }
 
-    @PutMapping("/{id}/inscricao")
-    public ResponseEntity<?> inscreverEmEvento
+    @PostMapping("/{id}/subscribe")
+    public ResponseEntity<?> subscribe
     (
         @PathVariable(value ="id") Long id, 
-        @RequestParam(value ="username") Long userID
+        @RequestParam(value ="userID") Long userID
     )
     {
-        return es.inscreverUsuarioNoEvento(id, userID);
+        return es.subscribe(id, userID);
     }
 
-    @PutMapping("/{id}/remover-inscricao")
-    public ResponseEntity<?> removerInscricaoEmEvento
+    @DeleteMapping("/{id}/remove-subscribe")
+    public ResponseEntity<?> removeSubscribe
     (
         @PathVariable(value ="id") Long id, 
-        @RequestParam(value ="username") Long userID
+        @RequestParam(value ="userID") Long userID
     )
     {
-        return es.removerInscricao(id, userID);
+        return es.removeSubscribe(id, userID);
     }
 
-    @PutMapping("/{id}/registro-presenca")
-    public ResponseEntity<?> registrarPresenca
+    @PutMapping("/{id}/register-presence")
+    public ResponseEntity<?> registerPresence
     (
         @PathVariable(value ="id") Long id, 
         @RequestBody RegistroPresencaDTO registroPresencaDTO
     )
     {
-        return es.registrarPresenca(id, registroPresencaDTO);
+        return es.registerPresence(id, registroPresencaDTO);
     }
 
     @GetMapping("/imagem/{fileName:.+}")
@@ -100,12 +100,12 @@ public class EventEndpoint {
         return es.getImageEvent(filename);
     }
 
-    @PostMapping(value="/{id}/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadImagemEvento(
+    @PutMapping(value="/{id}/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,  produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> upload(
         @PathVariable(value ="id") Long id, 
         @RequestParam("image") MultipartFile image
     ){
-        return es.salvarImagemEvento(id,image);
+        return es.uploadImage(id,image);
     }
     
     @PostMapping("/certification")

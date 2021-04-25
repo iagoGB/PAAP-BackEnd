@@ -56,15 +56,13 @@ import net.bytebuddy.utility.RandomString;
 @Service
 public class EventService {
     
-    private static final Disco disco = new Disco();
+    private final EventRepository eventRepository;
 
-    private final EventRepository eventoRepository;
+    private final CategoryRepository categoryRepository;
 
-    private final CategoryRepository categoriaRepository;
+    private final UserRepository userRepository;
 
-    private final UserRepository usuarioRepository;
-
-    private final EventUserRepository eventoUsuarioRepository;
+    private final EventUserRepository eventUserRepository;
 
     private final QRCodeGenerator qrCodeGenerator;
 
@@ -78,10 +76,10 @@ public class EventService {
 
     @Autowired
     public EventService(EventRepository eventoRepository, CategoryRepository categoriaRepository, UserRepository usuarioRepository, EventUserRepository eventoUsuarioRepository, QRCodeGenerator qrCodeGenerator, S3StorageService s3StorageService, @Value("${events.folder}")String events_folder,@Value("${qrcodes.folder}") String qrcodes_folder) {
-        this.eventoRepository = eventoRepository;
-        this.categoriaRepository = categoriaRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.eventoUsuarioRepository = eventoUsuarioRepository;
+        this.eventRepository = eventoRepository;
+        this.categoryRepository = categoriaRepository;
+        this.userRepository = usuarioRepository;
+        this.eventUserRepository = eventoUsuarioRepository;
         this.qrCodeGenerator = qrCodeGenerator;
         this.s3StorageService = s3StorageService;
         this.EVENTS_FOLDER = events_folder;
@@ -92,7 +90,7 @@ public class EventService {
     public List<DetalhesEventoDTO> findAllOpen(){
     	// System.out.println("Data do Brasil: "+ LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
 
-    	return eventoRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))
+    	return eventRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))
             .stream().map(DetalhesEventoDTO::parse).collect(Collectors.toList());
     	
     }
@@ -100,14 +98,14 @@ public class EventService {
     @Transactional
     public ResponseEntity<?> save(NovoEventoDTO novoEventoDTO) {
             // TODO - Tratar erro para categoria invalida e nome do palestrante inexistente
-            return categoriaRepository.findById(novoEventoDTO.getCategory())
+            return categoryRepository.findById(novoEventoDTO.getCategory())
             .map(categoria -> Event.parseFrom(novoEventoDTO, categoria))
             .map(evento -> {
-                evento = eventoRepository.save(evento);
+                evento = eventRepository.save(evento);
                 evento.setKeyword(this.createKeyword(evento));
                 var qrCodeURL = this.generateQRCodeEvent(evento);
                 evento.setQrCode(qrCodeURL);
-                evento = eventoRepository.save(evento);
+                evento = eventRepository.save(evento);
                 var response = DetalhesEventoDTO.parse(evento);
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
             })
@@ -129,18 +127,30 @@ public class EventService {
         }
         return resourceURL;
     }
+    
+    private String generateImageEvent(Event event, MultipartFile image) {
+    	String resourceURL = null;
+        try {
+            var file = File.createTempFile( String.format("event_%d", event.getId()), ".png");
+            image.transferTo(file);
+            resourceURL = s3StorageService.saveImage(file, event.getId(), EVENTS_FOLDER);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar link da imagem do evento: " + e.getMessage());
+        }
+        return resourceURL;
+    }
 
-    public ResponseEntity<?> deletarEvento(long id) {
-        return this.eventoRepository.findById(id)
+    public ResponseEntity<?> delete(long id) {
+        return this.eventRepository.findById(id)
                 .map( evento -> {
-                    this.eventoRepository.deleteById(id);
+                    this.eventRepository.deleteById(id);
                     return ResponseEntity.ok().build();
                 }).orElseThrow(() -> new RuntimeException(String.format("Evento com ID %s não existe", id)));
         
     }
 
 	public DetalhesEventoDTO findById(Long id) {
-		Optional<Event> result = eventoRepository.findById(id);
+		Optional<Event> result = eventRepository.findById(id);
 		if (result.isPresent()) {
 			Event evento = result.get();
 			return DetalhesEventoDTO.parse(evento);
@@ -149,12 +159,12 @@ public class EventService {
 	}
 
     public Event findEvent(Long id) {
-        return eventoRepository.findById(id)
+        return eventRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
     }
 
     public User findUser(Long id) {
-        return usuarioRepository.findById(id)
+        return userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
@@ -163,69 +173,58 @@ public class EventService {
    * @param eventoID ID do Evento ao qual o usuário deseja participar.  
    * @param userID String unica que identifica o email do usuário.  
    */
-	public ResponseEntity<?> inscreverUsuarioNoEvento(Long eventoID, Long userID) {
+	public ResponseEntity<?> subscribe(Long eventoID, Long userID) {
         var event = findEvent(eventoID);
         var user  = findUser(userID);
-        var findRelation = eventoUsuarioRepository.findById(new EventUserID(event.getId(), user.getId()));
+        var findRelation = findRelation(event.getId(), user.getId());
         if (findRelation.isPresent())
             throw new RuntimeException(String.format("Usuário(a) %s já inscrito no evento", user.getName()));
         var relation = EventUser.builder()
             .event(event)
             .user(user)
             .build();
-        eventoUsuarioRepository.save(relation);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        eventUserRepository.save(relation);
+        return ResponseEntity.ok().build();
 	}
 
-	public ResponseEntity<?> removerInscricao(Long eventoID, Long userID) {
+	public ResponseEntity<?> removeSubscribe(Long eventoID, Long userID) {
         var event = findEvent(eventoID);
         var user  = findUser(userID);
         var relationID = new EventUserID(event.getId(), user.getId());
-        return eventoUsuarioRepository.findById(relationID)
+        return eventUserRepository.findById(relationID)
             .map(relation -> {
-                eventoUsuarioRepository.deleteById(relationID);
+                eventUserRepository.deleteById(relationID);
                 return ResponseEntity.ok().build();
             }).orElseThrow( () -> new RuntimeException("Usuário não possui inscrição no evento"));
 	}
 
     @Transactional
-	public ResponseEntity<?> registrarPresenca(Long eventoId, RegistroPresencaDTO data) {
-        EventUser eventoUsuario = null;
-        var usuario = findUser(data.userID);
-        // Checa se usuário se inscreveu
-        var relacao = eventoUsuarioRepository.findById( new EventUserID(eventoId, usuario.getId()) );
-        // Se existe a relação:
-        if (relacao.isPresent()){
-            //Usuário está iscrito
-            eventoUsuario = relacao.get();
-        } else {
-            // tratamento para usuário que quer registrar presença mas não está inscrito no evento
-            // Se a relação nao existe, é necessário checkar se o evento existe, se o usuário esta inscrito
-           throw new RuntimeException("Usuário  não inscrito para o evento");
-        }
-        // Checa se a data do evento é hoje
-        this.isToday(eventoId);
-        this.validateEventKeyCode(eventoUsuario,data.getKeyword());
-        // Se a presença do usuário no evento já foi inserida
-        if ( relacao.get().isPresent() ) {
-            throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
-        } else {
-            relacao.get().setPresent(true);
-            var cargaHoraria = relacao.get().getEvent().getWorkload();
-            usuario.setWorkload( usuario.getWorkload() + cargaHoraria);
-            relacao.get().getUser().getEvents().add(relacao.get());
-        }
-		return ResponseEntity.ok().body(UsuarioDTO.parse(usuario));
+	public ResponseEntity<?> registerPresence(Long eventID, RegistroPresencaDTO data) {
+       
+        return findRelation(eventID, data.getUserID())
+        		.map(relation -> {
+        			
+        			this.isToday(eventID);
+        			this.validateEventKeyCode(relation, data.getKeyword());
+        			if (relation.isUserPresent())
+        				throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
+        			relation.setUserPresent(true);
+        	        var eventWorkload = relation.getEvent().getWorkload();
+        	        var user = relation.getUser();
+        	        user.setWorkload( user.getWorkload() + eventWorkload);
+        	        return ResponseEntity.ok().body(UsuarioDTO.parse(user));
+        				
+        		}).orElseThrow(() -> new RuntimeException("Relação entre evento e usuário não existe"));
     }
 
     private Optional<EventUser> findRelation(Long eventoID, Long userID){
-        return this.eventoUsuarioRepository.findById( new EventUserID(eventoID, userID));
+        return this.eventUserRepository.findById( new EventUserID(eventoID, userID));
     }
 
     public ResponseEntity<?> getCertification(Long eventID, Long userID){
         return this.findRelation(eventID,userID)
                 .map((relation) -> {
-                	var participated = relation.isPresent();
+                	var participated = relation.isUserPresent();
                 	if (!participated) {
                 		throw new RuntimeException(String.format("%s não possui registro de presença no evento %s", relation.getUser().getName(), relation.getEvent().getTitle()));
                 	}
@@ -302,36 +301,35 @@ public class EventService {
         }
     }
 
-    private void validateEventKeyCode(EventUser relacao,String keyword) {
-        if (!relacao.getEvent().getKeyword().equals(keyword))
+    private void validateEventKeyCode(EventUser relation,String keyword) {
+        if (!relation.getEvent().getKeyword().equals(keyword))
             throw new IllegalArgumentException("Código do evento inválido");
     }
 
     @SuppressWarnings("unused")
 	private User findUsuarioByEmail(String username) {
-        var findById = usuarioRepository.findByEmail(username);
+        var findById = userRepository.findByEmail(username);
         return findById.orElseThrow( () -> new IllegalArgumentException("Usuário não encontrado"));
     }
 
-    private Event findEventoById(Long id) {
-        var findById = eventoRepository.findById(id);
+    private Event findEventById(Long id) {
+        var findById = eventRepository.findById(id);
         return findById.orElseThrow( () -> new IllegalArgumentException("Usuário não encontrado"));
     }
     // Checa se o evento ocorre hoje
     private void isToday(Long eventoId){
-        Optional<Event> findById = eventoRepository.findById(eventoId);
-        Event evento = findById.get();
-        if ( LocalDateTime.now().isBefore(evento.getDateTime())){
+        var event = eventRepository.findById(eventoId).get();
+        if ( LocalDateTime.now().isBefore(event.getDateTime())){
             throw new IllegalArgumentException("O Evento ainda não está na data");
         }
     }
 
-	public ResponseEntity<?> salvarImagemEvento(Long id, MultipartFile image) {
-        
-        var saveImagePath = disco.salvarImagem(image, eventImageDir);
-        var eventoFound = findEventoById(id);
-        eventoFound.setPicture(saveImagePath);
-        eventoRepository.save(eventoFound);
+	public ResponseEntity<?> uploadImage(Long id, MultipartFile image) {
+		
+        var event = findEventById(id);
+        var saveImagePath = this.generateImageEvent(event, image);
+        event.setPicture(saveImagePath);
+        eventRepository.save(event);
         return ResponseEntity.ok().build();
     }
     
@@ -359,13 +357,8 @@ public class EventService {
     }
 
 
-	public String getEVENTS_FOLDER() {
-		return EVENTS_FOLDER;
-	}
-
-
 	public ResponseEntity<Page<DetalhesEventoDTO>> findAll(Pageable pagination) {
-		  var eventPage = eventoRepository.findAll(pagination);
+		  var eventPage = eventRepository.findAll(pagination);
 			return  ResponseEntity.ok().body(DetalhesEventoDTO.parse(eventPage));
 	}
 }

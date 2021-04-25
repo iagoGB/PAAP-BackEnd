@@ -102,20 +102,20 @@ INSERT INTO public.event(
 
  --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
     INSERT INTO public.event_user(
-        fk_evento_id, fk_usuario_id, is_present)
+        fk_evento_id, fk_usuario_id, is_user_present)
         VALUES (20, 2, false);
 
     INSERT INTO public.event_user(
-        fk_evento_id, fk_usuario_id, is_present)
+        fk_evento_id, fk_usuario_id, is_user_present)
         VALUES (33, 2, false);
 
     -- Usuario 3 Já possui 2 eventos cadastrados,1 com  presença e carga horaria computadas
     INSERT INTO public.event_user(
-        fk_evento_id, fk_usuario_id, is_present)
+        fk_evento_id, fk_usuario_id, is_user_present)
         VALUES (50, 3, true);
 
      INSERT INTO public.event_user(
-        fk_evento_id, fk_usuario_id, is_present)
+        fk_evento_id, fk_usuario_id, is_user_present)
         VALUES (10, 3, false);
 -- 
         

@@ -14,6 +14,6 @@ public class EventoUsuarioDTO {
     public EventoUsuarioDTO(EventUser eventUser) {
         this.id = eventUser.getEvent().getId();
         this.titulo = eventUser.getEvent().getTitle();
-        this.presente = eventUser.isPresent();
+        this.presente = eventUser.isUserPresent();
     }
 }
