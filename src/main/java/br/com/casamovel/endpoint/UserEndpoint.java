@@ -1,15 +1,12 @@
 package br.com.casamovel.endpoint;
 
-import br.com.casamovel.dto.usuario.AtualizarUsuarioDTO;
-import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
-import br.com.casamovel.dto.usuario.UsuarioDTO;
+import javax.validation.Valid;
 
-import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,26 +18,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.casamovel.model.Usuario;
+import br.com.casamovel.dto.usuario.AtualizarUsuarioDTO;
+import br.com.casamovel.dto.usuario.NewUserDTO;
+import br.com.casamovel.dto.usuario.UsuarioDTO;
+import br.com.casamovel.model.User;
 import br.com.casamovel.repository.RoleRepository;
-import br.com.casamovel.repository.UsuarioRepository;
-import br.com.casamovel.service.UsuarioService;
+import br.com.casamovel.repository.UserRepository;
+import br.com.casamovel.service.UserService;
 import javassist.NotFoundException;
-
-import javax.validation.Valid;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 @RestController
 @RequestMapping("/user")
-public class UsuarioEndpoint {
+public class UserEndpoint {
 	@Autowired
-	UsuarioRepository usuarioRepository;
+	UserRepository usuarioRepository;
 	@Autowired
 	RoleRepository roleRepository;
 	@Autowired
-	UsuarioService usuarioService;
+	UserService usuarioService;
 
 	@GetMapping
 	public ResponseEntity<Page<UsuarioDTO>> listaUsuario(Pageable pagination) {
@@ -58,7 +53,7 @@ public class UsuarioEndpoint {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> salvarUsuario(@RequestBody @Valid NovoUsuarioDTO NovoUsuarioDTO,
+	public ResponseEntity<?> save(@RequestBody @Valid NewUserDTO NovoUsuarioDTO,
 			UriComponentsBuilder uriBuilder) throws Exception {
 		return usuarioService.save(NovoUsuarioDTO, uriBuilder);
 
@@ -69,7 +64,7 @@ public class UsuarioEndpoint {
 	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
 	public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid AtualizarUsuarioDTO atualizarUsuarioDTO,
 			UriComponentsBuilder uriBuilder){
-		Usuario usuarioAtualizado = atualizarUsuarioDTO.atualizar(id, usuarioRepository);
+		User usuarioAtualizado = atualizarUsuarioDTO.update(id, usuarioRepository);
 		return ResponseEntity.ok(new UsuarioDTO(usuarioAtualizado));
 	}
 	

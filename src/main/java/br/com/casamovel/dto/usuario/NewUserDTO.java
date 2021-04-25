@@ -21,21 +21,21 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class NovoUsuarioDTO {
+public class NewUserDTO {
 	@NotNull @NotEmpty @Email(message = "Não é um endereço de email válido")
 	private String email;
 	@NotNull
 	private Long cpf;
 	@NotNull @NotEmpty
-	private String nome;
+	private String name;
 	@NotNull @NotEmpty
 	private String password;
 	@NotNull @NotEmpty
-	private String departamento;
+	private String departament;
 	@NotNull @NotEmpty
-	private String telefone;
+	private String phone;
 	@NotNull @PastOrPresent
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" ,timezone = "GMT-3")
 	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" ,timezone = "GMT-3")
-	private LocalDate data_ingresso;
+	private LocalDate entryDate;
 }

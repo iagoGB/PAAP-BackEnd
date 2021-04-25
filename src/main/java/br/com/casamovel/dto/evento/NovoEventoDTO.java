@@ -20,17 +20,17 @@ import lombok.ToString;
 @NoArgsConstructor
 public class NovoEventoDTO {
 	@NotNull @NotEmpty
-	private Long categoria;
+	private Long category;
 	@NotNull @NotEmpty
-	private String titulo;
+	private String title;
 	@NotNull @NotEmpty @PastOrPresent
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
-	private LocalDateTime data_horario;
+	private LocalDateTime dateTime;
 	@NotNull @NotEmpty
 	private String local;
 	@NotNull @NotEmpty
-	private int carga_horaria;
+	private int workload;
 	@NotNull @NotEmpty
-	private List<String> palestrantes;
+	private List<String> speakers;
 	
 }

@@ -2,6 +2,9 @@ package br.com.casamovel.endpoint;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,20 +22,26 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
-import br.com.casamovel.service.EventoService;
+import br.com.casamovel.service.EventService;
 
 @RestController
-@RequestMapping("/evento")
-public class EventoEndpoint {
-    private final EventoService es;
-
-    public EventoEndpoint(EventoService es) {
+@RequestMapping("/event")
+public class EventEndpoint {
+    private final EventService es;
+    
+    @Autowired
+    public EventEndpoint(EventService es) {
         this.es = es;
     }
 
-    @GetMapping
-    public List<DetalhesEventoDTO> getAll() {
-        return es.listarEventos();
+    @GetMapping("/open")
+    public List<DetalhesEventoDTO> findAllOpen() {
+        return es.findAllOpen();
+    }
+    
+    @GetMapping()
+    public ResponseEntity<Page<DetalhesEventoDTO>> findAll(Pageable pagination) {
+        return es.findAll(pagination);
     }
     
     @GetMapping("/{id}")
@@ -41,12 +50,12 @@ public class EventoEndpoint {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvaEvento(
+    public ResponseEntity<?> save(
     	@RequestBody final NovoEventoDTO evento,
     	final UriComponentsBuilder uriBuilder
     ) 
     {
-    	return es.salvarEvento(evento);
+    	return es.save(evento);
     }
 
     @DeleteMapping("/{id}")

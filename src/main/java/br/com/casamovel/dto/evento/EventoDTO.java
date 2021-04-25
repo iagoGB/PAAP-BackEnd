@@ -1,6 +1,6 @@
 package br.com.casamovel.dto.evento;
 
-import br.com.casamovel.model.Evento;
+import br.com.casamovel.model.Event;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,17 +19,17 @@ public class EventoDTO {
 	Integer carga_horaria;
     String categoria;
     
-    public EventoDTO(Evento evento){
+    public EventoDTO(Event evento){
         this.id = evento.getId();
-        this.foto = evento.getFoto();
-        this.titulo = evento.getTitulo();
+        this.foto = evento.getPicture();
+        this.titulo = evento.getTitle();
         this.localizacao = evento.getLocal();
-        this.data_horario = evento.getDataHorario().toString();
-        this.carga_horaria = evento.getCargaHoraria();
-        this.categoria = evento.getCategoria().getNome();
+        this.data_horario = evento.getDateTime().toString();
+        this.carga_horaria = evento.getWorkload();
+        this.categoria = evento.getCategory().getName();
     }
 
-    public static EventoDTO parse(Evento evento){
+    public static EventoDTO parse(Event evento){
         return new EventoDTO(evento);
     }
 }

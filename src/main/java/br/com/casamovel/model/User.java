@@ -28,7 +28,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
+import br.com.casamovel.dto.usuario.NewUserDTO;
 import br.com.casamovel.repository.RoleRepository;
 
 @Getter
@@ -38,8 +38,8 @@ import br.com.casamovel.repository.RoleRepository;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name="usuario")
-public class Usuario implements UserDetails{
+@Table(name = "usuario")
+public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -49,9 +49,9 @@ public class Usuario implements UserDetails{
 	@Builder.Default
     private String avatar = "../assets/images/default_avatar.png";
     
-	private long cpf;
+	private Long cpf;
 
-	private String nome;
+	private String name;
 	
 	@NotEmpty
 	@Column(unique = true, nullable = false)
@@ -59,17 +59,17 @@ public class Usuario implements UserDetails{
 	
 	private String password;
 	
-	private String departamento;
+	private String departament;
 	
-	private String telefone;
+	private String phone;
 	
 	@Builder.Default
-	private Integer cargaHoraria = 0;
+	private Integer workload = 0;
 
 	
-	@OneToMany(mappedBy = "usuarioID") // Trocar pelo outro lado que referencia aqui
+	@OneToMany(mappedBy = "user") // Trocar pelo outro lado que referencia aqui
 	@Builder.Default
-	private List<EventoUsuario> eventos = new ArrayList<>();
+	private List<EventUser> events = new ArrayList<>();
 	
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinTable(
@@ -90,15 +90,15 @@ public class Usuario implements UserDetails{
 
 	
 	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT-3")
-	private LocalDate dataIngresso; 
+	private LocalDate entryDate; 
 	
 	@Builder.Default
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
-	private LocalDateTime criadoEm = LocalDateTime.now();
+	private LocalDateTime createdAt = LocalDateTime.now();
 	
 	@Builder.Default
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT-3")
-	private LocalDateTime atualizadoEm = LocalDateTime.now();
+	private LocalDateTime updatedAt = LocalDateTime.now();
 
 	
 	@Override
@@ -138,14 +138,14 @@ public class Usuario implements UserDetails{
 		return true;
 	}
 	
-	public void parse(NovoUsuarioDTO uDto, RoleRepository roleRepository) {
-		this.nome = uDto.getNome();
+	public void parse(NewUserDTO uDto, RoleRepository roleRepository) {
+		this.name = uDto.getName();
 		this.email = uDto.getEmail();
 		this.password = new BCryptPasswordEncoder().encode(uDto.getPassword());
 		this.cpf = uDto.getCpf();
-		this.departamento = uDto.getDepartamento();
-		this.dataIngresso = uDto.getData_ingresso();
-		this.telefone = uDto.getTelefone();
+		this.departament = uDto.getDepartament();
+		this.entryDate = uDto.getEntryDate();
+		this.phone = uDto.getPhone();
 		
 		Role defaultRole = new Role();
         defaultRole = roleRepository.getOne("ROLE_USER");
@@ -153,10 +153,9 @@ public class Usuario implements UserDetails{
 	}
 	
 	@PreUpdate
-	public void commitarAtualizacao() {
-		LocalDateTime now = LocalDateTime.now();
-		System.out.println("------------------------ATUALIZAÇÃO COMMITADA ÀS "+ now.toString()+" -------------------------------------------------------");
-		setAtualizadoEm(now);
+	public void onUpdate() {
+		var now = LocalDateTime.now();
+		setUpdatedAt(now);
 	}
 	
 	

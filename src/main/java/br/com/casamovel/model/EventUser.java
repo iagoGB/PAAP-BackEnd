@@ -19,8 +19,8 @@ import lombok.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(EventoUsuarioID.class)
-public class EventoUsuario implements Serializable {
+@IdClass(EventUserID.class)
+public class EventUser implements Serializable {
 	
 	
 	private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class EventoUsuario implements Serializable {
 		referencedColumnName = "id",
 		foreignKey = @ForeignKey(name="fk_evento_id")
 	)
-	private Evento eventoID;
+	private Event event;
 	
 	@Id
 	@ManyToOne
@@ -41,7 +41,7 @@ public class EventoUsuario implements Serializable {
 		referencedColumnName = "id",
 		foreignKey = @ForeignKey(name="fk_usuario_id")
 	)
-	private Usuario usuarioID;
+	private User user;
 	
 	private String certificate;
 	

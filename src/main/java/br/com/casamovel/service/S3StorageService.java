@@ -15,7 +15,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 
-import br.com.casamovel.model.EventoUsuario;
+import br.com.casamovel.model.EventUser;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -104,7 +104,7 @@ public class S3StorageService  {
         return resourceUrl;
     }
     
-    public String saveCertificate(File imageFile, EventoUsuario eu) {
+    public String saveCertificate(File imageFile, EventUser eu) {
         String resourceUrl = null;
         System.out.println(this.REGION);
         try {
@@ -118,7 +118,7 @@ public class S3StorageService  {
                 .withRegion(this.REGION)
                 .build();
             var bucketName = this.BUCKET;
-            var targetPath = "certificados"+"/"+eu.getEventoID().getId()+"/"+eu.getUsuarioID().getId();
+            var targetPath = "certificados"+"/"+eu.getEvent().getId()+"/"+eu.getUser().getId();
             var por = new PutObjectRequest( 
                 bucketName, 
                 targetPath,

@@ -17,37 +17,37 @@ import org.springframework.http.HttpStatus;
 
 
 import br.com.casamovel.dto.usuario.UsuarioDTO;
-import br.com.casamovel.model.Usuario;
-import br.com.casamovel.repository.UsuarioRepository;
-import br.com.casamovel.service.UsuarioService;
+import br.com.casamovel.model.User;
+import br.com.casamovel.repository.UserRepository;
+import br.com.casamovel.service.UserService;
 
 /**
  * UsuarioUnitTest
  */
-public class UsuarioUnitTest {
+public class UserUnitTest {
 
     @InjectMocks
-    private UsuarioService usuarioService;
+    private UserService usuarioService;
 
     @Mock
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
 
-    private List<Usuario> usuarios;
+    private List<User> usuarios;
 
-    private List<Usuario> initUsers() {
+    private List<User> initUsers() {
 
-        var user1 = Usuario.builder().id(10L)
-            .nome("Tidinha")
+        var user1 = User.builder().id(10L)
+            .name("Tidinha")
             .email("teste@teste.com")
             .build();
         
-        var user2 = Usuario.builder().id(11L)
-            .nome("Usuario Dois")
+        var user2 = User.builder().id(11L)
+            .name("Usuario Dois")
             .email("outrousuario@teste.com")
             .build();
 
-        var user3 = Usuario.builder().id(12L)
-            .nome("Terceiro Usuario")
+        var user3 = User.builder().id(12L)
+            .name("Terceiro Usuario")
             .email("usuariotres@teste.com")
             .build();
         
@@ -71,7 +71,7 @@ public class UsuarioUnitTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode()); 
         assertEquals(UsuarioDTO.class, response.getBody().getClass());
-        assertEquals(usuario.getNome(), response.getBody().getName()); 
+        assertEquals(usuario.getName(), response.getBody().getName()); 
     }
 
     

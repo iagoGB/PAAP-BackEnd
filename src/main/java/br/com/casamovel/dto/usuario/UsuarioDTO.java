@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 
-import br.com.casamovel.model.Usuario;
+import br.com.casamovel.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,17 +32,17 @@ public class UsuarioDTO {
 	@Builder.Default
 	public List<EventoUsuarioDTO> events = new ArrayList<>();
 	
-	public UsuarioDTO(Usuario usuario) {
+	public UsuarioDTO(User usuario) {
 		this.id = usuario.getId();
-		this.name = usuario.getNome();
+		this.name = usuario.getName();
 		this.cpf = usuario.getCpf();
 		this.email = usuario.getEmail();
-		this.workload = usuario.getCargaHoraria();
-		this.departament = usuario.getDepartamento();
-		this.telephone = usuario.getTelefone();
-		this.setEntryDate(usuario.getDataIngresso());
+		this.workload = usuario.getWorkload();
+		this.departament = usuario.getDepartament();
+		this.telephone = usuario.getPhone();
+		this.setEntryDate(usuario.getEntryDate());
 		this.setAvatar(usuario.getAvatar());
-		var collect = usuario.getEventos().stream().map(eu -> new EventoUsuarioDTO(eu)).collect(Collectors.toList());
+		var collect = usuario.getEvents().stream().map(eu -> new EventoUsuarioDTO(eu)).collect(Collectors.toList());
 		this.events = collect;
 	}
 	
@@ -96,11 +96,11 @@ public class UsuarioDTO {
 		this.telephone = telephone;
 	}
 	
-	public static Page<UsuarioDTO> parse(Page<Usuario> usuarios) {
+	public static Page<UsuarioDTO> parse(Page<User> usuarios) {
 		return usuarios.map(UsuarioDTO::new);
 	}
 	
-	public static UsuarioDTO parse(Usuario usuario) {
+	public static UsuarioDTO parse(User usuario) {
 		return new UsuarioDTO(usuario);
 	}
 

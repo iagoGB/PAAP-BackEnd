@@ -1,6 +1,6 @@
 package br.com.casamovel.dto.usuario;
 
-import br.com.casamovel.model.EventoUsuario;
+import br.com.casamovel.model.EventUser;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -11,9 +11,9 @@ public class EventoUsuarioDTO {
     public String titulo;
     public Boolean presente;
 
-    public EventoUsuarioDTO(EventoUsuario eventoUsuario) {
-        this.id = eventoUsuario.getEventoID().getId();
-        this.titulo = eventoUsuario.getEventoID().getTitulo();
-        this.presente = eventoUsuario.isPresent();
+    public EventoUsuarioDTO(EventUser eventUser) {
+        this.id = eventUser.getEvent().getId();
+        this.titulo = eventUser.getEvent().getTitle();
+        this.presente = eventUser.isPresent();
     }
 }

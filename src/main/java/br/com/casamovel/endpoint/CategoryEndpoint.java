@@ -9,38 +9,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.casamovel.dto.categoria.CategoriaDTO;
-import br.com.casamovel.model.Categoria;
-import br.com.casamovel.repository.CategoriaRepository;
+import br.com.casamovel.model.Category;
+import br.com.casamovel.repository.CategoryRepository;
 
 @RestController
-public class CategoriaEndpoint {
+@RequestMapping("/category")
+public class CategoryEndpoint {
 	@Autowired
-	 CategoriaRepository categoriaRepository;
+	 CategoryRepository categoriaRepository;
 	
-	@GetMapping("/categoria")
-	public List<CategoriaDTO> listaCategoria() {
+	@GetMapping
+	public List<CategoriaDTO> findAll() {
 		//return categoriaRepository.findAll();
 		List<CategoriaDTO> listaCategoriaDTO = new ArrayList<>();
-		 List<Categoria> listaCategorias = categoriaRepository.findAll();
+		 List<Category> listaCategorias = categoriaRepository.findAll();
 		 listaCategorias.forEach( c -> 
 		 {
-			 CategoriaDTO nc = new CategoriaDTO(c.getId(),c.getNome());
+			 CategoriaDTO nc = new CategoriaDTO(c.getId(),c.getName());
 			 listaCategoriaDTO.add(nc);
 		 });
 		 
 		 return listaCategoriaDTO;
 	}
 	
-	@GetMapping("/categoria/{id}")
-	public Optional<Categoria> categoriaPorId(@PathVariable(value="id") Long id) {
+	@GetMapping("/{id}")
+	public Optional<Category> findById(@PathVariable(value="id") Long id) {
 		return categoriaRepository.findById(id);
 	}
 	
-	@PostMapping("/categoria")
-	public Categoria salvarProduto(@RequestBody Categoria categoria) {
+	@PostMapping
+	public Category save(@RequestBody Category categoria) {
 		return categoriaRepository.save(categoria);
 		
 	}

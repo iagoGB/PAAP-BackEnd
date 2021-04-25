@@ -1,8 +1,6 @@
 package br.com.casamovel.service;
 
 import java.net.URI;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,16 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.casamovel.dto.usuario.NovoUsuarioDTO;
+import br.com.casamovel.dto.usuario.NewUserDTO;
 import br.com.casamovel.dto.usuario.UsuarioDTO;
-import br.com.casamovel.model.Usuario;
+import br.com.casamovel.model.User;
 import br.com.casamovel.repository.RoleRepository;
-import br.com.casamovel.repository.UsuarioRepository;
+import br.com.casamovel.repository.UserRepository;
 
 @Service
-public class UsuarioService {
+public class UserService {
 
-    @Autowired UsuarioRepository usuarioRepository;
+    @Autowired UserRepository usuarioRepository;
     @Autowired RoleRepository roleRepository;
 
     public ResponseEntity<Page<UsuarioDTO>> findAll(Pageable pagination){
@@ -42,12 +40,12 @@ public class UsuarioService {
 
     public ResponseEntity<UsuarioDTO> save
     (
-        final NovoUsuarioDTO NovoUsuarioDTO, 
+        final NewUserDTO NovoUsuarioDTO, 
         final UriComponentsBuilder uriBuilder
     )
     {
         try {
-            final Usuario novoUsuario = new Usuario();
+            final User novoUsuario = new User();
             novoUsuario.parse(NovoUsuarioDTO, roleRepository);
             // Salvar
             usuarioRepository.save(novoUsuario);

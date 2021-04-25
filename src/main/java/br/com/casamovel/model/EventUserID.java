@@ -13,12 +13,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class EventoUsuarioID implements Serializable {
+public class EventUserID implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private Long eventoID;
+	private Long event;
 	
-	private Long usuarioID;
+	private Long user;
 		
 }

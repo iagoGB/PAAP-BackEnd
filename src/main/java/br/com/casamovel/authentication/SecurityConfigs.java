@@ -11,14 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 
-import br.com.casamovel.repository.UsuarioRepository;
+import br.com.casamovel.repository.UserRepository;
 
 @EnableWebSecurity
 public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private ImplementsUserDetailsService userDetailsService;
 	@Autowired
-	private UsuarioRepository userRepository;
+	private UserRepository userRepository;
 	private CorsConfiguration applyPermitDefaultValues;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
@@ -31,8 +31,9 @@ public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 			.and()
 			.csrf().disable().authorizeRequests()
 			.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-			.antMatchers(HttpMethod.GET,"/usuario").hasAnyRole("ADMIN","USER")
-			.antMatchers(HttpMethod.POST,"/usuario").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET,"/category").hasAnyRole("ADMIN","USER")
+			.antMatchers(HttpMethod.GET,"/user").hasAnyRole("ADMIN","USER")
+			.antMatchers(HttpMethod.POST,"/user").hasRole("ADMIN")
 			.antMatchers(HttpMethod.PUT,"/evento/**").hasAnyRole("ADMIN","USER")
 			.antMatchers(HttpMethod.PUT,"/evento/*/inscricao").hasRole("USER")
 			.and()

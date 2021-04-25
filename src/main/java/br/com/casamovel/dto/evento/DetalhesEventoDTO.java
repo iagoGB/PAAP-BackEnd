@@ -3,15 +3,21 @@ package br.com.casamovel.dto.evento;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import br.com.casamovel.model.Evento;
+import org.springframework.data.domain.Page;
+
+import br.com.casamovel.model.Event;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class DetalhesEventoDTO {
 	
@@ -26,43 +32,57 @@ public class DetalhesEventoDTO {
 	private List<String> palestrantes = new ArrayList<>();
 	private List<String> participantes = new ArrayList<>();
 	
-	public DetalhesEventoDTO(Long id, String foto, String titulo, String local, String qrCode, LocalDateTime dataHorario,
-			Integer cargaHoraria, String categoria, List<String> palestrantes,
-			List<String> participantes) {
-		super();
-		this.id = id;
-		this.foto = foto;
-		this.titulo = titulo;
-		this.localizacao = local;
-		this.qrCode = qrCode;
-		this.setData_horario(dataHorario);
-		this.setCarga_horaria(cargaHoraria);
-		this.categoria = categoria;
-		this.palestrantes = palestrantes;
-		this.participantes = participantes;
+//	public DetalhesEventoDTO(Long id, String foto, String titulo, String local, String qrCode, LocalDateTime dataHorario,
+//			Integer cargaHoraria, String categoria, List<String> palestrantes,
+//			List<String> participantes) {
+//		super();
+//		this.id = id;
+//		this.foto = foto;
+//		this.titulo = titulo;
+//		this.localizacao = local;
+//		this.qrCode = qrCode;
+//		this.setData_horario(dataHorario);
+//		this.setCarga_horaria(cargaHoraria);
+//		this.categoria = categoria;
+//		this.palestrantes = palestrantes;
+//		this.participantes = participantes;
+//	}
+	
+	public DetalhesEventoDTO(Event event) {
+		this.categoria = event.getCategory().getName();
+		this.data_horario = event.getDateTime();
+		this.foto = event.getPicture();
+		this.id = event.getId();
+		this.localizacao = event.getLocal();
+		this.palestrantes = event.getSpeakers();
+		this.qrCode = event.getQrCode();
+		this.titulo = event.getTitle();
+		this.participantes = event.getUsers().stream()
+				.map(eu -> eu.getUser().getName()).collect(Collectors.toList());
+		this.carga_horaria = event.getWorkload();
 	}
 	
-	public static DetalhesEventoDTO parse(Evento evento) {
+	public static Page<DetalhesEventoDTO> parse(Page<Event> pageEvent) {
+		return pageEvent.map(DetalhesEventoDTO::new);
+	}
+	
+	public static DetalhesEventoDTO parse(Event event) {
 		// TODO - Refatorar for each para map. Tratar momentos em que lista de usuarios vem nulo.
-		var palestrantes = new ArrayList<String>();
-		var participantes = new ArrayList<String>();
-		evento.getPalestrantes().forEach( p -> {
-			palestrantes.add(p.getNome_palestrante_id().getNome());
-		});
-		evento.getUsuarios().forEach(u -> {
-			participantes.add(u.getUsuarioID().getNome());
+		var participants = new ArrayList<String>();
+		event.getUsers().forEach(eu -> {
+			participants.add(eu.getUser().getName());
 		});
 		return new DetalhesEventoDTO(
-					evento.getId(),
-					evento.getFoto(),
-					evento.getTitulo(),
-					evento.getLocal(),
-					evento.getQrCode(),
-					evento.getDataHorario(),
-					evento.getCargaHoraria(),
-					evento.getCategoria().getNome(),
-					palestrantes,
-					participantes		
+					event.getId(),
+					event.getPicture(),
+					event.getTitle(),
+					event.getLocal(),
+					event.getQrCode(),
+					event.getDateTime(),
+					event.getWorkload(),
+					event.getCategory().getName(),
+					event.getSpeakers(),
+					participants		
 				);
 	}
 	

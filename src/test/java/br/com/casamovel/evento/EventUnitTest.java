@@ -1,93 +1,73 @@
 package br.com.casamovel.evento;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
 import br.com.casamovel.dto.usuario.UsuarioDTO;
-import br.com.casamovel.model.Categoria;
-import br.com.casamovel.model.Evento;
-import br.com.casamovel.model.EventoPalestrante;
-import br.com.casamovel.model.EventoUsuario;
-import br.com.casamovel.model.EventoUsuarioID;
-import br.com.casamovel.model.Palestrante;
-import br.com.casamovel.model.Usuario;
-import br.com.casamovel.repository.EventoRepository;
-import br.com.casamovel.repository.EventoUsuarioRepository;
-import br.com.casamovel.repository.UsuarioRepository;
-import br.com.casamovel.service.EventoService;
+import br.com.casamovel.model.Category;
+import br.com.casamovel.model.Event;
+import br.com.casamovel.model.EventUser;
+import br.com.casamovel.model.EventUserID;
+import br.com.casamovel.model.User;
+import br.com.casamovel.repository.EventRepository;
+import br.com.casamovel.repository.EventUserRepository;
+import br.com.casamovel.repository.UserRepository;
+import br.com.casamovel.service.EventService;
 
 /**
  * EventoUnitTest
  */
-public class EventoUnitTest {
+public class EventUnitTest {
 
     @InjectMocks
-    private EventoService eventoService;
+    private EventService eventoService;
 
     @Mock
-    private EventoRepository eventoRepository;
+    private EventRepository eventoRepository;
 
     @Mock
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
 
     @Mock
-    private EventoUsuarioRepository euRepository;
+    private EventUserRepository euRepository;
 
-    private EventoUsuario eventoUsuario;
+    private EventUser EventUser;
 
-    private EventoUsuario initEventUser() {
-        var palestrante = Palestrante.builder()
-                        .id(1L)
-                        .descricao("Um palestrante top")
-                        .foto("http://umenderecoqualquer.com.br")
-                        .nome("João Palestrinha")
-                        .build();
+    private EventUser initEventUser() {
 
-   	    var evento = Evento.builder()
+   	    var evento = Event.builder()
                 .id(1L)
-                .cargaHoraria(120)
-                .categoria(Categoria.builder().id(1L).nome("Arte").build())
-                .dataHorario(LocalDateTime.now().plusDays(10))
-                .estaAberto(false)
-                .titulo("Evento de teste")
+                .workload(120)
+                .category(Category.builder().id(1L).name("Arte").build())
+                .dateTime(LocalDateTime.now().plusDays(10))
+                .isOpen(false)
+                .title("Evento de teste")
                 .keyword("XXYYZZ-1")
                 .build();
    	 
-        var usuario = Usuario.builder()
+        var usuario = User.builder()
                 .id(10L)
-                .nome("Tidinha")
-                .cargaHoraria(600) // 10h
+                .name("Tidinha")
+                .workload(600) // 10h
                 .build();
         
-        var ep = EventoPalestrante.builder()
-                .evento_id(evento)
-                .nome_palestrante_id(palestrante)
-                .build();
-                
-        ep.getEvento_id().setPalestrantes(Arrays.asList(ep));
-        ep.getNome_palestrante_id().setEventos(Arrays.asList(ep));
         
-        var eu = EventoUsuario.builder()
-            .eventoID(evento)
-            .usuarioID(usuario)
+        var eu = br.com.casamovel.model.EventUser.builder()
+            .event(evento)
+            .user(usuario)
             .certificate(null)
             .build();
 
@@ -97,13 +77,13 @@ public class EventoUnitTest {
     @BeforeEach
     public void setup(){
         MockitoAnnotations.initMocks(this);
-        eventoUsuario = initEventUser();
+        EventUser = initEventUser();
     }
 
     @Test
     public void deveInscreverUsuarioNoEventoComSucesso(){
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         // Evento Existe
         when(
             eventoRepository.findById(evento.getId())
@@ -114,12 +94,12 @@ public class EventoUnitTest {
         ).thenReturn(Optional.of(usuario));
         // Inscrição ainda não feita 
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
         ).thenReturn(Optional.ofNullable(null));
 
         when(
-            euRepository.save(eventoUsuario)
-        ).thenReturn(eventoUsuario);
+            euRepository.save(EventUser)
+        ).thenReturn(EventUser);
 
         var result = eventoService.inscreverUsuarioNoEvento(evento.getId(),usuario.getId());
 
@@ -128,8 +108,8 @@ public class EventoUnitTest {
 
     @Test
     public void deveLancarErroAoTentarInscreverUsuarioEmEventoJaInscrito(){
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
 
         // Evento Existe
         when(
@@ -141,11 +121,11 @@ public class EventoUnitTest {
         ).thenReturn(Optional.of(usuario));
         // Inscrição já existe
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
-        ).thenReturn(Optional.of(eventoUsuario));
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
+        ).thenReturn(Optional.of(EventUser));
         when(
-            euRepository.save(eventoUsuario)
-        ).thenReturn(eventoUsuario);
+            euRepository.save(EventUser)
+        ).thenReturn(EventUser);
 
         var result = assertThrows(
             RuntimeException.class, () ->
@@ -158,8 +138,8 @@ public class EventoUnitTest {
     @Test
     public void deveCancelarInscricaoDoUsuarioEmEventoComSucesso(){
     
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         // Evento Existe
         when(
             eventoRepository.findById(evento.getId())
@@ -170,8 +150,8 @@ public class EventoUnitTest {
         ).thenReturn(Optional.of(usuario));
         // Inscrição existe
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
-        ).thenReturn(Optional.of(eventoUsuario));
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
+        ).thenReturn(Optional.of(EventUser));
 
         var result = eventoService.removerInscricao(evento.getId(),usuario.getId());
 
@@ -181,8 +161,8 @@ public class EventoUnitTest {
     @Test
     public void deveLancarErroAoTentarCancelarInscricaoEmEventoAoQualUsuarioNaoEstaInscrito(){
     
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         // Evento Existe
         when(
             eventoRepository.findById(evento.getId())
@@ -193,7 +173,7 @@ public class EventoUnitTest {
         ).thenReturn(Optional.of(usuario));
         // Inscrição não foi realizada previamente
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
         ).thenReturn(Optional.ofNullable(null));
 
         var result =  assertThrows(
@@ -206,16 +186,16 @@ public class EventoUnitTest {
 
     @Test
     public void deveRegistrarPresencaComSucesso(){
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         var presencaDTO = RegistroPresencaDTO.builder()
             .keyword(evento.getKeyword())
             .userID(usuario.getId())
             .build();
-        var cargaHorariaEsperada = usuario.getCargaHoraria() + evento.getCargaHoraria();
+        var cargaHorariaEsperada = usuario.getWorkload() + evento.getWorkload();
 
         // Muda a data do evento para o passado
-        evento.setDataHorario(LocalDateTime.now().minusHours(2));
+        evento.setDateTime(LocalDateTime.now().minusHours(2));
 
         // Usuario Existe
         when(
@@ -228,12 +208,13 @@ public class EventoUnitTest {
         ).thenReturn(Optional.of(usuario));
         // Usuario Inscrito
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
-        ).thenReturn(Optional.of(eventoUsuario));
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
+        ).thenReturn(Optional.of(EventUser));
 
 
-        ResponseEntity<UsuarioDTO>  result = (ResponseEntity<UsuarioDTO>) eventoService.registrarPresenca(evento.getId(), presencaDTO);
-        var eventoParticipado = result.getBody().getEvents().stream().filter(e -> e.titulo == evento.getTitulo()).findFirst().orElse(null);
+        @SuppressWarnings("unchecked")
+		ResponseEntity<UsuarioDTO>  result = (ResponseEntity<UsuarioDTO>) eventoService.registrarPresenca(evento.getId(), presencaDTO);
+        var eventoParticipado = result.getBody().getEvents().stream().filter(e -> e.titulo == evento.getTitle()).findFirst().orElse(null);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(cargaHorariaEsperada, result.getBody().getWorkload());
         assertEquals(true, eventoParticipado.presente);
@@ -241,8 +222,8 @@ public class EventoUnitTest {
 
     @Test
     public void deveLancarUmErroAoTentarRegistrarPresencaEmEventoNaoInscrito(){
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         var presencaDTO = RegistroPresencaDTO.builder()
             .keyword(evento.getKeyword())
             .userID(usuario.getId())
@@ -259,7 +240,7 @@ public class EventoUnitTest {
         ).thenReturn(Optional.of(usuario));
         // Inscrição não existe
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
         ).thenReturn(Optional.ofNullable(null));
 
 
@@ -271,8 +252,8 @@ public class EventoUnitTest {
 
     @Test
     public void deveLancarUmErroAoTentarRegistrarPresencaAntesDoHorarioDoEvento(){
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         var presencaDTO = RegistroPresencaDTO.builder()
             .keyword(evento.getKeyword())
             .userID(usuario.getId())
@@ -290,8 +271,8 @@ public class EventoUnitTest {
 
         // Evento existe
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
-        ).thenReturn(Optional.ofNullable(eventoUsuario));
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
+        ).thenReturn(Optional.ofNullable(EventUser));
 
 
         var result =  assertThrows(RuntimeException.class, ()-> eventoService.registrarPresenca(evento.getId(), presencaDTO));
@@ -301,8 +282,8 @@ public class EventoUnitTest {
 
     @Test
     public void deveLancarUmErroAoPassarUmCodigoDeEventoInvalido(){
-        var evento = eventoUsuario.getEventoID();
-        var usuario = eventoUsuario.getUsuarioID();
+        var evento = EventUser.getEvent();
+        var usuario = EventUser.getUser();
         var presencaDTO = RegistroPresencaDTO.builder()
             .keyword("AAABBBCCC-1") // chave de evento errada
             .userID(usuario.getId())
@@ -311,7 +292,7 @@ public class EventoUnitTest {
             O evento passa primeiro pelo teste de data, 
             então para passar é necessário deixar a data do evento como se já tivesse acontecido 
         **/
-        evento.setDataHorario(LocalDateTime.now().minusHours(2));
+        evento.setDateTime(LocalDateTime.now().minusHours(2));
 
         // Evento Existe
         when(
@@ -325,8 +306,8 @@ public class EventoUnitTest {
 
         // Evento existe
         when(
-            euRepository.findById(new EventoUsuarioID(evento.getId(),usuario.getId()))
-        ).thenReturn(Optional.ofNullable(eventoUsuario));
+            euRepository.findById(new EventUserID(evento.getId(),usuario.getId()))
+        ).thenReturn(Optional.ofNullable(EventUser));
 
 
         var result =  assertThrows(RuntimeException.class, ()-> eventoService.registrarPresenca(evento.getId(), presencaDTO));

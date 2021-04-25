@@ -1,7 +1,6 @@
 package br.com.casamovel.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 @Entity
 public class Role implements GrantedAuthority {
 	private static final long serialVersionUID = 1L;
@@ -18,7 +17,7 @@ public class Role implements GrantedAuthority {
 	@Id
 	private String roleName;
 	@ManyToMany (mappedBy = "roles", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) //antes estava por role
-	private List<Usuario> usuarios;
+	private List<User> usuarios;
 
 	@Override
 	public String toString() {
@@ -35,13 +34,13 @@ public class Role implements GrantedAuthority {
 		this.roleName = roleName;
 	}
         @JsonBackReference
-	public List<Usuario> getUsuarios() {
+	public List<User> getUsuarios() {
 		return usuarios;
 	}
-	public void setUsuarios(List<Usuario> usuarios) {
+	public void setUsuarios(List<User> usuarios) {
 		this.usuarios = usuarios;
 	}
-	public Role(String roleName, List<Usuario> usuarios) {
+	public Role(String roleName, List<User> usuarios) {
 		super();
 		this.roleName = roleName;
 		this.usuarios = usuarios;
