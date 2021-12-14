@@ -20,7 +20,7 @@ public class PAAPApplication {
 		
 	}	
 	
-	@RequestMapping("/login")
+	@RequestMapping("/health")
 	public String home() {
 		return "Hello World! \n Welcome to PAAP API";
 	} 
