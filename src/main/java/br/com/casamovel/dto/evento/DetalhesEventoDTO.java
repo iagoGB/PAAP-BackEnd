@@ -22,15 +22,15 @@ import lombok.Setter;
 public class DetalhesEventoDTO {
 	
 	private Long id;
-	private String foto;
-	private String titulo;
-	private String localizacao;
+	private String picture;
+	private String title;
+	private String location;
 	private String qrCode;
-	private LocalDateTime data_horario;
-	private Integer carga_horaria;
-	private String categoria;
-	private List<String> palestrantes = new ArrayList<>();
-	private List<String> participantes = new ArrayList<>();
+	private LocalDateTime dateTime;
+	private Integer workload;
+	private String category;
+	private List<String> speakers = new ArrayList<>();
+	private List<String> enrolled = new ArrayList<>();
 	
 //	public DetalhesEventoDTO(Long id, String foto, String titulo, String local, String qrCode, LocalDateTime dataHorario,
 //			Integer cargaHoraria, String categoria, List<String> palestrantes,
@@ -49,17 +49,17 @@ public class DetalhesEventoDTO {
 //	}
 	
 	public DetalhesEventoDTO(Event event) {
-		this.categoria = event.getCategory().getName();
-		this.data_horario = event.getDateTime();
-		this.foto = event.getPicture();
+		this.category = event.getCategory().getName();
+		this.dateTime = event.getDateTime();
+		this.picture = event.getPicture();
 		this.id = event.getId();
-		this.localizacao = event.getLocal();
-		this.palestrantes = event.getSpeakers();
+		this.location = event.getLocal();
+		this.speakers = event.getSpeakers();
 		this.qrCode = event.getQrCode();
-		this.titulo = event.getTitle();
-		this.participantes = event.getUsers().stream()
+		this.title= event.getTitle();
+		this.enrolled = event.getUsers().stream()
 				.map(eu -> eu.getUser().getName()).collect(Collectors.toList());
-		this.carga_horaria = event.getWorkload();
+		this.workload = event.getWorkload();
 	}
 	
 	public static Page<DetalhesEventoDTO> parse(Page<Event> pageEvent) {
