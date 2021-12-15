@@ -89,10 +89,8 @@ public class EventService {
 
     public List<DetalhesEventoDTO> findAllOpen(){
     	// System.out.println("Data do Brasil: "+ LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
-
     	return eventRepository.findAllOpen(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))
             .stream().map(DetalhesEventoDTO::parse).collect(Collectors.toList());
-    	
     }
 
     @Transactional
@@ -361,4 +359,24 @@ public class EventService {
 		  var eventPage = eventRepository.findAll(pagination);
 			return  ResponseEntity.ok().body(DetalhesEventoDTO.parse(eventPage));
 	}
+
+    /**
+   * Encontra eventos que usuário se inscreveu.
+   * A variável SubscribeLimiteDate é a data limite para o evento ser listado na aba inscritos.
+   * Necessária para cobrir situações onde o usuário se inscreve mas não registra presença ou 
+   * não cancela inscrição.
+   * @param userID Id do usuário
+   */
+    public ResponseEntity<List<DetalhesEventoDTO>> findEnrolleds(Long userID) {
+        var events = new ArrayList<DetalhesEventoDTO>();
+        this.eventUserRepository.findByUserId(userID).stream()
+        .forEach((eu) -> {
+            var currentDate = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+            // Data limite para um evento ser listado na aba de inscrito
+            var subscribeLimitDate = eu.getEvent().getDateTime().plusDays(1);
+            if (currentDate.isBefore(subscribeLimitDate) && !eu.isUserPresent()) 
+                events.add(DetalhesEventoDTO.parse(eu.getEvent()));
+        });
+        return ResponseEntity.ok().body(events);
+    }
 }

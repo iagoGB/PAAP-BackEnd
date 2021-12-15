@@ -38,7 +38,12 @@ public class EventEndpoint {
     public List<DetalhesEventoDTO> findAllOpen() {
         return es.findAllOpen();
     }
-    
+
+    @GetMapping("/enrolled")
+    public ResponseEntity<List<DetalhesEventoDTO>> findEnrolleds( @RequestParam(value ="userID") Long userID) {
+        return es.findEnrolleds(userID);
+    }
+
     @GetMapping
     public ResponseEntity<Page<DetalhesEventoDTO>> findAll(Pageable pagination) {
         return es.findAll(pagination);
