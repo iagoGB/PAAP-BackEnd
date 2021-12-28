@@ -1,6 +1,5 @@
 package br.com.casamovel.model;
 
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,13 +38,14 @@ public class Event implements Serializable {
 	private Long id;
 
 	private String keyword;
-	
+
 	@Builder.Default
 	private Boolean isOpen = true;
 
 	private String title;
 
-	private String picture;
+	@Builder.Default
+	private String picture = "https://fcdocente-teste.s3.sa-east-1.amazonaws.com/eventos/paap.png";
 
 	private String qrCode;
 
@@ -59,7 +59,7 @@ public class Event implements Serializable {
 	@JoinColumn(name = "fk_categoria_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_categoria_id"), nullable = false)
 	private Category category;
 
-	@OneToMany(mappedBy = "event",orphanRemoval = true) // nome da chave do outro lado do relacionamento
+	@OneToMany(mappedBy = "event", orphanRemoval = true) // nome da chave do outro lado do relacionamento
 	@Builder.Default
 	List<EventUser> users = new ArrayList<>();
 
@@ -68,17 +68,17 @@ public class Event implements Serializable {
 	List<String> speakers = new ArrayList<>();
 
 	public void parse(NovoEventoDTO eDto, Category category) {
-		
-        setPicture("default.png");
-        setTitle(eDto.getTitle());
-        setCategory(category);
-        setWorkload(eDto.getWorkload());
-        setLocal(eDto.getLocal());
-        setDateTime(eDto.getDateTime());
-        setIsOpen(true);
-        category.getEvents().add(this);
+
+		setPicture("default.png");
+		setTitle(eDto.getTitle());
+		setCategory(category);
+		setWorkload(eDto.getWorkload());
+		setLocal(eDto.getLocal());
+		setDateTime(eDto.getDateTime());
+		setIsOpen(true);
+		category.getEvents().add(this);
 		setSpeakers(eDto.getSpeakers());
-	}	
+	}
 
 	public static Event parseFrom(NovoEventoDTO eDto, Category category) {
 		var event = Event.builder()

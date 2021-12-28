@@ -90,7 +90,7 @@ INSERT INTO public.event(
 
 INSERT INTO public.event(
 	id, workload, date_time, picture, local, title, fk_categoria_id, is_open, keyword)
-	VALUES (20,4*60, '2022-04-21 14:00:00.067', 'default.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
+	VALUES (20,4*60, '2022-04-21 14:00:00.067', 'https://fcdocente-teste.s3.sa-east-1.amazonaws.com/eventos/paap.png', 'Rua Oscar Freire 1720, Centro','Treinamento de Educação a Distância Para Professores', 3, true,'YYZZ15-20');
 
 INSERT INTO public.event(
 	id, workload, date_time, picture, local, title, fk_categoria_id, is_open, keyword)
