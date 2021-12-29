@@ -201,9 +201,8 @@ public class EventService {
        
         return findRelation(eventID, data.getUserID())
         		.map(relation -> {
-        			
-        			this.isToday(eventID);
         			this.validateEventKeyCode(relation, data.getKeyword());
+        			this.isToday(eventID);
         			if (relation.isUserPresent())
         				throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
         			relation.setUserPresent(true);
@@ -270,7 +269,7 @@ public class EventService {
             return saveCertificate;
         } catch (JRException | FileNotFoundException  e) {
             e.printStackTrace();
-            throw new RuntimeException("Deu um erro ai ó");
+            throw new RuntimeException("Erro de arquivo");
         } catch ( Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Erro inexperado");
@@ -376,6 +375,17 @@ public class EventService {
             var subscribeLimitDate = eu.getEvent().getDateTime().plusDays(1);
             if (currentDate.isBefore(subscribeLimitDate) && !eu.isUserPresent()) 
                 events.add(DetalhesEventoDTO.parse(eu.getEvent()));
+        });
+        return ResponseEntity.ok().body(events);
+    }
+
+
+    public ResponseEntity<List<DetalhesEventoDTO>> findHistoric(Long userID) {
+        var events = new ArrayList<DetalhesEventoDTO>();
+        this.eventUserRepository.findByUserId(userID).stream().forEach((eu) -> {
+            if (eu.isUserPresent()) {
+                events.add(DetalhesEventoDTO.parse(eu.getEvent()));
+            }
         });
         return ResponseEntity.ok().body(events);
     }

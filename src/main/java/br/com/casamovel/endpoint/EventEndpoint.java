@@ -44,6 +44,11 @@ public class EventEndpoint {
         return es.findEnrolleds(userID);
     }
 
+    @GetMapping("/historic")
+    public ResponseEntity<List<DetalhesEventoDTO>> findHistoric( @RequestParam(value ="userID") Long userID) {
+        return es.findHistoric(userID);
+    }
+
     @GetMapping
     public ResponseEntity<Page<DetalhesEventoDTO>> findAll(Pageable pagination) {
         return es.findAll(pagination);
