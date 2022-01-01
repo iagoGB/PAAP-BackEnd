@@ -315,7 +315,7 @@ public class EventService {
     // Checa se o evento ocorre hoje
     private void isToday(Long eventoId){
         var event = eventRepository.findById(eventoId).get();
-        if ( LocalDateTime.now().isBefore(event.getDateTime())){
+        if ( LocalDateTime.now(ZoneId.of("America/Sao_Paulo")).isBefore(event.getDateTime())){
             throw new IllegalArgumentException("O Evento ainda não está na data");
         }
     }
