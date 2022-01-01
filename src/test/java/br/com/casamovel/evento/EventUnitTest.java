@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
-import br.com.casamovel.dto.usuario.UsuarioDTO;
+import br.com.casamovel.dto.usuario.UserDTO;
 import br.com.casamovel.model.Category;
 import br.com.casamovel.model.Event;
 import br.com.casamovel.model.EventUser;
@@ -213,11 +213,11 @@ public class EventUnitTest {
 
 
         @SuppressWarnings("unchecked")
-		ResponseEntity<UsuarioDTO>  result = (ResponseEntity<UsuarioDTO>) eventoService.registerPresence(evento.getId(), presencaDTO);
-        var eventoParticipado = result.getBody().getEvents().stream().filter(e -> e.titulo == evento.getTitle()).findFirst().orElse(null);
+		ResponseEntity<UserDTO>  result = (ResponseEntity<UserDTO>) eventoService.registerPresence(evento.getId(), presencaDTO);
+        var eventoParticipado = result.getBody().getEvents().stream().filter(e -> e.title == evento.getTitle()).findFirst().orElse(null);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(cargaHorariaEsperada, result.getBody().getWorkload());
-        assertEquals(true, eventoParticipado.presente);
+        assertEquals(true, eventoParticipado.isPresent);
     }
 
     @Test
