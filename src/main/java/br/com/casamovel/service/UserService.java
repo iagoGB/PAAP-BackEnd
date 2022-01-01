@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.casamovel.dto.usuario.NewUserDTO;
-import br.com.casamovel.dto.usuario.UsuarioDTO;
+import br.com.casamovel.dto.usuario.UserDTO;
 import br.com.casamovel.model.User;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UserRepository;
@@ -20,25 +20,25 @@ public class UserService {
     @Autowired UserRepository usuarioRepository;
     @Autowired RoleRepository roleRepository;
 
-    public ResponseEntity<Page<UsuarioDTO>> findAll(Pageable pagination){
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pagination){
         var userPage = usuarioRepository.findAll(pagination);
-		return  ResponseEntity.ok().body(UsuarioDTO.parse(userPage));
+		return  ResponseEntity.ok().body(UserDTO.parse(userPage));
     }
     
 
-    public ResponseEntity<UsuarioDTO> findById(Long id) {
+    public ResponseEntity<UserDTO> findById(Long id) {
         return usuarioRepository.findById(id)
-            .map( user -> ResponseEntity.ok().body(UsuarioDTO.parse(user)))
+            .map( user -> ResponseEntity.ok().body(UserDTO.parse(user)))
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
     
-    public ResponseEntity<UsuarioDTO> findByEmail(String username) {
+    public ResponseEntity<UserDTO> findByEmail(String username) {
     	return usuarioRepository.findByEmail(username)
-    			.map(user -> ResponseEntity.ok().body(UsuarioDTO.parse(user)))
+    			.map(user -> ResponseEntity.ok().body(UserDTO.parse(user)))
     			.orElse(ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<UsuarioDTO> save
+    public ResponseEntity<UserDTO> save
     (
         final NewUserDTO NovoUsuarioDTO, 
         final UriComponentsBuilder uriBuilder
@@ -49,10 +49,10 @@ public class UserService {
             novoUsuario.parse(NovoUsuarioDTO, roleRepository);
             // Salvar
             usuarioRepository.save(novoUsuario);
-            final UsuarioDTO usuarioDTO = UsuarioDTO.parse(novoUsuario);
+            final UserDTO userDTO = UserDTO.parse(novoUsuario);
             // Caminho do novo recurso criado
             final URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
-            return ResponseEntity.created(uri).body(usuarioDTO);
+            return ResponseEntity.created(uri).body(userDTO);
         } catch (final Exception ex) {
             return ResponseEntity.badRequest().build();
         }

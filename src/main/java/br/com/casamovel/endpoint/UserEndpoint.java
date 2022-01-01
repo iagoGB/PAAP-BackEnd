@@ -20,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.casamovel.dto.usuario.AtualizarUsuarioDTO;
 import br.com.casamovel.dto.usuario.NewUserDTO;
-import br.com.casamovel.dto.usuario.UsuarioDTO;
+import br.com.casamovel.dto.usuario.UserDTO;
 import br.com.casamovel.model.User;
 import br.com.casamovel.repository.RoleRepository;
 import br.com.casamovel.repository.UserRepository;
@@ -38,12 +38,12 @@ public class UserEndpoint {
 	UserService usuarioService;
 
 	@GetMapping
-	public ResponseEntity<Page<UsuarioDTO>> listaUsuario(Pageable pagination) {
+	public ResponseEntity<Page<UserDTO>> listaUsuario(Pageable pagination) {
 		return usuarioService.findAll(pagination);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UsuarioDTO> usuarioPorId(@PathVariable(value = "id") Long id) throws NotFoundException {
+	public ResponseEntity<UserDTO> usuarioPorId(@PathVariable(value = "id") Long id) throws NotFoundException {
 		return usuarioService.findById(id);
 	}
 	
@@ -62,10 +62,10 @@ public class UserEndpoint {
 	@PutMapping("/{id}")
 	@Transactional
 	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
-	public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid AtualizarUsuarioDTO atualizarUsuarioDTO,
+	public ResponseEntity<UserDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid AtualizarUsuarioDTO atualizarUsuarioDTO,
 			UriComponentsBuilder uriBuilder){
 		User usuarioAtualizado = atualizarUsuarioDTO.update(id, usuarioRepository);
-		return ResponseEntity.ok(new UsuarioDTO(usuarioAtualizado));
+		return ResponseEntity.ok(new UserDTO(usuarioAtualizado));
 	}
 	
 	@DeleteMapping("/{id}")

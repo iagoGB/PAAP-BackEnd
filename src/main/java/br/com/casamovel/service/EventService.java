@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.casamovel.dto.evento.DetalhesEventoDTO;
 import br.com.casamovel.dto.evento.NovoEventoDTO;
 import br.com.casamovel.dto.evento.RegistroPresencaDTO;
-import br.com.casamovel.dto.usuario.UsuarioDTO;
+import br.com.casamovel.dto.usuario.UserDTO;
 import br.com.casamovel.model.Event;
 import br.com.casamovel.model.EventUser;
 import br.com.casamovel.model.EventUserID;
@@ -44,7 +44,6 @@ import br.com.casamovel.repository.CategoryRepository;
 import br.com.casamovel.repository.EventRepository;
 import br.com.casamovel.repository.EventUserRepository;
 import br.com.casamovel.repository.UserRepository;
-import br.com.casamovel.util.Disco;
 import br.com.casamovel.util.QRCodeGenerator;
 import net.bytebuddy.utility.RandomString;
 
@@ -209,7 +208,7 @@ public class EventService {
         	        var eventWorkload = relation.getEvent().getWorkload();
         	        var user = relation.getUser();
         	        user.setWorkload( user.getWorkload() + eventWorkload);
-        	        return ResponseEntity.ok().body(UsuarioDTO.parse(user));
+        	        return ResponseEntity.ok().body(UserDTO.parse(user));
         				
         		}).orElseThrow(() -> new RuntimeException("Relação entre evento e usuário não existe"));
     }

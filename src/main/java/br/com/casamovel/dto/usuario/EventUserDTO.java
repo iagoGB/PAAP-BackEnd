@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventoUsuarioDTO {
+public class EventUserDTO {
     public Long id;
-    public String titulo;
-    public Boolean presente;
+    public String title;
+    public Boolean isPresent;
 
-    public EventoUsuarioDTO(EventUser eventUser) {
+    public EventUserDTO(EventUser eventUser) {
         this.id = eventUser.getEvent().getId();
-        this.titulo = eventUser.getEvent().getTitle();
-        this.presente = eventUser.isUserPresent();
+        this.title = eventUser.getEvent().getTitle();
+        this.isPresent = eventUser.isUserPresent();
     }
 }

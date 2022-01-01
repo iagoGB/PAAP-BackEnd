@@ -19,7 +19,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioDTO {
+public class UserDTO {
 	public Long id;
 	public String email;
 	public Long cpf;
@@ -30,19 +30,19 @@ public class UsuarioDTO {
 	public LocalDate entryDate;
 	public String avatar;
 	@Builder.Default
-	public List<EventoUsuarioDTO> events = new ArrayList<>();
+	public List<EventUserDTO> events = new ArrayList<>();
 	
-	public UsuarioDTO(User usuario) {
-		this.id = usuario.getId();
-		this.name = usuario.getName();
-		this.cpf = usuario.getCpf();
-		this.email = usuario.getEmail();
-		this.workload = usuario.getWorkload();
-		this.departament = usuario.getDepartament();
-		this.telephone = usuario.getPhone();
-		this.setEntryDate(usuario.getEntryDate());
-		this.setAvatar(usuario.getAvatar());
-		var collect = usuario.getEvents().stream().map(eu -> new EventoUsuarioDTO(eu)).collect(Collectors.toList());
+	public UserDTO(User user) {
+		this.id = user.getId();
+		this.name = user.getName();
+		this.cpf = user.getCpf();
+		this.email = user.getEmail();
+		this.workload = user.getWorkload();
+		this.departament = user.getDepartament();
+		this.telephone = user.getPhone();
+		this.setEntryDate(user.getEntryDate());
+		this.setAvatar(user.getAvatar());
+		var collect = user.getEvents().stream().map(eu -> new EventUserDTO(eu)).collect(Collectors.toList());
 		this.events = collect;
 	}
 	
@@ -96,12 +96,12 @@ public class UsuarioDTO {
 		this.telephone = telephone;
 	}
 	
-	public static Page<UsuarioDTO> parse(Page<User> usuarios) {
-		return usuarios.map(UsuarioDTO::new);
+	public static Page<UserDTO> parse(Page<User> usuarios) {
+		return usuarios.map(UserDTO::new);
 	}
 	
-	public static UsuarioDTO parse(User usuario) {
-		return new UsuarioDTO(usuario);
+	public static UserDTO parse(User usuario) {
+		return new UserDTO(usuario);
 	}
 
 	public Integer getWorkload() {
