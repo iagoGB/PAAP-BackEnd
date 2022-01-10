@@ -53,9 +53,9 @@ public class UserEndpoint {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody @Valid NewUserDTO NovoUsuarioDTO,
+	public ResponseEntity<?> save(@RequestBody @Valid NewUserDTO novoUsuarioDTO,
 			UriComponentsBuilder uriBuilder) throws Exception {
-		return usuarioService.save(NovoUsuarioDTO, uriBuilder);
+		return usuarioService.save(novoUsuarioDTO, uriBuilder);
 
 	} 
 	
@@ -63,7 +63,9 @@ public class UserEndpoint {
 	@Transactional
 	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
 	public ResponseEntity<UserDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid AtualizarUsuarioDTO atualizarUsuarioDTO,
-			UriComponentsBuilder uriBuilder){
+			UriComponentsBuilder uriBuilder) {
+		System.out.println("Executou endpoint");
+		System.out.println(atualizarUsuarioDTO.getEmail());
 		User usuarioAtualizado = atualizarUsuarioDTO.update(id, usuarioRepository);
 		return ResponseEntity.ok(new UserDTO(usuarioAtualizado));
 	}
