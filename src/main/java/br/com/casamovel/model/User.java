@@ -47,7 +47,7 @@ public class User implements UserDetails {
 	private long id;
 	
 	@Builder.Default
-    private String avatar = "../assets/images/default_avatar.png";
+    private String avatar = "https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png";
     
 	private Long cpf;
 

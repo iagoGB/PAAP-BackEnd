@@ -15,8 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-
-import br.com.casamovel.dto.usuario.UsuarioDTO;
+import br.com.casamovel.dto.usuario.UserDTO;
 import br.com.casamovel.model.User;
 import br.com.casamovel.repository.UserRepository;
 import br.com.casamovel.service.UserService;
@@ -70,7 +69,7 @@ public class UserUnitTest {
         var response = usuarioService.findById(usuario.getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode()); 
-        assertEquals(UsuarioDTO.class, response.getBody().getClass());
+        assertEquals(UserDTO.class, response.getBody().getClass());
         assertEquals(usuario.getName(), response.getBody().getName()); 
     }
 
@@ -95,7 +94,7 @@ public class UserUnitTest {
         var result = usuarioService.findById(usuario.getId());
         
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(UsuarioDTO.class, result.getBody().getClass()); 
+        assertEquals(UserDTO.class, result.getBody().getClass()); 
         assertEquals(usuario.getEmail(), result.getBody().getEmail());  
     }
 
