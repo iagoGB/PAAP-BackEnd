@@ -48,7 +48,7 @@ public class UserEndpoint {
 	}
 	
 	@GetMapping("/email")
-	public ResponseEntity<?> usuarioPorId(@RequestParam(value="username") String username) {
+	public ResponseEntity<?> findByEmail(@RequestParam(value="username") String username) {
 		 return usuarioService.findByEmail(username);
 	}
 	
