@@ -74,15 +74,15 @@ public class EventService {
     private final String  eventImageDir = "C:\\CasaMovel\\eventos\\";
 
     @Autowired
-    public EventService(EventRepository eventoRepository, CategoryRepository categoriaRepository, UserRepository usuarioRepository, EventUserRepository eventoUsuarioRepository, QRCodeGenerator qrCodeGenerator, S3StorageService s3StorageService, @Value("${events.folder}")String events_folder,@Value("${qrcodes.folder}") String qrcodes_folder) {
+    public EventService(EventRepository eventoRepository, CategoryRepository categoriaRepository, UserRepository usuarioRepository, EventUserRepository eventoUsuarioRepository, QRCodeGenerator qrCodeGenerator, S3StorageService s3StorageService, @Value("${events.folder}")String eventsFolder,@Value("${qrcodes.folder}") String qrcodesFolder) {
         this.eventRepository = eventoRepository;
         this.categoryRepository = categoriaRepository;
         this.userRepository = usuarioRepository;
         this.eventUserRepository = eventoUsuarioRepository;
         this.qrCodeGenerator = qrCodeGenerator;
         this.s3StorageService = s3StorageService;
-        this.EVENTS_FOLDER = events_folder;
-        this.QRCODES_FOLDER = qrcodes_folder;
+        this.EVENTS_FOLDER = eventsFolder;
+        this.QRCODES_FOLDER = qrcodesFolder;
     }
 
 

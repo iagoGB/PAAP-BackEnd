@@ -2,6 +2,10 @@ package br.com.casamovel.endpoint;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,47 +75,33 @@ public class UserEndpoint {
 		return ResponseEntity.ok(new UserDTO(usuarioAtualizado));
 	}
 
+	@PutMapping("teste/{id}")
+	@Transactional
+	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
+	public ResponseEntity<?> updateUser(
+			@PathVariable Long id,
+			@RequestParam(name="image", required = false) MultipartFile image,
+			@RequestParam(name = "user", required = false ) String user
+	) throws JsonMappingException, JsonProcessingException {
+		return usuarioService.update(image, user, id);
+	}
+
 	// @PutMapping("teste/{id}")
 	// @Transactional
 	// // Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
 	// public ResponseEntity<UserDTO> updateUser(
 	// 		@PathVariable Long id,
-	// 		@RequestParam(name="image", required = false) MultipartFile image,
-	// 		@RequestParam(name = "user", required = false ) String user
-	// ) throws JsonMappingException, JsonProcessingException {
-	// 	System.out.println(user);
-	// 	var objectMapper = new ObjectMapper();
+	// 		@RequestParam("image") MultipartFile image,
+	// 		@RequestPart(name = "user", required = false) UpdateUserDTO user
+	// ) {
 	// 	if (user == null) {
-	// 		System.out.println("Não veio usuario!");
+	// 		System.out.println("Não vieo usuário");
 	// 	} else {
-	// 		System.out.println("Usuário será atualizado");
-	// 		var updatedUser = objectMapper.readValue(user, AtualizarUsuarioDTO.class);
+	// 		System.out.println("Atualizar informações");
 	// 	}
-	// 	if (image == null) {
-	// 		System.out.println("Não Tem imagem!");
-	// 	} else {
-	// 		System.out.println("Veio uma imagem!");
-	// 	}
-
+		
 	// 	return ResponseEntity.ok().build();
 	// }
-
-	@PutMapping("teste/{id}")
-	@Transactional
-	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
-	public ResponseEntity<UserDTO> updateUser(
-			@PathVariable Long id,
-			@RequestParam("image") MultipartFile image,
-			@RequestPart(name = "user", required = false) UpdateUserDTO user
-	) {
-		if (user == null) {
-			System.out.println("Não vieo usuário");
-		} else {
-			System.out.println("Atualizar informações");
-		}
-		
-		return ResponseEntity.ok().build();
-	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
