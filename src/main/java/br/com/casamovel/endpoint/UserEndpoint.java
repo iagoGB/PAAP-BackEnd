@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.casamovel.dto.usuario.AtualizarUsuarioDTO;
+import br.com.casamovel.dto.usuario.UpdateUserDTO;
 import br.com.casamovel.dto.usuario.NewUserDTO;
 import br.com.casamovel.dto.usuario.UserDTO;
 import br.com.casamovel.model.User;
@@ -46,41 +48,81 @@ public class UserEndpoint {
 	public ResponseEntity<UserDTO> usuarioPorId(@PathVariable(value = "id") Long id) throws NotFoundException {
 		return usuarioService.findById(id);
 	}
-	
+
 	@GetMapping("/email")
-	public ResponseEntity<?> findByEmail(@RequestParam(value="username") String username) {
-		 return usuarioService.findByEmail(username);
+	public ResponseEntity<?> findByEmail(@RequestParam(value = "username") String username) {
+		return usuarioService.findByEmail(username);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody @Valid NewUserDTO novoUsuarioDTO,
 			UriComponentsBuilder uriBuilder) throws Exception {
 		return usuarioService.save(novoUsuarioDTO, uriBuilder);
 
-	} 
-	
+	}
+
 	@PutMapping("/{id}")
 	@Transactional
 	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
-	public ResponseEntity<UserDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid AtualizarUsuarioDTO atualizarUsuarioDTO,
+	public ResponseEntity<UserDTO> atualizarUsuario(@PathVariable Long id,
+			@RequestBody @Valid UpdateUserDTO atualizarUsuarioDTO,
 			UriComponentsBuilder uriBuilder) {
-		System.out.println("Executou endpoint");
-		System.out.println(atualizarUsuarioDTO.getEmail());
 		User usuarioAtualizado = atualizarUsuarioDTO.update(id, usuarioRepository);
 		return ResponseEntity.ok(new UserDTO(usuarioAtualizado));
 	}
-	
+
+	// @PutMapping("teste/{id}")
+	// @Transactional
+	// // Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
+	// public ResponseEntity<UserDTO> updateUser(
+	// 		@PathVariable Long id,
+	// 		@RequestParam(name="image", required = false) MultipartFile image,
+	// 		@RequestParam(name = "user", required = false ) String user
+	// ) throws JsonMappingException, JsonProcessingException {
+	// 	System.out.println(user);
+	// 	var objectMapper = new ObjectMapper();
+	// 	if (user == null) {
+	// 		System.out.println("Não veio usuario!");
+	// 	} else {
+	// 		System.out.println("Usuário será atualizado");
+	// 		var updatedUser = objectMapper.readValue(user, AtualizarUsuarioDTO.class);
+	// 	}
+	// 	if (image == null) {
+	// 		System.out.println("Não Tem imagem!");
+	// 	} else {
+	// 		System.out.println("Veio uma imagem!");
+	// 	}
+
+	// 	return ResponseEntity.ok().build();
+	// }
+
+	@PutMapping("teste/{id}")
+	@Transactional
+	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
+	public ResponseEntity<UserDTO> updateUser(
+			@PathVariable Long id,
+			@RequestParam("image") MultipartFile image,
+			@RequestPart(name = "user", required = false) UpdateUserDTO user
+	) {
+		if (user == null) {
+			System.out.println("Não vieo usuário");
+		} else {
+			System.out.println("Atualizar informações");
+		}
+		
+		return ResponseEntity.ok().build();
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
 		usuarioRepository.deleteById(id);
 		return ResponseEntity.ok().build();
-		
+
 	}
-	
+
 	public ResponseEntity<?> getCertificate(
-			@RequestParam(value="eventID") Long eventID,
-			@RequestParam(value="userID") Long userID
-	) {
-		return null;	
+			@RequestParam(value = "eventID") Long eventID,
+			@RequestParam(value = "userID") Long userID) {
+		return null;
 	}
 }

@@ -33,7 +33,7 @@ INSERT INTO public.usuario(
 )
 VALUES ( 
     '2016-09-15 14:26:29.124',
-    '../assets/images/default_avatar.png',
+    'https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png',
     1500,
     '5555',
     '2019-12-25 08:27:59.067', 
@@ -50,7 +50,7 @@ INSERT INTO public.usuario(
 )
 VALUES ( 
     '2017-02-02 16:31:29.124',
-    '../assets/images/default_avatar.png',
+    'https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png',
     600,
     '6565',
     '2017-12-25 08:27:59.067', 
@@ -67,7 +67,7 @@ INSERT INTO public.usuario(
 )
 VALUES ( 
     '2017-02-02 16:31:29.124',
-    '../assets/images/default_avatar.png',
+    'https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png',
     2550,
     '223344',
     '2018-12-25 08:27:59.067', 
@@ -94,11 +94,11 @@ INSERT INTO public.event(
 
 INSERT INTO public.event(
 	id, workload, date_time, picture, local, title, fk_categoria_id, is_open, keyword)
-	VALUES (33,3*60, '2020-07-22 15:00:00.067', 'default.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
+	VALUES (33,3*60, '2020-07-22 15:00:00.067', 'https://fcdocente-teste.s3.sa-east-1.amazonaws.com/eventos/paap.png', 'Rua Mentor de Alencar 2020, Centro','Conhecendo a Faculdade de Direito', 2, true,'AABc-33');
 
 INSERT INTO public.event(
 	id, workload, date_time, picture, local, title, fk_categoria_id, is_open, keyword)
-	VALUES (50,3*60, '2020-09-22 18:00:00.067', 'default.png', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
+	VALUES (50,3*60, '2020-09-22 18:00:00.067', 'https://fcdocente-teste.s3.sa-east-1.amazonaws.com/eventos/paap.png', 'Campus do Pici','Evento de Teste', 1, true,'ZZRot-50');
 
  --                 O usuario dois está cadastrado em 2 eventos ao iniciar o banco
     INSERT INTO public.event_user(
