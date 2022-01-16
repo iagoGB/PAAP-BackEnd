@@ -17,18 +17,24 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class NewEventDTO {
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private Long category;
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private String title;
-	@NotNull @NotEmpty @PastOrPresent
-	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "GMT-3")
+	@NotNull
+	@NotEmpty
+	@PastOrPresent
 	private LocalDateTime dateTime;
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private String location;
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private int workload;
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private List<String> speakers;
-	
+
 }
