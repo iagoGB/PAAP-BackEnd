@@ -17,7 +17,6 @@ public class PresenceEventIntegrationTest extends PAAPApplicationIntegrationIT  
 
     @Test
     public void deveRegistrarPresencaECargaHorariaDeUsuarioJaInscritoEmEventoExistente() {
-        //TODO - Refatorar testes para retornarem a carga horária computada
         given()
             .port(porta)
             .header("Authorization", usuarioAutenticado.getToken())

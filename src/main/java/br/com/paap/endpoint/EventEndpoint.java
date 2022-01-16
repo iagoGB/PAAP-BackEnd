@@ -2,6 +2,9 @@ package br.com.paap.endpoint;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.paap.dto.event.DetailsEventDTO;
 import br.com.paap.dto.event.RegisterPresenceDTO;
-import br.com.paap.dto.event.newEventDTO;
 import br.com.paap.service.EventService;
 
 @RestController
@@ -61,11 +62,11 @@ public class EventEndpoint {
 
     @PostMapping
     public ResponseEntity<?> save(
-    	@RequestBody final newEventDTO event,
-    	final UriComponentsBuilder uriBuilder
-    ) 
+        @RequestParam(name="image", required = true) MultipartFile image,
+    	@RequestParam(name = "event", required = true )  String event
+    ) throws JsonMappingException, JsonProcessingException 
     {
-    	return es.save(event);
+    	return es.save(image, event);
     }
 
     @DeleteMapping("/{id}")

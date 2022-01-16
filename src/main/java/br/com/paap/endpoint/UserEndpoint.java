@@ -4,8 +4,6 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,15 +17,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.paap.dto.user.NewUserDTO;
-import br.com.paap.dto.user.UpdateUserDTO;
 import br.com.paap.dto.user.UserDTO;
-import br.com.paap.model.User;
 import br.com.paap.repository.RoleRepository;
 import br.com.paap.repository.UserRepository;
 import br.com.paap.service.UserService;
@@ -68,16 +63,6 @@ public class UserEndpoint {
 	@PutMapping("/{id}")
 	@Transactional
 	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
-	public ResponseEntity<UserDTO> atualizarUsuario(@PathVariable Long id,
-			@RequestBody @Valid UpdateUserDTO atualizarUsuarioDTO,
-			UriComponentsBuilder uriBuilder) {
-		User usuarioAtualizado = atualizarUsuarioDTO.update(id, usuarioRepository);
-		return ResponseEntity.ok(new UserDTO(usuarioAtualizado));
-	}
-
-	@PutMapping("teste/{id}")
-	@Transactional
-	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
 	public ResponseEntity<?> updateUser(
 			@PathVariable Long id,
 			@RequestParam(name="image", required = false) MultipartFile image,
@@ -86,22 +71,6 @@ public class UserEndpoint {
 		return usuarioService.update(image, user, id);
 	}
 
-	// @PutMapping("teste/{id}")
-	// @Transactional
-	// // Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
-	// public ResponseEntity<UserDTO> updateUser(
-	// 		@PathVariable Long id,
-	// 		@RequestParam("image") MultipartFile image,
-	// 		@RequestPart(name = "user", required = false) UpdateUserDTO user
-	// ) {
-	// 	if (user == null) {
-	// 		System.out.println("Não vieo usuário");
-	// 	} else {
-	// 		System.out.println("Atualizar informações");
-	// 	}
-		
-	// 	return ResponseEntity.ok().build();
-	// }
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {

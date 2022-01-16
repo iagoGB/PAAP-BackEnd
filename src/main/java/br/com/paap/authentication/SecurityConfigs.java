@@ -33,9 +33,9 @@ public class SecurityConfigs extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
 			// .antMatchers(HttpMethod.GET,"/category").hasAnyRole("ADMIN","USER")
 			.antMatchers(HttpMethod.GET,"/user").hasAnyRole("ADMIN","USER")
-			.antMatchers(HttpMethod.POST,"/user").hasRole("ADMIN")
-			.antMatchers(HttpMethod.PUT,"/evento/**").hasAnyRole("ADMIN","USER")
-			.antMatchers(HttpMethod.PUT,"/evento/*/inscricao").hasRole("USER")
+			.antMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
+			.antMatchers(HttpMethod.PUT,"/event/**").hasAnyRole("ADMIN","USER")
+			.antMatchers(HttpMethod.PUT,"/event/*/subscribe").hasRole("USER")
 			.and()
 			// filtra requisições de login
 			.addFilter(new JWTAuthenticationFilter(authenticationManager(), userRepository))

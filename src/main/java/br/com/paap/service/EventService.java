@@ -16,6 +16,10 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.paap.dto.event.DetailsEventDTO;
 import br.com.paap.dto.event.RegisterPresenceDTO;
-import br.com.paap.dto.event.newEventDTO;
+import br.com.paap.dto.event.NewEventDTO;
 import br.com.paap.dto.user.UserDTO;
 import br.com.paap.model.Event;
 import br.com.paap.model.EventUser;
@@ -67,6 +71,8 @@ public class EventService {
 
     private final S3StorageService s3StorageService;
 
+    private ObjectMapper objectMapper;
+
     private  final String EVENTS_FOLDER;
 
     private  final String QRCODES_FOLDER;
@@ -74,7 +80,7 @@ public class EventService {
     private final String  eventImageDir = "C:\\CasaMovel\\eventos\\";
 
     @Autowired
-    public EventService(EventRepository eventoRepository, CategoryRepository categoriaRepository, UserRepository usuarioRepository, EventUserRepository eventoUsuarioRepository, QRCodeGenerator qrCodeGenerator, S3StorageService s3StorageService, @Value("${events.folder}")String eventsFolder,@Value("${qrcodes.folder}") String qrcodesFolder) {
+    public EventService(EventRepository eventoRepository, CategoryRepository categoriaRepository, UserRepository usuarioRepository, EventUserRepository eventoUsuarioRepository, QRCodeGenerator qrCodeGenerator, S3StorageService s3StorageService, @Value("${events.folder}")String eventsFolder,@Value("${qrcodes.folder}") String qrcodesFolder, ObjectMapper objectMapper) {
         this.eventRepository = eventoRepository;
         this.categoryRepository = categoriaRepository;
         this.userRepository = usuarioRepository;
@@ -83,6 +89,7 @@ public class EventService {
         this.s3StorageService = s3StorageService;
         this.EVENTS_FOLDER = eventsFolder;
         this.QRCODES_FOLDER = qrcodesFolder;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -93,19 +100,24 @@ public class EventService {
     }
 
     @Transactional
-    public ResponseEntity<?> save(newEventDTO newEventDTO) {
-            return categoryRepository.findById(newEventDTO.getCategory())
-            .map(categoria -> Event.parseFrom(newEventDTO, categoria))
-            .map(evento -> {
-                evento = eventRepository.save(evento);
-                evento.setKeyword(this.createKeyword(evento));
-                var qrCodeURL = this.generateQRCodeEvent(evento);
-                evento.setQrCode(qrCodeURL);
-                evento = eventRepository.save(evento);
-                var response = DetailsEventDTO.parse(evento);
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            })
-            .orElseThrow(() -> new RuntimeException(String.format("Categoria com ID %s não existe", newEventDTO.getCategory())));
+    public ResponseEntity<?> save(MultipartFile image, String event)
+            throws JsonMappingException, JsonProcessingException {
+        var newEventDTO = objectMapper.readValue(event, NewEventDTO.class);
+        return categoryRepository.findById(newEventDTO.getCategory())
+        .map(category -> Event.parseFrom(newEventDTO, category))
+        .map(newEvent -> {
+            newEvent = eventRepository.save(newEvent);
+            var savedImage = s3StorageService.saveImage(image, newEvent.getId(), EVENTS_FOLDER);
+            var qrCodeURL = this.generateQRCodeEvent(newEvent);
+            var createdKeyword = this.createKeyword(newEvent);
+            newEvent.setPicture(savedImage);
+            newEvent.setQrCode(qrCodeURL);
+            newEvent.setKeyword(createdKeyword);
+            newEvent = eventRepository.save(newEvent);
+            var response = DetailsEventDTO.parse(newEvent);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        })
+        .orElseThrow(() -> new RuntimeException(String.format("Categoria com ID %s não existe", newEventDTO.getCategory())));
     }
 
     private String createKeyword(Event evento){
