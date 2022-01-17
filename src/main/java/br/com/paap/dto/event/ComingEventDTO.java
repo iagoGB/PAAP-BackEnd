@@ -16,7 +16,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class NewEventDTO {
+public class ComingEventDTO {
 	@NotNull
 	@NotEmpty
 	private Long category;

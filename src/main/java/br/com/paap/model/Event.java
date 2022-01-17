@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import br.com.paap.dto.event.NewEventDTO;
+import br.com.paap.dto.event.ComingEventDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -67,7 +67,7 @@ public class Event implements Serializable {
 	@Builder.Default
 	List<String> speakers = new ArrayList<>();
 
-	public void parse(NewEventDTO eDto, Category category) {
+	public void parse(ComingEventDTO eDto, Category category) {
 
 		setPicture("default.png");
 		setTitle(eDto.getTitle());
@@ -80,7 +80,7 @@ public class Event implements Serializable {
 		setSpeakers(eDto.getSpeakers());
 	}
 
-	public static Event parseFrom(NewEventDTO eDto, Category category) {
+	public static Event parseFrom(ComingEventDTO eDto, Category category) {
 		var event = Event.builder()
 				.picture("default.png")
 				.title(eDto.getTitle())
