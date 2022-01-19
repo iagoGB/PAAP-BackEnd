@@ -10,19 +10,19 @@ import javax.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-public class ComingEventDTO {
-	@NotNull
+public class UpdateEventDTO {
+    Long id;
+    @NotNull
 	@NotEmpty
 	private Long category;
 	@NotNull
 	@NotEmpty
 	private String title;
+	private String description;
 	@NotNull
 	@NotEmpty
 	@PastOrPresent
@@ -36,5 +36,4 @@ public class ComingEventDTO {
 	@NotNull
 	@NotEmpty
 	private List<String> speakers;
-
 }

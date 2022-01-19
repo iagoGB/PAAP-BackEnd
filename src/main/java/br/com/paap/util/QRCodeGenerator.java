@@ -14,15 +14,15 @@ import java.io.File;
 
 @Component
 public class QRCodeGenerator {
-    public  File create(String text, int width, int height, File file) {
+    public File create(String text, int width, int height, File file) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
             MatrixToImageWriter.writeToPath(bitMatrix, "PNG", file.toPath());
         } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao tentar escrever no arquivo temporário");
+            System.out.println("Ocorreu um erro ao tentar escrever no arquivo temporário" + e);
         }
         return file;
-        
+
     }
 }

@@ -66,7 +66,16 @@ public class EventEndpoint {
     	@RequestParam(name = "event", required = true )  String event
     ) throws JsonMappingException, JsonProcessingException 
     {
-    	return es.save(image, event);
+        return es.save(image, event);
+    }
+    
+    @PutMapping
+    public ResponseEntity<?> update(
+        @RequestParam(name="image", required = false) MultipartFile image,
+    	@RequestParam(name = "event", required = true )  String event
+    ) throws JsonMappingException, JsonProcessingException 
+    {
+    	return es.update(image, event);
     }
 
     @DeleteMapping("/{id}")

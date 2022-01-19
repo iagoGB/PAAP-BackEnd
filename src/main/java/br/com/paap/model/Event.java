@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import br.com.paap.dto.event.ComingEventDTO;
+import br.com.paap.dto.event.NewEventDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -55,6 +55,8 @@ public class Event implements Serializable {
 
 	private Integer workload;
 
+	private String description;
+
 	@ManyToOne
 	@JoinColumn(name = "fk_categoria_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_categoria_id"), nullable = false)
 	private Category category;
@@ -67,10 +69,9 @@ public class Event implements Serializable {
 	@Builder.Default
 	List<String> speakers = new ArrayList<>();
 
-	public void parse(ComingEventDTO eDto, Category category) {
-
-		setPicture("default.png");
+	public void parse(NewEventDTO eDto, Category category) {
 		setTitle(eDto.getTitle());
+		setDescription(eDto.getDescription());
 		setCategory(category);
 		setWorkload(eDto.getWorkload());
 		setLocal(eDto.getLocation());
@@ -80,10 +81,10 @@ public class Event implements Serializable {
 		setSpeakers(eDto.getSpeakers());
 	}
 
-	public static Event parseFrom(ComingEventDTO eDto, Category category) {
+	public static Event parseFrom(NewEventDTO eDto, Category category) {
 		var event = Event.builder()
-				.picture("default.png")
 				.title(eDto.getTitle())
+				.description(eDto.getDescription())
 				.category(category)
 				.workload(eDto.getWorkload())
 				.local(eDto.getLocation())

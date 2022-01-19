@@ -37,9 +37,11 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.paap.dto.event.DetailsEventDTO;
+import br.com.paap.dto.event.NewEventDTO;
 import br.com.paap.dto.event.RegisterPresenceDTO;
-import br.com.paap.dto.event.ComingEventDTO;
+import br.com.paap.dto.event.UpdateEventDTO;
 import br.com.paap.dto.user.UserDTO;
+import br.com.paap.model.Category;
 import br.com.paap.model.Event;
 import br.com.paap.model.EventUser;
 import br.com.paap.model.EventUserID;
@@ -105,17 +107,17 @@ public class EventService {
     @Transactional
     public ResponseEntity<?> save(MultipartFile image, String event)
             throws JsonMappingException, JsonProcessingException {
-        var newEventDTO = objectMapper.readValue(event, ComingEventDTO.class);
+        NewEventDTO newEventDTO = objectMapper.readValue(event, NewEventDTO.class);
         return categoryRepository.findById(newEventDTO.getCategory())
                 .map(category -> Event.parseFrom(newEventDTO, category))
                 .map(newEvent -> {
                     newEvent = eventRepository.save(newEvent);
                     var savedImage = s3StorageService.saveImage(image, newEvent.getId(), EVENTS_FOLDER);
-                    var qrCodeURL = this.generateQRCodeEvent(newEvent);
                     var createdKeyword = this.createKeyword(newEvent);
+                    newEvent.setKeyword(createdKeyword);
+                    var qrCodeURL = this.generateQRCodeEvent(newEvent);
                     newEvent.setPicture(savedImage);
                     newEvent.setQrCode(qrCodeURL);
-                    newEvent.setKeyword(createdKeyword);
                     newEvent = eventRepository.save(newEvent);
                     var response = DetailsEventDTO.parse(newEvent);
                     return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -405,5 +407,30 @@ public class EventService {
             }
         });
         return ResponseEntity.ok().body(events);
+    }
+
+    public ResponseEntity<?> update(MultipartFile image, String event)
+            throws JsonMappingException, JsonProcessingException {
+        var updatedEvent = objectMapper.readValue(event, UpdateEventDTO.class);
+        return eventRepository.findById(updatedEvent.getId())
+                .map(e -> {
+                    var category = categoryRepository.findById(updatedEvent.getCategory()).get();
+                    e.setCategory(category);
+                    e.setWorkload(updatedEvent.getWorkload());
+                    e.setTitle(updatedEvent.getTitle());
+                    e.setDateTime(updatedEvent.getDateTime());
+                    e.setDescription(updatedEvent.getDescription());
+                    e.setLocal(updatedEvent.getLocation());
+                    e.setSpeakers(updatedEvent.getSpeakers());
+                    String eventImage = null;
+                    if (image != null)
+                        eventImage = this.s3StorageService.saveImage(image, e.getId(), this.EVENTS_FOLDER);
+                    if (eventImage != null)
+                        e.setPicture(eventImage);
+                    eventRepository.save(e);
+                    return ResponseEntity.ok().build();
+                }).orElseThrow(
+                        () -> new RuntimeException(String.format("Evento com ID %s não existe", updatedEvent.getId())));
+
     }
 }
