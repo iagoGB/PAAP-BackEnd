@@ -49,7 +49,7 @@ public class User implements UserDetails {
 	@Builder.Default
     private String avatar = "https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png";
     
-	private Long cpf;
+	private String cpf;
 
 	private String name;
 	

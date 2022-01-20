@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import br.com.paap.dto.user.NewUserDTO;
 import br.com.paap.dto.user.UpdateUserDTO;
 import br.com.paap.dto.user.UserDTO;
@@ -59,24 +57,29 @@ public class UserService {
     			.orElse(ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<UserDTO> save
+    public ResponseEntity<?> save
     (
-        final NewUserDTO NovoUsuarioDTO, 
-        final UriComponentsBuilder uriBuilder
-    )
+        MultipartFile image,
+        final String user
+    ) throws JsonMappingException, JsonProcessingException
     {
-        try {
-            final User novoUsuario = new User();
-            novoUsuario.parse(NovoUsuarioDTO, roleRepository);
-            // Salvar
-            usuarioRepository.save(novoUsuario);
-            final UserDTO userDTO = UserDTO.parse(novoUsuario);
-            // Caminho do novo recurso criado
-            final URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(novoUsuario.getId()).toUri();
-            return ResponseEntity.created(uri).body(userDTO);
-        } catch (final Exception ex) {
-            return ResponseEntity.badRequest().build();
-        }
+    
+        var newUserDTO = objectMapper.readValue(user, NewUserDTO.class);
+        final User newUserModel = new User();
+        var findByEmail = this.usuarioRepository.findByEmail(newUserDTO.getEmail());
+        if (findByEmail.isPresent())
+            throw new RuntimeException(
+                    String.format("O Email %s já está em uso", newUserDTO.getEmail()));
+        
+        newUserModel.parse(newUserDTO, roleRepository);
+        usuarioRepository.save(newUserModel);
+        String urlAvatar = null;
+        if (image != null)
+            urlAvatar = this.s3StorageService.saveImage(image, newUserModel.getId(), this.USERS_FOLDER);
+        if (urlAvatar != null)
+            newUserModel.setAvatar(urlAvatar);
+        usuarioRepository.save(newUserModel);
+        return ResponseEntity.ok().build();
        
     }
 
@@ -86,12 +89,7 @@ public class UserService {
             var updatedUser = objectMapper.readValue(user, UpdateUserDTO.class);
             return this.usuarioRepository.findById(id)
                     .map(u -> {
-                        if (!u.getEmail().equals(updatedUser.getEmail())) {
-                            var findByEmail = this.usuarioRepository.findByEmail(updatedUser.getEmail());
-                            if (findByEmail.isPresent())
-                                throw new RuntimeException(
-                                        String.format("O Email %s já está em uso", updatedUser.getEmail()));
-                        }
+                        this.checkIfEmailIsUsed(updatedUser, u);
                         String urlAvatar = null;
                         if (image != null) urlAvatar = this.s3StorageService.saveImage(image, id, this.USERS_FOLDER);
                         if (urlAvatar != null) u.setAvatar(urlAvatar);
@@ -106,6 +104,56 @@ public class UserService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Erro ao converter usuário");
         }
+    }
+
+    private void checkIfEmailIsUsed(UpdateUserDTO updatedUser, User u) {
+        if (!u.getEmail().equals(updatedUser.getEmail())) {
+            var findByEmail = this.usuarioRepository.findByEmail(updatedUser.getEmail());
+            if (findByEmail.isPresent())
+                throw new RuntimeException(
+                        String.format("O Email %s já está em uso", updatedUser.getEmail()));
+        }
+    }
+
+    private void checkIfEmailIsUsed(NewUserDTO updatedUser, User u) {
+        if (!u.getEmail().equals(updatedUser.getEmail())) {
+            var findByEmail = this.usuarioRepository.findByEmail(updatedUser.getEmail());
+            if (findByEmail.isPresent())
+                throw new RuntimeException(
+                        String.format("O Email %s já está em uso", updatedUser.getEmail()));
+        }
+    }
+
+    public ResponseEntity<?> updateComplete(MultipartFile image, String user, Long id) {
+        try {
+            var updatedUser = objectMapper.readValue(user, NewUserDTO.class);
+            return usuarioRepository.findById(id).map(u -> {
+                this.checkIfEmailIsUsed(updatedUser, u);
+                String urlAvatar = null;
+                if (image != null)
+                    urlAvatar = this.s3StorageService.saveImage(image, id, this.USERS_FOLDER);
+                if (urlAvatar != null)
+                    u.setAvatar(urlAvatar);
+                u.setEmail(updatedUser.getEmail());
+                u.setCpf(updatedUser.getCpf());
+                u.setDepartament(updatedUser.getDepartament());
+                u.setWorkload(updatedUser.getWorkload());
+                u.setEntryDate(updatedUser.getEntryDate());
+                u.setName(updatedUser.getName());
+                u.setEmail(updatedUser.getEmail());
+                u.setPhone(updatedUser.getPhone());
+            
+                return ResponseEntity.ok().build();
+            }).orElseThrow(()-> new RuntimeException(String.format("Usuário com ID %s não existe", id)));
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao converter usuário");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao converter usuário");
+        }
+
     }
 
 }

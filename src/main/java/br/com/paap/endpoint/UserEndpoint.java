@@ -54,9 +54,11 @@ public class UserEndpoint {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody @Valid NewUserDTO novoUsuarioDTO,
-			UriComponentsBuilder uriBuilder) throws Exception {
-		return usuarioService.save(novoUsuarioDTO, uriBuilder);
+	public ResponseEntity<?> save(
+		@RequestParam(name="image", required = false) MultipartFile image,
+		@RequestParam(name = "user", required = false) String user
+	) throws Exception {
+		return usuarioService.save(image, user);
 
 	}
 
@@ -69,6 +71,17 @@ public class UserEndpoint {
 			@RequestParam(name = "user", required = false ) String user
 	) throws JsonMappingException, JsonProcessingException {
 		return usuarioService.update(image, user, id);
+	}
+
+	@PutMapping("/update/{id}")
+	@Transactional
+	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
+	public ResponseEntity<?> updateComplete(
+			@PathVariable Long id,
+			@RequestParam(name="image", required = false) MultipartFile image,
+			@RequestParam(name = "user", required = false ) String user
+	) throws JsonMappingException, JsonProcessingException {
+		return usuarioService.updateComplete(image, user, id);
 	}
 
 

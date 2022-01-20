@@ -24,7 +24,7 @@ import lombok.ToString;
 public class UserDTO {
 	public Long id;
 	public String email;
-	public Long cpf;
+	public String cpf;
 	public String name;
 	public Integer workload;
 	public String departament;
