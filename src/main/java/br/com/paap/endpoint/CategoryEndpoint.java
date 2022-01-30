@@ -20,11 +20,11 @@ import br.com.paap.repository.CategoryRepository;
 @RequestMapping("/category")
 public class CategoryEndpoint {
 	@Autowired
-	 CategoryRepository categoriaRepository;
+	 CategoryRepository categoryRepository;
 	
 	@GetMapping
 	public List<CategoryDTO> findAll() {
-		 return categoriaRepository.findAll().stream().map(c ->{
+		 return categoryRepository.findAll().stream().map(c ->{
 				return CategoryDTO.builder()
 						.id(c.getId())	
 						.name(c.getName())
@@ -35,12 +35,12 @@ public class CategoryEndpoint {
 	
 	@GetMapping("/{id}")
 	public Optional<Category> findById(@PathVariable(value="id") Long id) {
-		return categoriaRepository.findById(id);
+		return categoryRepository.findById(id);
 	}
 	
 	@PostMapping
 	public Category save(@RequestBody Category categoria) {
-		return categoriaRepository.save(categoria);
+		return categoryRepository.save(categoria);
 		
 	}
 	

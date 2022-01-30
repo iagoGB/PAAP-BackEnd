@@ -1,9 +1,9 @@
 INSERT INTO public.role(role_name) VALUES ('ROLE_ADMIN');
 INSERT INTO public.role(role_name) VALUES ('ROLE_USER');
 
-INSERT INTO public.categoria(id, name, url_image) VALUES (1, 'Ciência e Tecnologia','https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png');
-INSERT INTO public.categoria(id, name, url_image) VALUES (2, 'Cultura e Arte','https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png');
-INSERT INTO public.categoria(id, name, url_image) VALUES (3, 'Educação e Pesquisa','https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png');
+INSERT INTO public.categoria(name, url_image) VALUES ( 'Ciência e Tecnologia','https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png');
+INSERT INTO public.categoria(name, url_image) VALUES ('Cultura e Arte','https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png');
+INSERT INTO public.categoria(name, url_image) VALUES ('Educação e Pesquisa','https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png');
 
 --INSERT INTO public.palestrante(descricao, foto, nome) VALUES ('Departamento de Tecnologia', '/palestrante/numerodafotox.png', 'João Ribeiro');
 --INSERT INTO public.palestrante(descricao, foto, nome) VALUES ('Professor da Universidade do Texas', '/palestrante/numerodafotoy.png', 'Luce Hasenberg');

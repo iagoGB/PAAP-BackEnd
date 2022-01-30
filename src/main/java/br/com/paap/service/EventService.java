@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+
+import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -41,7 +43,6 @@ import br.com.paap.dto.event.NewEventDTO;
 import br.com.paap.dto.event.RegisterPresenceDTO;
 import br.com.paap.dto.event.UpdateEventDTO;
 import br.com.paap.dto.user.UserDTO;
-import br.com.paap.model.Category;
 import br.com.paap.model.Event;
 import br.com.paap.model.EventUser;
 import br.com.paap.model.EventUserID;
@@ -244,7 +245,7 @@ public class EventService {
                                 relation.getUser().getName(), relation.getEvent().getTitle()));
                     }
                     if (relation.getCertificate() == null) {
-                        relation.setCertificate(generateCertificate(relation));
+                        relation.setCertificate(this.generateCertificate(relation));
                     }
                     return ResponseEntity.ok()
                             .contentType(MediaType.APPLICATION_PDF) // "application/octet-stream"
@@ -279,7 +280,9 @@ public class EventService {
             parameter.put("name", user.getName());
             parameter.put("event", event.getTitle());
             parameter.put("workload", workload.toString() + " h");
-            parameter.put("data", event.getDateTime().toString());
+            var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy às HH:mm");
+            var formatedDate = event.getDateTime().format(formatter);
+            parameter.put("data", formatedDate);
             var jasperPrint = JasperFillManager.fillReport(relatorio, parameter, new JREmptyDataSource());
             var file = File.createTempFile(String.valueOf("user_" + user.getId()), ".pdf");
             JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
