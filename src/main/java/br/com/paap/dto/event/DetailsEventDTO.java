@@ -29,9 +29,11 @@ public class DetailsEventDTO {
 	private String qrCode;
 	private LocalDateTime dateTime;
 	private Integer workload;
+	private String description;
 	private CategoryDTO category;
 	private List<String> speakers = new ArrayList<>();
 	private List<String> enrolled = new ArrayList<>();
+	private List<String> attended = new ArrayList<>();
 	
 	public DetailsEventDTO(Event event) {
 		this.category = CategoryDTO.builder()
@@ -48,7 +50,9 @@ public class DetailsEventDTO {
 		this.title= event.getTitle();
 		this.enrolled = event.getUsers().stream()
 				.map(eu -> eu.getUser().getName()).collect(Collectors.toList());
+		this.attended = event.getUsers().stream().filter(eu -> eu.isUserPresent()).map(eu -> eu.getUser().getName()).collect(Collectors.toList());
 		this.workload = event.getWorkload();
+		this.description = event.getDescription();
 	}
 	
 	public static Page<DetailsEventDTO> parse(Page<Event> pageEvent) {

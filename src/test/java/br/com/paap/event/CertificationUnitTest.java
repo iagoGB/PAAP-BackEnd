@@ -42,7 +42,6 @@ public class CertificationUnitTest {
                 .workload(120)
                 .category(Category.builder().id(1L).name("Arte").build())
                 .dateTime(LocalDateTime.now().minusDays(10))
-                .isOpen(false)
                 .title("Evento de  teste")
                 .build();
    	 

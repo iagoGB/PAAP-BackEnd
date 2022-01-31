@@ -53,7 +53,6 @@ public class EventUnitTest {
                 .workload(120)
                 .category(Category.builder().id(1L).name("Arte").build())
                 .dateTime(LocalDateTime.now().plusDays(10))
-                .isOpen(false)
                 .title("Evento de teste")
                 .keyword("XXYYZZ-1")
                 .build();

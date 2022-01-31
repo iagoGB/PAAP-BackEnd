@@ -113,11 +113,13 @@ public class EventService {
                 .map(category -> Event.parseFrom(newEventDTO, category))
                 .map(newEvent -> {
                     newEvent = eventRepository.save(newEvent);
-                    var savedImage = s3StorageService.saveImage(image, newEvent.getId(), EVENTS_FOLDER);
+                    String urlPicture = null;
+                    if (image != null)
+                        urlPicture = s3StorageService.saveImage(image, newEvent.getId(), EVENTS_FOLDER);
                     var createdKeyword = this.createKeyword(newEvent);
                     newEvent.setKeyword(createdKeyword);
                     var qrCodeURL = this.generateQRCodeEvent(newEvent);
-                    newEvent.setPicture(savedImage);
+                    if (urlPicture != null) newEvent.setPicture(urlPicture);
                     newEvent.setQrCode(qrCodeURL);
                     newEvent = eventRepository.save(newEvent);
                     var response = DetailsEventDTO.parse(newEvent);
@@ -435,5 +437,11 @@ public class EventService {
                 }).orElseThrow(
                         () -> new RuntimeException(String.format("Evento com ID %s não existe", updatedEvent.getId())));
 
+    }
+
+    public ResponseEntity<?> findByTitle(String query) {
+        var fondEvents = this.eventRepository.findByTitleContainingIgnoreCase(query);
+        var events = fondEvents.stream().map(e -> DetailsEventDTO.parse(e)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(events);
     }
 }

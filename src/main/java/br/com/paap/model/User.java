@@ -47,8 +47,10 @@ public class User implements UserDetails {
 	private long id;
 	
 	@Builder.Default
-    private String avatar = "https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png";
+	private String avatar = "https://fcdocente-teste.s3.sa-east-1.amazonaws.com/usuarios/default-avatar.png";
     
+	private String siape;
+	
 	private String cpf;
 
 	private String name;
@@ -141,6 +143,7 @@ public class User implements UserDetails {
 	public void parse(NewUserDTO uDto, RoleRepository roleRepository) {
 		this.name = uDto.getName();
 		this.email = uDto.getEmail();
+		this.siape = uDto.getSiape();
 		this.password = new BCryptPasswordEncoder().encode(uDto.getPassword());
 		this.cpf = uDto.getCpf();
 		this.departament = uDto.getDepartament();

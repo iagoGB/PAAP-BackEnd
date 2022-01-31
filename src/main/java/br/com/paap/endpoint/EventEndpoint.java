@@ -56,13 +56,18 @@ public class EventEndpoint {
     }
     
     @GetMapping("/{id}")
-    public DetailsEventDTO findById(@PathVariable(value="id") final Long id) {
-    	return es.findById(id);
+    public DetailsEventDTO findById(@PathVariable(value = "id") final Long id) {
+        return es.findById(id);
+    }
+    
+    @GetMapping("/findBy")
+    public ResponseEntity<?> findByTitle(@RequestParam(value ="query") String query) {
+        return es.findByTitle(query);
     }
 
     @PostMapping
     public ResponseEntity<?> save(
-        @RequestParam(name="image", required = true) MultipartFile image,
+        @RequestParam(name="image", required = false) MultipartFile image,
     	@RequestParam(name = "event", required = true )  String event
     ) throws JsonMappingException, JsonProcessingException 
     {

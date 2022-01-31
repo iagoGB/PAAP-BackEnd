@@ -39,9 +39,6 @@ public class Event implements Serializable {
 
 	private String keyword;
 
-	@Builder.Default
-	private Boolean isOpen = true;
-
 	private String title;
 
 	@Builder.Default
@@ -76,7 +73,6 @@ public class Event implements Serializable {
 		setWorkload(eDto.getWorkload());
 		setLocal(eDto.getLocation());
 		setDateTime(eDto.getDateTime());
-		setIsOpen(true);
 		category.getEvents().add(this);
 		setSpeakers(eDto.getSpeakers());
 	}
@@ -89,7 +85,6 @@ public class Event implements Serializable {
 				.workload(eDto.getWorkload())
 				.local(eDto.getLocation())
 				.dateTime(eDto.getDateTime())
-				.isOpen(true)
 				.build();
 		category.getEvents().add(event);
 		event.setSpeakers(eDto.getSpeakers());

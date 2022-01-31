@@ -23,6 +23,8 @@ public class NewUserDTO {
 	@NotNull @NotEmpty @Email(message = "Não é um endereço de email válido")
 	private String email;
 	@NotNull
+	private String siape;
+	@NotNull
 	private String cpf;
 	@NotNull @NotEmpty
 	private String name;
@@ -34,6 +36,5 @@ public class NewUserDTO {
 	@NotNull @NotEmpty
 	private String phone;
 	@NotNull @PastOrPresent
-	// @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" ,timezone = "GMT-3")
 	private LocalDate entryDate;
 }

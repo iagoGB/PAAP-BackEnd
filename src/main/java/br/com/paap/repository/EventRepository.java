@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import br.com.paap.model.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long>{
-	List<Event> findByIsOpen(Boolean isOpen);
-	
 	@Query("select e from Event e where e.dateTime > :dateTime")
 	List<Event> findAllOpen(@Param("dateTime") LocalDateTime dateTime);
+
+	List<Event> findByTitleContainingIgnoreCase(String title);
 }

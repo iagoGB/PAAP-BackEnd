@@ -47,6 +47,11 @@ public class UserEndpoint {
 		return usuarioService.findByEmail(username);
 	}
 
+	@GetMapping("/findBy")
+	public ResponseEntity<?> findByName(@RequestParam(value = "query") String query) {
+		return usuarioService.findByName(query);
+	}
+
 	@PostMapping
 	public ResponseEntity<?> save(
 		@RequestParam(name="image", required = false) MultipartFile image,

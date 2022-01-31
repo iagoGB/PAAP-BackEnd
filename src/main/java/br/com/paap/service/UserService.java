@@ -1,5 +1,7 @@
 package br.com.paap.service;
 
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -153,6 +155,12 @@ public class UserService {
             throw new RuntimeException("Erro ao converter usuário");
         }
 
+    }
+
+    public ResponseEntity<?> findByName(String query) {
+        var foundUsers = this.usuarioRepository.findByNameContainingIgnoreCase(query);
+        var users = foundUsers.stream().map(u-> UserDTO.parse(u)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(users);
     }
 
 }

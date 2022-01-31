@@ -24,6 +24,7 @@ import lombok.ToString;
 public class UserDTO {
 	public Long id;
 	public String email;
+	public String siape;
 	public String cpf;
 	public String name;
 	public Integer workload;
@@ -37,6 +38,7 @@ public class UserDTO {
 	public UserDTO(User user) {
 		this.id = user.getId();
 		this.name = user.getName();
+		this.siape = user.getSiape();
 		this.cpf = user.getCpf();
 		this.email = user.getEmail();
 		this.workload = user.getWorkload();
