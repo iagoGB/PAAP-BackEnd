@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import br.com.paap.dto.user.ChangePasswordDTO;
 import br.com.paap.dto.user.NewUserDTO;
 import br.com.paap.dto.user.UpdateUserDTO;
 import br.com.paap.dto.user.UserDTO;
@@ -161,6 +164,19 @@ public class UserService {
         var foundUsers = this.usuarioRepository.findByNameContainingIgnoreCase(query);
         var users = foundUsers.stream().map(u-> UserDTO.parse(u)).collect(Collectors.toList());
         return ResponseEntity.ok().body(users);
+    }
+
+    public ResponseEntity<?> changePassword(Long id, ChangePasswordDTO data) {
+        return this.usuarioRepository.findById(id).map(u -> {
+            var passwordEncoder = new BCryptPasswordEncoder();
+            if (passwordEncoder.matches(data.getCurrentPassword(), u.getPassword())) {
+                var encodedNewPassword = new BCryptPasswordEncoder().encode(data.getNewPassword());
+                u.setPassword(encodedNewPassword);
+                this.usuarioRepository.save(u);
+                return ResponseEntity.ok().build();
+            } else 
+                throw new RuntimeException("Senha atual não confere");
+        }).orElseThrow(()->  new RuntimeException("Usuário não encontrado"));
     }
 
 }

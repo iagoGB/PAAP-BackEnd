@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import br.com.paap.dto.user.ChangePasswordDTO;
 import br.com.paap.dto.user.UserDTO;
 import br.com.paap.repository.RoleRepository;
 import br.com.paap.repository.UserRepository;
@@ -91,9 +94,10 @@ public class UserEndpoint {
 
 	}
 
-	public ResponseEntity<?> getCertificate(
-			@RequestParam(value = "eventID") Long eventID,
-			@RequestParam(value = "userID") Long userID) {
-		return null;
+	@PutMapping("/{id}/changePassword")
+	public ResponseEntity<?> changePassword(
+		@PathVariable Long id,
+		@RequestBody ChangePasswordDTO data) {
+		return usuarioService.changePassword(id, data);
 	}
 }
