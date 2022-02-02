@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 
 import br.com.paap.model.User;
+import br.com.paap.util.UserStatus;
+import ch.qos.logback.core.joran.conditional.ElseAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +34,8 @@ public class UserDTO {
 	public String telephone;
 	public LocalDate entryDate;
 	public String avatar;
+	public UserStatus status;
+	
 	@Builder.Default
 	public List<EventUserDTO> events = new ArrayList<>();
 	
@@ -44,10 +48,15 @@ public class UserDTO {
 		this.workload = user.getWorkload();
 		this.departament = user.getDepartament();
 		this.telephone = user.getPhone();
-		this.setEntryDate(user.getEntryDate());
-		this.setAvatar(user.getAvatar());
-		var collect = user.getEvents().stream().map(eu -> new EventUserDTO(eu)).collect(Collectors.toList());
-		this.events = collect;
+		this.entryDate = user.getEntryDate();
+		this.avatar = user.getAvatar();
+		this.events = user.getEvents().stream().map(eu -> new EventUserDTO(eu)).collect(Collectors.toList());
+		if(user.getWorkload() >= 70)
+			this.status = UserStatus.DONE;
+		else if (user.getEntryDate().plusYears(3).isBefore(LocalDate.now()))
+			this.status = UserStatus.PENDING;
+		else 
+			this.status = UserStatus.IN_PROGRESS;
 	}
 	
 	public static Page<UserDTO> parse(Page<User> usuarios) {

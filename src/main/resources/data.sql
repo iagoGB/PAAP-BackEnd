@@ -37,7 +37,7 @@ VALUES (
     8,
     '5555',
     '2019-12-25 08:27:59.067', 
-    '2016-12-20',
+    '2018-12-20',
     'ICA',
     'usuario@teste.com',
     'Karen Bravo dos Santos',
@@ -54,7 +54,7 @@ VALUES (
     30,
     '6565',
     '2017-12-25 08:27:59.067', 
-    '2017-10-20',
+    '2019-10-20',
     'UFC Virtual',
     'tres@usuario.com',
     'Elizabeth Rios Damas Albuquerque Feitosa da Costa e Silva',
@@ -63,7 +63,7 @@ VALUES (
 );
 
 INSERT INTO public.usuario(
-	updated_at, avatar,workload, cpf, created_at, entry_date, departament, email, name, password, phone
+	updated_at, avatar,workload, cpf, created_at, entry_date, departament, email, name, password, phone,siape
 )
 VALUES ( 
     '2017-02-02 16:31:29.124',
@@ -71,12 +71,13 @@ VALUES (
     12,
     '223344',
     '2018-12-25 08:27:59.067', 
-    '2018-10-20',
+    '2020-02-01',
     'UFC Virtual',
     'usuario',
     'João Bezerra Duarte',
     '$2a$10$uB6.WzxcB4dflWRxBZDuZuPrLeJtdastzakqbAeP9PTdk1ZlubOum',
-    '853498873'
+    '853498873',
+    '5439867'
 );
 
 INSERT INTO public.usuario_role(usuario_id, role_id) VALUES (1, 'ROLE_ADMIN');

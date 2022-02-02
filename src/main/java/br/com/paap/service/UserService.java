@@ -139,6 +139,7 @@ public class UserService {
                 if (urlAvatar != null)
                     u.setAvatar(urlAvatar);
                 u.setEmail(updatedUser.getEmail());
+                u.setSiape(updatedUser.getSiape());
                 u.setCpf(updatedUser.getCpf());
                 u.setDepartament(updatedUser.getDepartament());
                 u.setWorkload(updatedUser.getWorkload());

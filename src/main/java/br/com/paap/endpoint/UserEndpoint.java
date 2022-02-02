@@ -77,7 +77,7 @@ public class UserEndpoint {
 
 	@PutMapping("/update/{id}")
 	@Transactional
-	// Atualização é feita em memória, e ao término do método jpa dispara commit para atualizar no banco
+	// Atualização feita em memória, e ao término do método jpa dispara commit para atualizar no banco
 	public ResponseEntity<?> updateComplete(
 			@PathVariable Long id,
 			@RequestParam(name="image", required = false) MultipartFile image,
