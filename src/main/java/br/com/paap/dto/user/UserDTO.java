@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 
 import br.com.paap.model.User;
 import br.com.paap.util.UserStatus;
-import ch.qos.logback.core.joran.conditional.ElseAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
