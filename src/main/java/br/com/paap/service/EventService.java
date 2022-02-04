@@ -118,7 +118,7 @@ public class EventService {
                         urlPicture = s3StorageService.saveImage(image, newEvent.getId(), EVENTS_FOLDER);
                     var createdKeyword = this.createKeyword(newEvent);
                     newEvent.setKeyword(createdKeyword);
-                    var qrCodeURL = this.generateQRCodeEvent(newEvent);
+                    var qrCodeURL = this.generateQRCode(newEvent);
                     if (urlPicture != null) newEvent.setPicture(urlPicture);
                     newEvent.setQrCode(qrCodeURL);
                     newEvent = eventRepository.save(newEvent);
@@ -133,7 +133,7 @@ public class EventService {
         return String.format("%s_%s", RandomString.make(), evento.getId());
     }
 
-    private String generateQRCodeEvent(Event newEvent) {
+    private String generateQRCode(Event newEvent) {
         String resourceURL = null;
         try {
             var file = File.createTempFile(String.format("qrcode_%d", newEvent.getId()), ".png");
@@ -189,7 +189,7 @@ public class EventService {
      * Inscreve um usuário em um evento.
      * 
      * @param eventoID ID do Evento ao qual o usuário deseja participar.
-     * @param userID   String unica que identifica o email do usuário.
+     * @param userID   Id do usuário.
      */
     public ResponseEntity<?> subscribe(Long eventoID, Long userID) {
         var event = findEvent(eventoID);
@@ -222,7 +222,7 @@ public class EventService {
         return findRelation(eventID, data.getUserID())
                 .map(relation -> {
                     this.validateEventKeyCode(relation, data.getKeyword());
-                    this.isToday(eventID);
+                    this.checkIfEventIsHappening(eventID);
                     if (relation.isUserPresent())
                         throw new IllegalArgumentException("Sua presença já foi registrada anteriormente");
                     relation.setUserPresent(true);
@@ -338,8 +338,8 @@ public class EventService {
         return findById.orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
     }
 
-    // Checa se o evento ocorre hoje
-    private void isToday(Long eventoId) {
+    // Checa se o evento está acontecendo
+    private void checkIfEventIsHappening(Long eventoId) {
         var event = eventRepository.findById(eventoId).get();
         if (LocalDateTime.now(ZoneId.of("America/Sao_Paulo")).isBefore(event.getDateTime())) {
             throw new IllegalArgumentException("O Evento ainda não foi iniciado");

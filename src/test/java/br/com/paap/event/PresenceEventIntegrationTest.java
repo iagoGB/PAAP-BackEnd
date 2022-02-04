@@ -63,7 +63,7 @@ public class PresenceEventIntegrationTest extends PAAPApplicationIntegrationIT  
             .pathParam("eventoId", 50)
             .log().all()
         .when()
-            .put("/evento/{eventoId}/registro-presenca")
+            .put("/evento/{eventoId}/regi-presenca")
         .then()
             .statusCode(equalTo(400)) // Bad Request
             .and()
