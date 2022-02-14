@@ -281,8 +281,8 @@ public class EventService {
             var workload = event.getWorkload();
             parameter.put("name", user.getName());
             parameter.put("event", event.getTitle());
-            parameter.put("workload", workload.toString() + " h");
-            var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy às HH:mm");
+            parameter.put("workload", workload.toString() + " horas");
+            var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             var formatedDate = event.getDateTime().format(formatter);
             parameter.put("data", formatedDate);
             var jasperPrint = JasperFillManager.fillReport(relatorio, parameter, new JREmptyDataSource());
