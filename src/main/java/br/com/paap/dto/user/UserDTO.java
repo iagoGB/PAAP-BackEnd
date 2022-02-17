@@ -50,7 +50,7 @@ public class UserDTO {
 		this.entryDate = user.getEntryDate();
 		this.avatar = user.getAvatar();
 		this.events = user.getEvents().stream().map(eu -> new EventUserDTO(eu)).collect(Collectors.toList());
-		if(user.getWorkload() >= 70)
+		if(user.getWorkload() >= 64)
 			this.status = UserStatus.DONE;
 		else if (user.getEntryDate().plusYears(3).isBefore(LocalDate.now()))
 			this.status = UserStatus.PENDING;
